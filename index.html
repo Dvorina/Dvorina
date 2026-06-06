@@ -23,118 +23,120 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32L28 66zm0 34L0 84V52l28-16 28 16v32L28 100z' fill='none' stroke='%23C8841A' stroke-width='.3' opacity='.07'/%3E%3C/svg%3E")}
 
-/* ══ SCREENS ══════════════════════════════════════════════ */
-.screen{position:fixed;inset:0;z-index:500;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center}
+/* SCREENS */
+.screen{position:fixed;inset:0;z-index:500;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
 .screen.hidden{display:none}
-
-/* permission */
-.perm-hex{font-size:52px;margin-bottom:18px}
+.perm-hex{font-size:52px;margin-bottom:16px}
 .perm-brand{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;letter-spacing:4px;color:var(--honey-l);text-transform:uppercase;margin-bottom:3px}
-.perm-sub{font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:30px}
+.perm-sub{font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:28px}
 .perm-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text);margin-bottom:10px}
-.perm-desc{font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:26px;max-width:300px}
+.perm-desc{font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:24px;max-width:300px}
 .perm-btn{width:100%;max-width:300px;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:var(--r);padding:16px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer;margin-bottom:12px}
 .perm-skip{font-size:12px;color:var(--dim);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .denied-box{width:100%;max-width:300px;background:rgba(200,74,42,.08);border:.5px solid rgba(200,74,42,.3);border-radius:var(--r);padding:14px;margin-bottom:16px;text-align:left;display:none}
 .denied-box .dt{font-size:12px;font-weight:500;color:#E86A4A;margin-bottom:7px}
 .denied-box .dd{font-size:12px;color:var(--muted);line-height:1.9}
-.denied-box .dd span{color:var(--text)}
+.denied-box .dd b{color:var(--text)}
 
-/* setup */
-.setup-scroll{width:100%;max-width:360px;overflow-y:auto;max-height:90vh;display:flex;flex-direction:column;gap:0}
+/* SETUP */
+.setup-scroll{width:100%;max-width:360px;overflow-y:auto;max-height:90vh;display:flex;flex-direction:column;gap:0;padding-bottom:20px}
 .setup-brand{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;letter-spacing:4px;color:var(--honey-l);text-transform:uppercase;margin-bottom:4px}
-.setup-sub{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:28px}
-.setup-title{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text);margin-bottom:18px}
-.setup-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:7px;margin-top:16px;display:block}
-.setup-inp{width:100%;background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:12px 13px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;margin-bottom:4px}
+.setup-sub{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:24px}
+.setup-title{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text);margin-bottom:16px}
+.setup-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:7px;margin-top:14px;display:block}
+.setup-inp{width:100%;background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:12px 13px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:4px}
 .setup-inp:focus{border-color:var(--honey)}
 .setup-inp::placeholder{color:var(--dim)}
-.stanoviste-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.st-row{display:flex;gap:8px;align-items:center}
-.st-row input{flex:1;background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
-.st-row input:focus{border-color:var(--honey)}
-.st-row input::placeholder{color:var(--dim)}
-.st-num{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 10px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:60px;text-align:center}
+.st-row{display:flex;gap:7px;align-items:center;margin-bottom:8px}
+.st-name-inp{flex:1;background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
+.st-name-inp:focus{border-color:var(--honey)}
+.st-name-inp::placeholder{color:var(--dim)}
+.st-num{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 8px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:54px;text-align:center}
 .st-num:focus{border-color:var(--honey)}
-.st-del{background:none;border:.5px solid rgba(200,74,42,.3);border-radius:var(--rs);padding:10px 12px;color:#E86A4A;cursor:pointer;font-size:14px;flex-shrink:0}
-.add-st-btn{background:none;border:.5px dashed var(--bs);border-radius:var(--rs);padding:10px;width:100%;color:var(--honey-l);font-size:12px;letter-spacing:1px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:6px}
-.setup-save{width:100%;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:var(--r);padding:14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer;margin-top:10px}
+.st-del{background:none;border:.5px solid rgba(200,74,42,.3);border-radius:var(--rs);padding:10px 11px;color:#E86A4A;cursor:pointer;font-size:13px;flex-shrink:0}
+.add-st-btn{background:none;border:.5px dashed var(--bs);border-radius:var(--rs);padding:10px;width:100%;color:var(--honey-l);font-size:12px;letter-spacing:1px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:8px}
+.setup-save{width:100%;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:var(--r);padding:14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer;margin-top:8px}
 
-/* ══ TOPBAR ══════════════════════════════════════════════ */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px;border-bottom:.5px solid var(--b);flex-shrink:0;background:var(--dark2);z-index:2}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:11px 15px 8px;border-bottom:.5px solid var(--b);flex-shrink:0;background:var(--dark2);z-index:2}
 .brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;letter-spacing:3px;color:var(--honey-l);text-transform:uppercase;line-height:1.1}
 .brand small{color:var(--muted);font-size:9px;display:block;letter-spacing:3px;font-family:'DM Sans',sans-serif;margin-top:1px}
 .top-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
-.top-date{font-size:10px;color:var(--dim);letter-spacing:.5px;line-height:1.5;text-align:right}
+.top-date{font-size:10px;color:var(--dim);line-height:1.5;text-align:right}
 .top-btns{display:flex;gap:5px}
-.top-pill{display:flex;align-items:center;gap:4px;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:20px;border:.5px solid;cursor:pointer;transition:all .2s}
+.top-pill{display:flex;align-items:center;gap:4px;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:20px;border:.5px solid;cursor:pointer}
 .pill-ok{color:#7ABF52;border-color:rgba(90,140,58,.4);background:rgba(90,140,58,.08)}
 .pill-off{color:var(--dim);border-color:var(--b)}
 .pill-denied{color:#E86A4A;border-color:rgba(200,74,42,.4);background:rgba(200,74,42,.08)}
 .pill-set{color:var(--honey-l);border-color:var(--bs);background:rgba(200,132,26,.08)}
 
-/* ══ TABS ════════════════════════════════════════════════ */
+/* TABS */
 .tabs{display:flex;border-bottom:.5px solid var(--b);background:var(--dark2);flex-shrink:0}
-.tab{flex:1;padding:9px 0;font-size:10px;letter-spacing:1px;color:var(--dim);cursor:pointer;text-align:center;border:none;background:none;text-transform:uppercase;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tab{flex:1;padding:9px 0;font-size:10px;letter-spacing:.5px;color:var(--dim);cursor:pointer;text-align:center;border:none;background:none;text-transform:uppercase;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
 .tab svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .tab.active{color:var(--honey-l);border-bottom-color:var(--honey)}
 
-/* ══ VIEWS ═══════════════════════════════════════════════ */
+/* VIEWS */
 .views{flex:1;overflow:hidden;position:relative}
 .view{position:absolute;inset:0;overflow-y:auto;display:none;-webkit-overflow-scrolling:touch}
 .view.active{display:block}
 .view::-webkit-scrollbar{display:none}
 
-/* ══ RECORD VIEW ══════════════════════════════════════════ */
-.rec-wrap{padding:16px 16px 28px;display:flex;flex-direction:column;gap:12px}
+/* RECORD VIEW */
+.rec-wrap{padding:14px 15px 28px;display:flex;flex-direction:column;gap:11px}
 
-/* stanovište selector */
-.st-selector{display:flex;flex-direction:column;gap:7px}
-.st-sel-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
-.st-chips{display:flex;flex-wrap:wrap;gap:6px}
-.st-chip{padding:7px 14px;border-radius:20px;border:.5px solid var(--b);background:var(--dark3);font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.5px}
-.st-chip.active{border-color:var(--honey);background:rgba(200,132,26,.12);color:var(--honey-l)}
+/* status bar */
+.status-bar{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 13px;display:flex;align-items:center;gap:10px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background .3s}
+.status-dot.listening{background:#7ABF52;animation:pulse-dot 1.5s ease-in-out infinite}
+.status-dot.recording{background:var(--honey);animation:pulse-dot .8s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.status-txt{font-size:12px;color:var(--muted);flex:1;line-height:1.4}
+.status-txt b{color:var(--text);display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:1px}
+.rec-timer{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--honey-l);letter-spacing:2px;flex-shrink:0;display:none}
+.rec-timer.on{display:block}
 
-/* ule selector */
-.ul-selector{display:flex;flex-direction:column;gap:7px}
-.ul-sel-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+/* st + ul selector */
+.sel-section{display:flex;flex-direction:column;gap:6px}
+.sel-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:7px 13px;border-radius:20px;border:.5px solid var(--b);background:var(--dark3);font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s}
+.chip.active{border-color:var(--honey);background:rgba(200,132,26,.12);color:var(--honey-l)}
 .ul-chips{display:flex;flex-wrap:wrap;gap:6px}
-.ul-chip{width:36px;height:36px;border-radius:8px;border:.5px solid var(--b);background:var(--dark3);font-size:13px;color:var(--muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:500}
+.ul-chip{width:38px;height:38px;border-radius:8px;border:.5px solid var(--b);background:var(--dark3);font-size:14px;color:var(--muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:500}
 .ul-chip.active{border-color:var(--honey);background:rgba(200,132,26,.12);color:var(--honey-l)}
+.ul-chip.voice-highlight{border-color:var(--honey-l);background:rgba(232,168,50,.2);transform:scale(1.1)}
 
 /* mic */
-.mic-area{display:flex;flex-direction:column;align-items:center;gap:10px}
-.mic-hint-row{display:flex;gap:10px;width:100%;justify-content:center}
-.mic-hint-box{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:7px 12px;font-size:11px;color:var(--dim);text-align:center;line-height:1.7;flex:1;max-width:160px}
-.mic-hint-box b{color:var(--muted);display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
-
-.mic-btn{width:84px;height:84px;border-radius:50%;border:1.5px solid var(--bs);background:var(--dark3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;position:relative;-webkit-user-select:none;user-select:none;touch-action:none}
-.mic-btn::before{content:'';position:absolute;inset:-10px;border-radius:50%;border:.5px solid var(--b);pointer-events:none;transition:all .3s}
+.mic-area{display:flex;flex-direction:column;align-items:center;gap:8px}
+.mic-btn{width:80px;height:80px;border-radius:50%;border:1.5px solid var(--bs);background:var(--dark3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;position:relative;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.mic-btn::before{content:'';position:absolute;inset:-10px;border-radius:50%;border:.5px solid var(--b);pointer-events:none}
 .mic-btn.on{border-color:var(--honey);animation:mglow 1.4s ease-out infinite}
 .mic-btn.on::before{border-color:var(--honey);animation:mouter 1.4s ease-out infinite}
 .mic-btn.disabled-mic{opacity:.35;cursor:default}
 @keyframes mglow{0%,100%{box-shadow:0 0 10px rgba(200,132,26,.3)}50%{box-shadow:0 0 22px rgba(200,132,26,.6)}}
 @keyframes mouter{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.55);opacity:0}}
 .mic-btn svg{width:24px;height:24px;stroke:var(--honey-l);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.rec-lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);transition:color .2s;text-align:center;max-width:260px}
-.rec-lbl.on{color:var(--honey)}
-.rec-timer{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--honey-l);letter-spacing:2px;display:none}
-.rec-timer.on{display:block}
+.mic-lbl{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:center}
+.mic-lbl.on{color:var(--honey)}
 
-.denied-banner{display:none;background:rgba(200,74,42,.08);border:.5px solid rgba(200,74,42,.3);border-radius:var(--rs);padding:12px 14px;font-size:12px;line-height:1.8;color:var(--muted)}
-.denied-banner.show{display:block}
-.denied-banner strong{color:#E86A4A;display:block;margin-bottom:3px}
+/* povely info */
+.povely{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 13px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.povel{font-size:11px;color:var(--dim);line-height:1.7}
+.povel b{color:var(--honey-l);display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:1px}
 
-.colony-badge{display:none;align-items:center;gap:7px;background:rgba(200,132,26,.1);border:.5px solid var(--bs);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--honey-l);letter-spacing:.5px}
-.colony-badge.show{display:flex}
-
-.tbox{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:13px}
-.tbox-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
-.tbox-clear{font-size:10px;color:var(--dim);cursor:pointer;letter-spacing:1px;text-transform:uppercase}
-.tbox-clear:hover{color:var(--muted)}
-.tbox-txt{font-size:13px;color:var(--muted);font-style:italic;line-height:1.7;min-height:48px;word-break:break-word}
+/* tbox */
+.tbox{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:12px}
+.tbox-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.tbox-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+.tbox-clear{font-size:10px;color:var(--dim);cursor:pointer;letter-spacing:1px}
+.tbox-txt{font-size:13px;color:var(--muted);font-style:italic;line-height:1.7;min-height:46px;word-break:break-word;white-space:pre-wrap}
 .cur{display:inline-block;width:2px;height:13px;background:var(--honey);margin-left:2px;vertical-align:text-bottom;animation:blink 1s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.denied-banner{display:none;background:rgba(200,74,42,.08);border:.5px solid rgba(200,74,42,.3);border-radius:var(--rs);padding:11px 13px;font-size:12px;line-height:1.8;color:var(--muted)}
+.denied-banner.show{display:block}
+.denied-banner strong{color:#E86A4A;display:block;margin-bottom:3px}
 
 .manual-row{display:flex;gap:7px}
 .m-inp{flex:1;background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:11px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
@@ -147,23 +149,22 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .save-btn:disabled{opacity:.3;cursor:default}
 .save-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 
-/* ══ NOTES VIEW ═══════════════════════════════════════════ */
-.n-hdr{padding:12px 16px 10px;border-bottom:.5px solid var(--b);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+/* NOTES */
+.n-hdr{padding:12px 15px 8px;border-bottom:.5px solid var(--b);display:flex;justify-content:space-between;align-items:center}
 .n-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400}
 .n-cnt{font-size:11px;color:var(--dim);letter-spacing:1px}
-.n-filters{padding:10px 16px 0;display:flex;gap:6px;flex-wrap:wrap}
-.n-filter{padding:5px 12px;border-radius:20px;border:.5px solid var(--b);background:none;font-size:11px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.5px;transition:all .2s}
+.n-filters{padding:9px 15px 0;display:flex;gap:6px;flex-wrap:wrap}
+.n-filter{padding:5px 11px;border-radius:20px;border:.5px solid var(--b);background:none;font-size:11px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
 .n-filter.active{border-color:var(--honey);color:var(--honey-l);background:rgba(200,132,26,.08)}
-.n-list{padding:10px 16px;display:flex;flex-direction:column;gap:9px}
-
-.card{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s}
+.n-list{padding:10px 15px;display:flex;flex-direction:column;gap:9px}
+.card{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:13px;cursor:pointer;transition:border-color .2s}
 .card.open{border-color:var(--honey)}
 .c-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
 .c-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--honey-l);display:flex;align-items:center;gap:5px}
 .c-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .c-meta{text-align:right}
 .c-date{font-size:10px;color:var(--dim);line-height:1.6}
-.c-stanoviste{font-size:10px;color:var(--honey);letter-spacing:.5px}
+.c-loc{font-size:10px;color:var(--honey);letter-spacing:.5px;margin-top:1px}
 .c-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
 .tag{font-size:10px;padding:2px 8px;border-radius:20px;border:.5px solid}
 .t-ok{background:rgba(90,140,58,.12);border-color:rgba(90,140,58,.4);color:#7ABF52}
@@ -179,16 +180,16 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .c-rec-txt{font-size:12px;color:#E8D4A0;line-height:1.7}
 .c-raw{margin-top:8px;padding-top:8px;border-top:.5px solid var(--b);font-size:11px;color:var(--dim);line-height:1.6;font-style:italic;display:none}
 .c-del{margin-top:8px;padding-top:8px;border-top:.5px solid var(--b);display:none;justify-content:flex-end}
-.del-btn{background:none;border:.5px solid rgba(200,74,42,.4);border-radius:var(--rs);padding:5px 12px;font-size:11px;color:#E86A4A;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px}
+.del-btn{background:none;border:.5px solid rgba(200,74,42,.4);border-radius:var(--rs);padding:5px 12px;font-size:11px;color:#E86A4A;cursor:pointer;font-family:'DM Sans',sans-serif}
 
-/* ══ DASH VIEW ════════════════════════════════════════════ */
-.d-pad{padding:12px 16px 28px;display:flex;flex-direction:column;gap:12px}
+/* DASH */
+.d-pad{padding:12px 15px 28px;display:flex;flex-direction:column;gap:12px}
 .s-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .stat{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 5px;text-align:center}
 .stat-n{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--honey-l);line-height:1}
-.stat-l{font-size:9px;color:var(--dim);letter-spacing:.5px;margin-top:3px;line-height:1.3}
-.stanoviste-cards{display:flex;flex-direction:column;gap:7px}
+.stat-l{font-size:9px;color:var(--dim);margin-top:3px;line-height:1.3}
+.st-cards{display:flex;flex-direction:column;gap:7px}
 .st-card{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:11px 13px;display:flex;justify-content:space-between;align-items:center}
 .st-card-name{font-size:13px;color:var(--text);font-weight:500}
 .st-card-sub{font-size:11px;color:var(--dim);margin-top:2px}
@@ -196,7 +197,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .todo-list{display:flex;flex-direction:column;gap:6px}
 .todo{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 12px;display:flex;gap:9px}
 .todo.urg{border-color:rgba(200,74,42,.4)}
-.todo-ico{font-size:13px;flex-shrink:0;margin-top:1px}
 .todo-col{font-size:12px;font-weight:500;color:var(--text);margin-bottom:1px}
 .todo-act{font-size:12px;color:var(--muted);line-height:1.5}
 .tbadge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:3px}
@@ -205,49 +205,48 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .clr-btn{background:none;border:.5px solid var(--b);border-radius:var(--rs);padding:9px;color:var(--dim);font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;transition:all .2s}
 .clr-btn:hover{border-color:rgba(200,74,42,.4);color:#E86A4A}
 
-/* ══ SETTINGS VIEW ════════════════════════════════════════ */
-.cfg-pad{padding:14px 16px 28px;display:flex;flex-direction:column;gap:14px}
-.cfg-section{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:14px}
-.cfg-section-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
-.cfg-stanoviste-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.cfg-st-row{display:flex;gap:7px;align-items:center}
+/* SETTINGS */
+.cfg-pad{padding:13px 15px 28px;display:flex;flex-direction:column;gap:12px}
+.cfg-box{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:13px}
+.cfg-box-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:11px}
+.cfg-st-row{display:flex;gap:7px;align-items:center;margin-bottom:8px}
 .cfg-st-name{flex:1;background:var(--dark2);border:.5px solid var(--b);border-radius:var(--rs);padding:9px 11px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
 .cfg-st-name:focus{border-color:var(--honey)}
-.cfg-st-num{background:var(--dark2);border:.5px solid var(--b);border-radius:var(--rs);padding:9px 8px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:54px;text-align:center}
+.cfg-st-num{background:var(--dark2);border:.5px solid var(--b);border-radius:var(--rs);padding:9px 6px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:52px;text-align:center}
 .cfg-st-num:focus{border-color:var(--honey)}
-.cfg-del{background:none;border:.5px solid rgba(200,74,42,.25);border-radius:var(--rs);padding:9px 11px;color:#E86A4A;cursor:pointer;font-size:13px}
-.cfg-add{background:none;border:.5px dashed var(--bs);border-radius:var(--rs);padding:9px;width:100%;color:var(--honey-l);font-size:11px;letter-spacing:1px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
-.cfg-add:hover{background:rgba(200,132,26,.05)}
+.cfg-del{background:none;border:.5px solid rgba(200,74,42,.25);border-radius:var(--rs);padding:9px 10px;color:#E86A4A;cursor:pointer;font-size:13px}
+.cfg-add{background:none;border:.5px dashed var(--bs);border-radius:var(--rs);padding:9px;width:100%;color:var(--honey-l);font-size:11px;letter-spacing:1px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:6px}
 .cfg-save{background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:var(--rs);padding:12px;width:100%;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer;margin-top:4px}
-.cfg-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:.5px solid var(--b)}
+.cfg-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--b)}
 .cfg-row:last-child{border-bottom:none}
 .cfg-row-lbl{font-size:13px;color:var(--text)}
 .cfg-row-val{font-size:12px;color:var(--muted)}
-.cfg-mic-btn{background:none;border:.5px solid var(--bs);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--honey-l);cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px}
+.cfg-inp{background:var(--dark2);border:.5px solid var(--b);border-radius:4px;padding:5px 9px;font-size:12px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;margin-top:4px;width:100%}
+.cfg-inp:focus{border-color:var(--honey)}
+.cfg-mic-btn{background:none;border:.5px solid var(--bs);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--honey-l);cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;margin-top:8px}
 
 /* shared */
 .empty{text-align:center;padding:44px 20px;color:var(--dim);font-size:13px;line-height:2}
 .empty svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1;opacity:.2;display:block;margin:0 auto 10px}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark3);border:.5px solid var(--bs);border-radius:22px;padding:8px 18px;font-size:12px;color:var(--text);letter-spacing:.5px;opacity:0;transition:all .3s;z-index:400;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark3);border:.5px solid var(--bs);border-radius:22px;padding:8px 18px;font-size:12px;color:var(--text);opacity:0;transition:all .3s;z-index:400;pointer-events:none;max-width:90vw;text-align:center;white-space:nowrap}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.sep{height:.5px;background:var(--b);margin:0 -14px}
 </style>
 </head>
 <body>
 
-<!-- ══ PERMISSION SCREEN ════════════════════════════════ -->
+<!-- PERMISSION SCREEN -->
 <div id="s-perm" class="screen">
   <div class="perm-hex">🐝</div>
   <div class="perm-brand">Dvorina</div>
   <div class="perm-sub">Včelársky zápisník</div>
-  <div class="perm-title" style="margin-top:8px">Povolenie mikrofónu</div>
-  <div class="perm-desc">Po kliknutí nižšie prehliadač zobrazí systémové okno — klikni <strong style="color:var(--text)">Povoliť</strong>.</div>
+  <div class="perm-title">Povolenie mikrofónu</div>
+  <div class="perm-desc">Po kliknutí prehliadač zobrazí systémové okno — klikni <strong style="color:var(--text)">Povoliť</strong>.</div>
   <div class="denied-box" id="denied-box">
     <div class="dt">⚠ Mikrofón bol zamietnutý</div>
     <div class="dd">
-      <span>Chrome PC:</span> klikni na 🔒 v adresnom riadku → Mikrofón → Povoliť<br>
-      <span>Android:</span> Nastavenia → Aplikácie → Chrome → Povolenia → Mikrofón<br>
-      <span>iPhone:</span> Nastavenia → Chrome → Mikrofón → zapni<br>
+      <b>Chrome PC:</b> klikni 🔒 v adresnom riadku → Mikrofón → Povoliť<br>
+      <b>Android:</b> Nastavenia → Aplikácie → Chrome → Povolenia → Mikrofón<br>
+      <b>iPhone:</b> Nastavenia → Chrome → Mikrofón → zapni<br>
       Potom obnov stránku.
     </div>
   </div>
@@ -255,17 +254,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
   <span class="perm-skip" onclick="skipMic()">Preskočiť — budem písať ručne</span>
 </div>
 
-<!-- ══ SETUP SCREEN ══════════════════════════════════════ -->
+<!-- SETUP SCREEN -->
 <div id="s-setup" class="screen hidden">
   <div class="setup-scroll">
-    <div style="font-size:40px;margin-bottom:12px">🐝</div>
+    <div style="font-size:38px;margin-bottom:12px">🐝</div>
     <div class="setup-brand">Dvorina</div>
     <div class="setup-sub">prvé nastavenie</div>
     <div class="setup-title">Nastav svoju včelnicu</div>
     <span class="setup-label">Názov včelnice (voliteľný)</span>
     <input class="setup-inp" id="setup-vcelnica" placeholder="napr. Moja včelnica" maxlength="40">
-    <span class="setup-label">Stanovištia a počet úľov</span>
-    <div class="stanoviste-list" id="setup-st-list"></div>
+    <span class="setup-label">Stanovištia a počet včelstiev</span>
+    <div id="setup-st-list"></div>
     <button class="add-st-btn" onclick="setupAddSt()">+ Pridať stanovište</button>
     <button class="setup-save" onclick="saveSetup()">Uložiť a pokračovať →</button>
   </div>
@@ -273,7 +272,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 
 <div class="toast" id="toast"></div>
 
-<!-- ══ APP ══════════════════════════════════════════════ -->
+<!-- APP -->
 <div id="app" style="display:none;flex-direction:column;height:100%">
 
   <div class="topbar">
@@ -281,13 +280,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <div class="top-right">
       <div class="top-date" id="top-date"></div>
       <div class="top-btns">
-        <div class="top-pill pill-set" onclick="sw('cfg')">
-          <svg viewBox="0 0 24 24" style="width:9px;height:9px;stroke:currentColor;fill:none;stroke-width:1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Nastavenia
-        </div>
+        <div class="top-pill pill-set" onclick="sw('cfg')">⚙ Nastavenia</div>
         <div class="top-pill" id="mic-pill" onclick="recheckMic()">
-          <svg viewBox="0 0 24 24" style="width:9px;height:9px;stroke:currentColor;fill:none;stroke-width:1.5"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-          <span id="mic-pill-txt">mikrofón</span>
+          🎙 <span id="mic-pill-txt">mikrofón</span>
         </div>
       </div>
     </div>
@@ -318,46 +313,59 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <div class="view active" id="view-r">
       <div class="rec-wrap">
 
+        <!-- status -->
+        <div class="status-bar">
+          <div class="status-dot listening" id="status-dot"></div>
+          <div class="status-txt">
+            <b id="status-title">Počúvam povely</b>
+            <span id="status-sub">Povedz "Začíname" alebo klepni na mikrofón</span>
+          </div>
+          <div class="rec-timer" id="rec-timer">0:00</div>
+        </div>
+
         <!-- stanovište -->
-        <div class="st-selector">
-          <div class="st-sel-label">Stanovište</div>
-          <div class="st-chips" id="st-chips"></div>
+        <div class="sel-section">
+          <div class="sel-label">Stanovište</div>
+          <div class="chips" id="st-chips"></div>
         </div>
 
         <!-- úle -->
-        <div class="ul-selector" id="ul-selector" style="display:none">
-          <div class="ul-sel-label">Úľ</div>
+        <div class="sel-section" id="ul-section" style="display:none">
+          <div class="sel-label">Včelstvo <span id="ul-voice-hint" style="color:var(--honey);font-size:10px;margin-left:6px">— povedz číslo včelstva</span></div>
           <div class="ul-chips" id="ul-chips"></div>
         </div>
 
         <!-- mic -->
         <div class="mic-area">
-          <div class="mic-hint-row">
-            <div class="mic-hint-box"><b>Štart</b>Klepni · povedz "Začíname" · podrž hlasitosť</div>
-            <div class="mic-hint-box"><b>Stop</b>Klepni · povedz "Koniec" · podrž hlasitosť</div>
-          </div>
           <div class="mic-btn" id="mic" onclick="toggleRec()">
             <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
           </div>
-          <div class="rec-lbl" id="rec-lbl">Klepni pre nahrávanie</div>
-          <div class="rec-timer" id="rec-timer">0:00</div>
+          <div class="mic-lbl" id="mic-lbl">Klepni pre nahrávanie</div>
+        </div>
+
+        <!-- povely -->
+        <div class="povely">
+          <div class="povel"><b>Štart nahrávania</b>"Začíname" · klepnutie</div>
+          <div class="povel"><b>Stop + uloženie</b>"Koniec" · klepnutie</div>
+          <div class="povel"><b>Výber včelstva</b>"Včelstvo tri"</div>
+          <div class="povel"><b>Výber stanovišťa</b>klepnutím</div>
         </div>
 
         <div class="denied-banner" id="denied-banner">
           <strong>⚠ Mikrofón nie je dostupný</strong>
-          Môžeš písať ručne nižšie. Pre zapnutie hlasu klepni na ikonu mikrofónu vpravo hore.
+          Môžeš písať ručne nižšie. Klepni na "mikrofón" vpravo hore pre opätovné povolenie.
         </div>
 
-        <div class="colony-badge" id="c-badge">🐝 <span id="c-badge-txt">—</span></div>
-
+        <!-- transcript -->
         <div class="tbox">
-          <div class="tbox-lbl">
-            Prepis hlasu
+          <div class="tbox-hdr">
+            <div class="tbox-lbl">Prepis hlasu</div>
             <span class="tbox-clear" onclick="clearTranscript()">Vymazať</span>
           </div>
-          <div class="tbox-txt" id="tbox">Čaká sa na vstup...</div>
+          <div class="tbox-txt" id="tbox" style="color:var(--dim)">Čaká sa na vstup...</div>
         </div>
 
+        <!-- manual -->
         <div class="manual-row">
           <input class="m-inp" id="m-inp" placeholder="Alebo napíš poznámku ručne..." maxlength="600">
           <button class="m-btn" onclick="sendManual()">
@@ -390,491 +398,516 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <!-- SETTINGS -->
     <div class="view" id="view-cfg">
       <div class="cfg-pad">
-        <div class="cfg-section">
-          <div class="cfg-section-title">Včelnica</div>
-          <div class="cfg-row">
-            <div>
-              <div class="cfg-row-lbl">Názov včelnice</div>
-              <input id="cfg-vcelnica" style="background:var(--dark2);border:.5px solid var(--b);border-radius:4px;padding:5px 9px;font-size:12px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;margin-top:5px;width:100%">
-            </div>
-          </div>
+        <div class="cfg-box">
+          <div class="cfg-box-title">Včelnica</div>
+          <div class="cfg-row"><div class="cfg-row-lbl">Názov<input class="cfg-inp" id="cfg-vcelnica" placeholder="Moja včelnica"></div></div>
         </div>
-        <div class="cfg-section">
-          <div class="cfg-section-title">Stanovištia a úle</div>
-          <div class="cfg-stanoviste-list" id="cfg-st-list"></div>
+        <div class="cfg-box">
+          <div class="cfg-box-title">Stanovištia a počet včelstiev</div>
+          <div id="cfg-st-list"></div>
           <button class="cfg-add" onclick="cfgAddSt()">+ Pridať stanovište</button>
           <button class="cfg-save" onclick="cfgSave()">Uložiť nastavenia</button>
         </div>
-        <div class="cfg-section">
-          <div class="cfg-section-title">Mikrofón</div>
-          <div class="cfg-row">
-            <div class="cfg-row-lbl">Stav</div>
-            <div class="cfg-row-val" id="cfg-mic-status">—</div>
+        <div class="cfg-box">
+          <div class="cfg-box-title">Mikrofón a ovládanie</div>
+          <div class="cfg-row"><div class="cfg-row-lbl">Stav</div><div class="cfg-row-val" id="cfg-mic-st">—</div></div>
+          <div class="cfg-row"><div class="cfg-row-lbl">Jazyk</div><div class="cfg-row-val">Slovenčina</div></div>
+          <div class="cfg-row" style="border:none;display:block;font-size:11px;color:var(--dim);line-height:1.9;padding-top:8px">
+            <b style="color:var(--text);display:block;margin-bottom:4px">Hlasové povely:</b>
+            "Začíname" → spustí nahrávanie<br>
+            "Koniec" → zastaví a uloží zápisok<br>
+            "Včelstvo [číslo]" → vyberie úľ
           </div>
-          <div class="cfg-row">
-            <div class="cfg-row-lbl">Jazyk rozpoznávania</div>
-            <div class="cfg-row-val">Slovenčina (sk-SK)</div>
-          </div>
-          <button class="cfg-mic-btn" onclick="recheckMic()" style="margin-top:10px;width:100%">Znova požiadať o povolenie</button>
+          <button class="cfg-mic-btn" onclick="recheckMic()">Znova požiadať o povolenie mikrofónu</button>
         </div>
-        <div class="cfg-section">
-          <div class="cfg-section-title">Dáta</div>
-          <div class="cfg-row">
-            <div class="cfg-row-lbl">Počet zápiskov</div>
-            <div class="cfg-row-val" id="cfg-notes-count">0</div>
-          </div>
+        <div class="cfg-box">
+          <div class="cfg-box-title">Dáta</div>
+          <div class="cfg-row"><div class="cfg-row-lbl">Počet zápiskov</div><div class="cfg-row-val" id="cfg-notes-cnt">0</div></div>
           <button class="clr-btn" onclick="clearAll()" style="margin-top:10px">Vymazať všetky zápisky</button>
         </div>
       </div>
     </div>
 
   </div>
-</div><!-- end app -->
+</div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════
-const SK_NOTES  = 'dv_notes_v5';
-const SK_CONFIG = 'dv_config_v5';
+// ═══════════════════════════════════════════
+// CONSTANTS & STATE
+// ═══════════════════════════════════════════
+const SK_N = 'dv_notes_v6';
+const SK_C = 'dv_cfg_v6';
 
-let notes   = [];
-let config  = { vcelnica:'', stanovistia:[] }; // [{name, ule}]
+let notes  = [];
+let config = {vcelnica:'', stanovistia:[]};
 let micGranted = false;
-let SR = null, recActive = false;
-let finalText = '', curText = '', curColony = null;
-let selStanoviste = null, selUl = null;
-let timerInterval = null, timerSec = 0;
-let filterStanoviste = 'all';
 
-// ═══════════════════════════════════════════════════════════
+// SR state - SINGLE continuous session
+let SR = null;
+let srRunning = false;
+
+// Recording state
+let recActive  = false;
+let savedChunks = [];   // array of final transcript chunks we keep
+let lastFinalIdx = 0;   // index into e.results we've already saved as final
+
+// UI state
+let selSt = null;
+let selUl = null;
+let timerIv = null, timerSec = 0;
+let filterSt = 'all';
+
+// ═══════════════════════════════════════════
 // BOOT
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 (function boot(){
-  loadData();
-  if(!config.stanovistia.length) showSetupScreen();
-  else                           requestMicAuto();
+  try{ notes  = JSON.parse(localStorage.getItem(SK_N)) || []; }catch(e){}
+  try{ config = JSON.parse(localStorage.getItem(SK_C)) || {vcelnica:'',stanovistia:[]}; }catch(e){}
+  if(!config.stanovistia.length){
+    document.getElementById('s-setup').classList.remove('hidden');
+    document.getElementById('s-perm').classList.add('hidden');
+  } else {
+    tryPermission();
+  }
 })();
 
-function loadData(){
-  try{ notes  = JSON.parse(localStorage.getItem(SK_NOTES))  || []; }catch(e){}
-  try{ config = JSON.parse(localStorage.getItem(SK_CONFIG)) || {vcelnica:'',stanovistia:[]}; }catch(e){}
-}
 function persist(){
-  localStorage.setItem(SK_NOTES,  JSON.stringify(notes));
-  localStorage.setItem(SK_CONFIG, JSON.stringify(config));
+  localStorage.setItem(SK_N, JSON.stringify(notes));
+  localStorage.setItem(SK_C, JSON.stringify(config));
 }
 
-// ═══════════════════════════════════════════════════════════
-// SETUP SCREEN
-// ═══════════════════════════════════════════════════════════
-function showSetupScreen(){
-  document.getElementById('s-perm').classList.add('hidden');
-  document.getElementById('s-setup').classList.remove('hidden');
-  setupAddSt(); setupAddSt(); // start with 2 rows
-}
-
-function setupAddSt(){
-  const list = document.getElementById('setup-st-list');
-  const i = list.children.length + 1;
-  const row = document.createElement('div');
-  row.className = 'st-row';
-  row.innerHTML = `
-    <input class="st-name-inp" placeholder="Stanovište ${i}" maxlength="30" style="flex:1;background:var(--dark3);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none">
-    <input type="number" min="1" max="99" value="5" class="st-num" title="Počet včelstiev">
-    <button class="st-del" onclick="this.parentElement.remove()">✕</button>`;
-  list.appendChild(row);
-}
-
-function saveSetup(){
-  const vcelnica = document.getElementById('setup-vcelnica').value.trim();
-  const rows = document.querySelectorAll('#setup-st-list .st-row');
-  const stanovistia = [];
-  rows.forEach((r,i)=>{
-    const nameInp = r.querySelector('.st-name-inp');
-    const numInp  = r.querySelector('.st-num');
-    const name = (nameInp ? nameInp.value.trim() : '') || ('Stanovište '+(i+1));
-    const ule  = Math.max(1, parseInt(numInp ? numInp.value : '5')||5);
-    stanovistia.push({name, ule});
-  });
-  if(!stanovistia.length){ alert('Pridaj aspoň jedno stanovište'); return; }
-  config = { vcelnica: vcelnica||'Moja včelnica', stanovistia };
-  persist();
-  document.getElementById('s-setup').classList.add('hidden');
-  requestMicAuto();
-}
-
-// ═══════════════════════════════════════════════════════════
-// PERMISSION FLOW
-// ═══════════════════════════════════════════════════════════
-async function requestMicAuto(){
-  // try silently first (if already granted)
+// ═══════════════════════════════════════════
+// PERMISSION
+// ═══════════════════════════════════════════
+async function tryPermission(){
   try{
     if(navigator.permissions){
       const p = await navigator.permissions.query({name:'microphone'});
-      if(p.state === 'granted'){ micGranted=true; launchApp(true); return; }
-      if(p.state === 'denied'){  launchApp(false); showDeniedBox(); return; }
+      if(p.state==='granted'){ micGranted=true; launchApp(true); return; }
+      if(p.state==='denied'){  launchApp(false); return; }
     }
   }catch(e){}
-  // show permission screen
   document.getElementById('s-perm').classList.remove('hidden');
 }
 
 async function requestMic(){
   const btn = document.getElementById('perm-btn');
-  btn.textContent = '⏳ Čakám...'; btn.disabled = true;
+  btn.textContent='⏳ Čakám...'; btn.disabled=true;
   try{
     const s = await navigator.mediaDevices.getUserMedia({audio:true});
     s.getTracks().forEach(t=>t.stop());
-    micGranted = true;
-    launchApp(true);
+    micGranted=true; launchApp(true);
   }catch(e){
-    btn.textContent = '🎙 Skúsiť znova'; btn.disabled = false;
-    document.getElementById('denied-box').style.display = 'block';
+    btn.textContent='🎙 Skúsiť znova'; btn.disabled=false;
+    document.getElementById('denied-box').style.display='block';
   }
 }
-function skipMic(){ micGranted=false; launchApp(false); }
-function showDeniedBox(){ document.getElementById('denied-box').style.display='block'; }
 
-function launchApp(withMic){
-  document.getElementById('s-perm').classList.add('hidden');
-  document.getElementById('s-setup').classList.add('hidden');
-  const app = document.getElementById('app');
-  app.style.display = 'flex';
-  tick(); setInterval(tick, 30000);
-  applyConfig();
-  renderStChips();
-  updateMicPill(withMic?'ok':'off');
-  if(withMic) initSR();
-  else        showDeniedBanner();
-  renderNotes(); renderDash(); renderCfg();
-  document.getElementById('m-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendManual(); });
-}
+function skipMic(){ micGranted=false; launchApp(false); }
 
 async function recheckMic(){
   try{
     const s = await navigator.mediaDevices.getUserMedia({audio:true});
     s.getTracks().forEach(t=>t.stop());
-    micGranted = true;
+    micGranted=true;
     document.getElementById('denied-banner').classList.remove('show');
     document.getElementById('mic').classList.remove('disabled-mic');
-    document.getElementById('rec-lbl').textContent = 'Klepni pre nahrávanie';
-    updateMicPill('ok');
-    document.getElementById('cfg-mic-status').textContent = 'Povolený ✓';
-    initSR(); toast('Mikrofón povolený ✓');
+    setMicPill('ok');
+    document.getElementById('cfg-mic-st').textContent='Povolený ✓';
+    startSR(); toast('Mikrofón povolený ✓');
   }catch(e){ toast('Povolenie zamietnuté'); }
 }
 
-function updateMicPill(s){
+function setMicPill(s){
   const p=document.getElementById('mic-pill'),t=document.getElementById('mic-pill-txt');
   p.className='top-pill '+(s==='ok'?'pill-ok':s==='denied'?'pill-denied':'pill-off');
-  t.textContent=s==='ok'?'mikrofón OK':s==='denied'?'zamietnutý':'bez mikrofónu';
-  document.getElementById('cfg-mic-status').textContent=s==='ok'?'Povolený ✓':'Zamietnutý / nedostupný';
-}
-function showDeniedBanner(){
-  document.getElementById('denied-banner').classList.add('show');
-  document.getElementById('mic').classList.add('disabled-mic');
-  document.getElementById('rec-lbl').textContent = 'Mikrofón nie je dostupný';
-  updateMicPill('denied');
+  t.textContent=s==='ok'?'OK':s==='denied'?'zamietnutý':'vypnutý';
+  document.getElementById('cfg-mic-st').textContent=s==='ok'?'Povolený ✓':'Nedostupný';
 }
 
-// ═══════════════════════════════════════════════════════════
-// SPEECH RECOGNITION  (opravená verzia bez duplikátov)
-// ═══════════════════════════════════════════════════════════
-function initSR(){
-  if(SR){ try{SR.abort()}catch(e){} SR=null; }
+// ═══════════════════════════════════════════
+// LAUNCH APP
+// ═══════════════════════════════════════════
+function launchApp(withMic){
+  ['s-perm','s-setup'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  const app=document.getElementById('app');
+  app.style.display='flex';
+  tick(); setInterval(tick,30000);
+  applyConfig();
+  renderStChips();
+  renderNotes(); renderDash();
+  document.getElementById('m-inp').addEventListener('keydown',e=>{if(e.key==='Enter')sendManual();});
+  if(withMic){
+    setMicPill('ok');
+    startSR();
+    setStatus('listening','Počúvam povely','Povedz "Začíname" alebo klepni na mikrofón');
+  } else {
+    setMicPill('off');
+    document.getElementById('denied-banner').classList.add('show');
+    document.getElementById('mic').classList.add('disabled-mic');
+    setStatus('off','Mikrofón vypnutý','Použi textové pole nižšie');
+  }
+}
+
+// ═══════════════════════════════════════════
+// SPEECH RECOGNITION — SINGLE SESSION
+// The key insight: ONE SR session runs the whole time.
+// We track which results we already saved to avoid duplicates.
+// ═══════════════════════════════════════════
+function startSR(){
+  if(srRunning) return;
   const W = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!W) return;
+
   SR = new W();
   SR.lang = 'sk-SK';
   SR.continuous = true;
   SR.interimResults = true;
   SR.maxAlternatives = 1;
 
+  // pointer: how many results are already committed
+  let committedCount = 0;
+
   SR.onresult = function(e){
-    let newFinal = '';
-    let interim  = '';
-    for(let i=0; i<e.results.length; i++){
-      if(e.results[i].isFinal) newFinal += e.results[i][0].transcript + ' ';
-      else interim = e.results[i][0].transcript;
+    // 1. Save any NEW final results since last time
+    for(let i = committedCount; i < e.results.length; i++){
+      if(e.results[i].isFinal){
+        const word = e.results[i][0].transcript;
+        committedCount = i + 1;
+
+        // Check for voice commands FIRST (don't add commands to transcript)
+        const lo = word.toLowerCase().trim();
+
+        // START command — only when not recording
+        if(!recActive){
+          if(lo.includes('začíname') || lo.includes('začínam') || lo.includes('začni')){
+            startRec(); continue;
+          }
+        }
+
+        // UL selection — always active (even during recording)
+        const ulMatch = lo.match(/včelstvo\s*(jedna?|dve|tri|štyri|päť|šesť|sedem|osem|deväť|desať|\d+)/i);
+        if(ulMatch){
+          const num = wordToNum(ulMatch[1]);
+          if(num && selSt !== null) selectUlVoice(num);
+          if(recActive){ savedChunks.push(word); updateTbox(); }
+          continue;
+        }
+
+        // STOP command — only when recording
+        if(recActive){
+          if(lo.includes('koniec') || lo.includes('hotovo')){
+            stopRecAndSave(); continue;
+          }
+          // Normal speech — add to transcript
+          savedChunks.push(word);
+          updateTbox();
+        }
+      }
     }
-    finalText = newFinal;
-    curText = (finalText + interim).trim();
-    if(recActive) showText(curText, true);
-    // voice commands - check last few words
-    const last = curText.toLowerCase().slice(-30);
-    if(!recActive && (last.includes('začínam') || last.includes('začíname') || last.includes('začni'))) startRec();
-    if(recActive  && (last.includes('koniec')  || last.includes('hotovo')   || last.includes('stop')))  stopRec();
+
+    // 2. Show interim (live) text while recording
+    if(recActive){
+      let interim = '';
+      for(let i = committedCount; i < e.results.length; i++){
+        if(!e.results[i].isFinal) interim += e.results[i][0].transcript;
+      }
+      showTboxLive(savedChunks.join(' '), interim);
+    }
   };
 
   SR.onerror = function(e){
-    if(e.error==='not-allowed'||e.error==='service-not-allowed'){ showDeniedBanner(); micGranted=false; }
-    // for other errors just restart if recording
-    if(recActive) setTimeout(restartSR, 500);
+    console.log('SR error:', e.error);
+    if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+      micGranted=false; setMicPill('denied');
+      document.getElementById('denied-banner').classList.add('show');
+    }
+    srRunning = false;
+    // restart after short delay unless it was a permissions error
+    if(e.error!=='not-allowed' && e.error!=='service-not-allowed'){
+      setTimeout(startSR, 1000);
+    }
   };
 
   SR.onend = function(){
-    if(recActive) setTimeout(restartSR, 200);
+    srRunning = false;
+    committedCount = 0; // reset on new session
+    // auto restart - this is the key to keeping it always listening
+    setTimeout(startSR, 300);
   };
+
+  try{
+    SR.start();
+    srRunning = true;
+  }catch(e){
+    srRunning = false;
+    setTimeout(startSR, 1000);
+  }
 }
 
-function restartSR(){
-  if(!SR||!recActive) return;
-  finalText = '';
-  try{ SR.start(); }catch(e){}
+function wordToNum(w){
+  const map={
+    'jedna':1,'jeden':1,'1':1,
+    'dve':2,'dva':2,'2':2,
+    'tri':3,'3':3,
+    'štyri':4,'4':4,
+    'päť':5,'5':5,
+    'šesť':6,'6':6,
+    'sedem':7,'7':7,
+    'osem':8,'8':8,
+    'deväť':9,'9':9,
+    'desať':10,'10':10
+  };
+  const lo = String(w).toLowerCase().trim();
+  return map[lo] || parseInt(lo) || null;
 }
 
-// ── VOLUME BUTTON LONG PRESS (1 sekunda = štart/stop) ────
-(function setupVolumeBtn(){
-  let pressTimer = null;
-  let lastKey = null;
-
-  window.addEventListener('keydown', function(e){
-    // Volume keys: Android = 'AudioVolumeUp'/'AudioVolumeDown', some devices = 'VolumeUp'/'VolumeDown'
-    const isVolume = e.key === 'AudioVolumeUp' || e.key === 'AudioVolumeDown' ||
-                     e.key === 'VolumeUp'      || e.key === 'VolumeDown';
-    if(!isVolume) return;
-    e.preventDefault();
-    if(lastKey === e.key) return; // already pressed
-    lastKey = e.key;
-    pressTimer = setTimeout(()=>{
-      if(micGranted) toggleRec();
-    }, 800); // 0.8s hold
-  }, {passive:false});
-
-  window.addEventListener('keyup', function(e){
-    const isVolume = e.key === 'AudioVolumeUp' || e.key === 'AudioVolumeDown' ||
-                     e.key === 'VolumeUp'      || e.key === 'VolumeDown';
-    if(!isVolume) return;
-    lastKey = null;
-    clearTimeout(pressTimer);
-  });
-})();
-
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // RECORD CONTROLS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function toggleRec(){
   if(!micGranted){ recheckMic(); return; }
-  recActive ? stopRec() : startRec();
+  recActive ? stopRecAndSave() : startRec();
 }
 
 function startRec(){
   if(recActive) return;
-  recActive = true; finalText = ''; curText = ''; curColony = null;
+  recActive = true;
+  savedChunks = [];
   document.getElementById('mic').classList.add('on');
-  document.getElementById('rec-lbl').textContent = 'Nahrávam — klepni pre zastavenie';
-  document.getElementById('rec-lbl').classList.add('on');
-  document.getElementById('tbox').innerHTML = '<span class="cur"></span>';
-  document.getElementById('tbox').style.cssText = '';
-  document.getElementById('c-badge').classList.remove('show');
+  document.getElementById('mic-lbl').textContent = 'Nahrávam — klepni pre zastavenie';
+  document.getElementById('mic-lbl').classList.add('on');
   document.getElementById('save-btn').disabled = true;
+  setStatus('recording', 'Nahrávam', 'Povedz "Koniec" alebo klepni pre zastavenie a uloženie');
   // timer
-  timerSec = 0;
-  const timerEl = document.getElementById('rec-timer');
-  timerEl.classList.add('on');
-  timerEl.textContent = '0:00';
-  timerInterval = setInterval(()=>{
+  timerSec=0;
+  const te=document.getElementById('rec-timer');
+  te.classList.add('on'); te.textContent='0:00';
+  timerIv=setInterval(()=>{
     timerSec++;
-    const m=Math.floor(timerSec/60), s=timerSec%60;
-    timerEl.textContent = m+':'+(s<10?'0':'')+s;
+    const m=Math.floor(timerSec/60),s=timerSec%60;
+    te.textContent=m+':'+(s<10?'0':'')+s;
   },1000);
-  // start SR fresh
-  if(SR){ try{SR.abort()}catch(e){} }
-  initSR();
-  setTimeout(()=>{ try{SR.start()}catch(e){} }, 150);
+  // clear tbox
+  document.getElementById('tbox').style.color='var(--muted)';
+  document.getElementById('tbox').style.fontStyle='italic';
+  document.getElementById('tbox').innerHTML='<span class="cur"></span>';
 }
 
-function stopRec(){
+function stopRecAndSave(){
   if(!recActive) return;
-  recActive = false;
-  clearInterval(timerInterval);
+  recActive=false;
+  clearInterval(timerIv);
   document.getElementById('mic').classList.remove('on');
-  document.getElementById('rec-lbl').classList.remove('on');
+  document.getElementById('mic-lbl').classList.remove('on');
   document.getElementById('rec-timer').classList.remove('on');
-  if(SR) try{SR.abort()}catch(e){}
-  const txt = curText.trim();
+  const txt = savedChunks.join(' ').trim();
   if(txt.length > 2){
-    document.getElementById('save-btn').disabled = false;
-    document.getElementById('rec-lbl').textContent = 'Nahrávanie zastavené ✓';
-    showText(txt, false);
-    detectColony(txt);
+    // show final text
+    const el=document.getElementById('tbox');
+    el.style.color='var(--muted)'; el.style.fontStyle='italic';
+    el.textContent=txt;
+    document.getElementById('save-btn').disabled=false;
+    document.getElementById('mic-lbl').textContent='Nahrávanie zastavené ✓';
+    setStatus('listening','Zápisok pripravený','Klepni Uložiť alebo pokračuj hovorením');
+    // auto-save
+    saveNote();
   } else {
-    document.getElementById('rec-lbl').textContent = 'Nič nenahraté. Skús znova.';
-    showText('', false);
+    document.getElementById('mic-lbl').textContent='Nič nenahraté. Skús znova.';
+    setStatus('listening','Počúvam povely','Povedz "Začíname" alebo klepni na mikrofón');
+    document.getElementById('tbox').style.color='var(--dim)';
+    document.getElementById('tbox').style.fontStyle='italic';
+    document.getElementById('tbox').textContent='Čaká sa na vstup...';
   }
 }
 
-function showText(txt, cursor){
-  const el = document.getElementById('tbox');
-  el.style.color = 'var(--muted)'; el.style.fontStyle = 'italic';
-  el.innerHTML = escH(txt||'') + (cursor&&txt ? '<span class="cur"></span>' : (!txt&&cursor?'<span class="cur"></span>':''));
+function showTboxLive(final, interim){
+  const el=document.getElementById('tbox');
+  el.style.color='var(--muted)'; el.style.fontStyle='italic';
+  const txt=(final?final+' ':'')+interim;
+  el.innerHTML=escH(txt)+(recActive?'<span class="cur"></span>':'');
+}
+
+function updateTbox(){
+  const el=document.getElementById('tbox');
+  el.style.color='var(--muted)'; el.style.fontStyle='italic';
+  el.innerHTML=escH(savedChunks.join(' '))+(recActive?'<span class="cur"></span>':'');
 }
 
 function clearTranscript(){
-  curText=''; finalText='';
-  document.getElementById('tbox').innerHTML='';
-  document.getElementById('tbox').style.color='var(--dim)';
-  document.getElementById('tbox').style.fontStyle='italic';
-  document.getElementById('tbox').textContent='Čaká sa na vstup...';
+  savedChunks=[];
+  const el=document.getElementById('tbox');
+  el.style.color='var(--dim)'; el.style.fontStyle='italic';
+  el.textContent='Čaká sa na vstup...';
   document.getElementById('save-btn').disabled=true;
-  document.getElementById('c-badge').classList.remove('show');
 }
 
-function detectColony(txt){
-  const m = txt.match(/včelstvo\s*(\d+|[a-zA-Z])\b/i);
-  if(m){ curColony='Včelstvo '+m[1]; document.getElementById('c-badge').classList.add('show'); document.getElementById('c-badge-txt').textContent=curColony; }
+// ═══════════════════════════════════════════
+// STATUS BAR
+// ═══════════════════════════════════════════
+function setStatus(type, title, sub){
+  const dot=document.getElementById('status-dot');
+  dot.className='status-dot '+(type==='recording'?'recording':type==='listening'?'listening':'');
+  document.getElementById('status-title').textContent=title;
+  document.getElementById('status-sub').textContent=sub;
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // STANOVIŠTE / ÚĽ SELECTOR
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function renderStChips(){
-  const wrap = document.getElementById('st-chips');
-  wrap.innerHTML = '';
+  const wrap=document.getElementById('st-chips');
+  wrap.innerHTML='';
   config.stanovistia.forEach((st,i)=>{
-    const c = document.createElement('div');
-    c.className = 'st-chip' + (selStanoviste===i?' active':'');
-    c.textContent = st.name;
-    c.onclick = ()=>selectSt(i);
+    const c=document.createElement('div');
+    c.className='chip'+(selSt===i?' active':'');
+    c.textContent=st.name;
+    c.onclick=()=>selectSt(i);
     wrap.appendChild(c);
   });
 }
 
 function selectSt(i){
-  selStanoviste = i; selUl = null;
-  renderStChips();
-  renderUlChips();
-  document.getElementById('ul-selector').style.display='block';
+  selSt=i; selUl=null;
+  renderStChips(); renderUlChips();
+  document.getElementById('ul-section').style.display='flex';
+  document.getElementById('ul-section').style.flexDirection='column';
+  document.getElementById('ul-section').style.gap='6px';
 }
 
 function renderUlChips(){
-  const wrap = document.getElementById('ul-chips');
-  wrap.innerHTML='';
-  if(selStanoviste===null) return;
-  const count = config.stanovistia[selStanoviste].ule;
+  const wrap=document.getElementById('ul-chips'); wrap.innerHTML='';
+  if(selSt===null) return;
+  const count=config.stanovistia[selSt].ule;
   for(let i=1;i<=count;i++){
     const c=document.createElement('div');
     c.className='ul-chip'+(selUl===i?' active':'');
-    c.textContent=i;
-    c.onclick=(()=>{const u=i;return()=>{ selUl=u; renderUlChips(); };})();
+    c.textContent=i; c.id='ul-chip-'+i;
+    c.onclick=(n=>()=>selectUl(n))(i);
     wrap.appendChild(c);
   }
 }
 
-// ═══════════════════════════════════════════════════════════
+function selectUl(n){
+  selUl=n; renderUlChips();
+}
+
+function selectUlVoice(n){
+  // check if this ul exists in current stanoviste
+  if(selSt===null) return;
+  const count=config.stanovistia[selSt].ule;
+  if(n<1||n>count) return;
+  selUl=n; renderUlChips();
+  // highlight briefly
+  const chip=document.getElementById('ul-chip-'+n);
+  if(chip){ chip.classList.add('voice-highlight'); setTimeout(()=>chip.classList.remove('voice-highlight'),800); }
+  toast('Včelstvo '+n+' vybrané');
+}
+
+// ═══════════════════════════════════════════
 // MANUAL INPUT
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function sendManual(){
   const v=document.getElementById('m-inp').value.trim();
   if(!v) return;
-  curText = curText ? curText+' '+v : v;
-  detectColony(curText);
-  showText(curText,false);
+  savedChunks.push(v);
+  updateTbox();
   document.getElementById('save-btn').disabled=false;
   document.getElementById('m-inp').value='';
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // SAVE NOTE
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function saveNote(){
-  const txt=curText.trim(); if(!txt) return;
+  const txt=savedChunks.join(' ').trim();
+  if(!txt) return;
   const note=parseNote(txt);
   notes.unshift(note); persist();
-  renderNotes(); renderDash(); renderCfg();
+  renderNotes(); renderDash();
   // reset
-  curText=''; finalText=''; curColony=null;
+  savedChunks=[];
   const el=document.getElementById('tbox');
   el.style.color='var(--ok)'; el.style.fontStyle='normal'; el.textContent='✓ Zápisok uložený';
-  document.getElementById('c-badge').classList.remove('show');
   document.getElementById('save-btn').disabled=true;
-  document.getElementById('rec-lbl').textContent='Klepni pre nahrávanie';
-  toast('Zápisok uložený'); setTimeout(()=>sw('n'),900);
+  document.getElementById('mic-lbl').textContent='Klepni pre nahrávanie';
+  setStatus('listening','Zápisok uložený ✓','Povedz "Začíname" pre ďalší záznam');
+  toast('Zápisok uložený'); setTimeout(()=>sw('n'),1200);
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // SMART PARSER
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function parseNote(txt){
   const tags=[];
   const noQ  =/chýba\s*matka|bez\s*matky|nenašiel\s*matku|nevidím\s*matku|nevidel\s*matku/i.test(txt);
-  const noE  =/chýbaj[uú]\s*vaj[ií]čka|nevidím\s*vaj[ií]čka|nevidel\s*vaj[ií]čka|bez\s*vaj[ií]čiek/i.test(txt);
+  const noE  =/chýbaj[uú]\s*vaj[ií]čka|nevidím\s*vaj[ií]čka|bez\s*vaj[ií]čiek/i.test(txt);
   const noQc =/nevidím\s*matečník|chýbaj[uú]\s*matečník|bez\s*matečník/i.test(txt);
   const hasQc=/matečník/i.test(txt)&&!noQc;
-  const hasQ =/vidím\s*matku|matka\s*(prítomná|dobrá|viditeľná|kladi|OK)/i.test(txt);
-  const hasE =/vaj[ií]čka\s*(s[uú]|vidím|videl|OK|dobr)/i.test(txt);
+  const hasQ =/vidím\s*matku|matka\s*(prítomná|dobrá|kladie|OK)/i.test(txt);
+  const hasE =/vaj[ií]čka\s*(s[uú]|vidím|OK|dobr)/i.test(txt);
   const swarm=/rojenie|roj\b/i.test(txt);
   const treat=/liečeni[oe]|kyselina|oxal|apiguard|apivar|varroa/i.test(txt);
-  const feed =/kŕmeni[oe]|kŕmim|cukor|sirup|medové/i.test(txt);
-  const weak =/slabé\s*včelstvo|slabá\s*kolónia|málo\s*(včiel|rámik)/i.test(txt);
-  const strong=/silné\s*včelstvo|silná\s*kolónia|plné\s*nástavk|veľa\s*(včiel|rámik)/i.test(txt);
-  if(noQ)   tags.push({l:'Chýba matka',    t:'danger'});
-  if(noE)   tags.push({l:'Chýbajú vajíčka',t:'danger'});
-  if(noQc)  tags.push({l:'Bez matečníkov', t:'warn'});
-  if(hasQc) tags.push({l:'Matečníky',      t:'warn'});
-  if(hasQ)  tags.push({l:'Matka prítomná', t:'ok'});
-  if(hasE)  tags.push({l:'Vajíčka OK',     t:'ok'});
-  if(swarm) tags.push({l:'Rojenie',         t:'warn'});
-  if(treat) tags.push({l:'Liečenie',        t:'info'});
-  if(feed)  tags.push({l:'Kŕmenie',         t:'info'});
-  if(weak)  tags.push({l:'Slabé včelstvo',  t:'warn'});
-  if(strong)tags.push({l:'Silné včelstvo',  t:'ok'});
-  // agression
+  const feed =/kŕmeni[oe]|kŕmim|cukor|sirup/i.test(txt);
+  const weak =/slabé\s*včelstvo|slabá|málo\s*(včiel|rámik)/i.test(txt);
+  const strong=/silné|silná|plné|veľa\s*(včiel|rámik)/i.test(txt);
+  if(noQ)  tags.push({l:'Chýba matka',    t:'danger'});
+  if(noE)  tags.push({l:'Chýbajú vajíčka',t:'danger'});
+  if(noQc) tags.push({l:'Bez matečníkov', t:'warn'});
+  if(hasQc)tags.push({l:'Matečníky',      t:'warn'});
+  if(hasQ) tags.push({l:'Matka prítomná', t:'ok'});
+  if(hasE) tags.push({l:'Vajíčka OK',     t:'ok'});
+  if(swarm)tags.push({l:'Rojenie',         t:'warn'});
+  if(treat)tags.push({l:'Liečenie',        t:'info'});
+  if(feed) tags.push({l:'Kŕmenie',         t:'info'});
+  if(weak) tags.push({l:'Slabé včelstvo',  t:'warn'});
+  if(strong)tags.push({l:'Silné včelstvo', t:'ok'});
   let agr=null;
-  const am=txt.match(/agresivita\s*[:\-]?\s*([1-5])/i)||txt.match(/agresivit[ay]\s+([1-5])\b/i);
+  const am=txt.match(/agresivita\s*[:\-]?\s*([1-5])/i);
   if(am) agr=parseInt(am[1]);
   else if(/veľmi\s*agresívn/i.test(txt)) agr=5;
   else if(/agresívn/i.test(txt)) agr=3;
-  if(agr&&agr>3) tags.push({l:`Agresivita ${agr}/5`,t:'warn'});
-  // strength
+  if(agr&&agr>3)tags.push({l:`Agresivita ${agr}/5`,t:'warn'});
   let str=null;
   const sm=txt.match(/sila\s*(včelstva\s*)?[:\-]?\s*(\d{1,2})/i);
   if(sm) str=Math.min(10,parseInt(sm[sm.length-1]));
-  // urgency + rec
   let urgency='normal',rec='',next='';
-  if(noQ&&noE){urgency='urgent';rec='Včelstvo je osirotené – chýba matka aj vajíčka. Čo najskôr pridaj záložnú matku alebo spoj s iným včelstvom.';next='Zaobstarať matku do 48h';}
-  else if(noQ){urgency='urgent';rec='Matka nie je prítomná. Skontroluj matečníky. Ak do 7 dní nie je nová matka, pridaj záložnú.';next='Skontrolovať matečníky zajtra';}
-  else if(noE&&!hasQ){urgency='soon';rec='Vajíčka nie sú viditeľné – matka možno nekladie. Vykonaj kontrolu do 3–4 dní.';next='Kontrola kladenosti do 4 dní';}
+  if(noQ&&noE){urgency='urgent';rec='Včelstvo je osirotené. Čo najskôr pridaj záložnú matku alebo spoj s iným včelstvom.';next='Zaobstarať matku do 48h';}
+  else if(noQ){urgency='urgent';rec='Matka nie je prítomná. Skontroluj matečníky. Ak do 7 dní niet novej matky, pridaj záložnú.';next='Skontrolovať matečníky zajtra';}
+  else if(noE&&!hasQ){urgency='soon';rec='Vajíčka nie sú viditeľné. Vykonaj kontrolu do 3–4 dní.';next='Kontrola kladenosti do 4 dní';}
   else if(hasQc){urgency='soon';rec='Matečníky naznačujú prípravu na rojenie alebo výmenu matky. Sleduj každé 3 dni.';next='Sledovať matečníky každé 3 dni';}
   else if(swarm){urgency='soon';rec='Rojenie hrozí alebo prebieha. Zvaž umelý roj alebo pridanie medzery.';next='Riešiť rojenie čo najskôr';}
-  else if(agr&&agr>=4){urgency='soon';rec='Vysoká agresivita – skontroluj matku a zásoby. Zvaž výmenu matky.';next='Zistiť príčinu agresivity';}
-  else if(treat){rec='Liečenie prebieha. Dodržuj dobu expozície a teploty. Zaznamenaj dátum aplikácie.';next='Skontrolovať výsledok liečenia';}
+  else if(agr&&agr>=4){urgency='soon';rec='Vysoká agresivita — skontroluj matku a zásoby. Zvaž výmenu matky.';next='Zistiť príčinu agresivity';}
+  else if(treat){rec='Liečenie prebieha. Dodržuj dobu expozície. Zaznamenaj dátum aplikácie.';next='Skontrolovať výsledok liečenia';}
   else if(feed){rec='Kŕmenie prebieha. Kontroluj spotrebu a doplňaj podľa potreby.';next='Skontrolovať krmivo o 3 dni';}
-  else if(strong){rec='Včelstvo v dobrej kondícii. Sleduj priestor – hrozí rojenie. Pridaj nadstavec ak treba.';next='Skontrolovať priestor v úli';}
-  else if(weak){urgency='soon';rec='Slabé včelstvo vyžaduje pozornosť. Skontroluj matku, zásoby a choroby.';next='Vyšetriť príčinu slabosti';}
+  else if(strong){rec='Včelstvo v dobrej kondícii. Sleduj priestor — hrozí rojenie. Pridaj nadstavec ak treba.';next='Skontrolovať priestor v úli';}
+  else if(weak){urgency='soon';rec='Slabé včelstvo. Skontroluj matku, zásoby a choroby.';next='Vyšetriť príčinu slabosti';}
   else{rec='Bežná kontrola bez výrazných problémov.';next='Pravidelná kontrola o týždeň';}
-  // summary
   const parts=[];
   if(noQ||noE)parts.push('Problém s matkou alebo plodovom');
   else if(hasQ&&hasE)parts.push('Matka kladie, vajíčka prítomné');
   else if(hasQ)parts.push('Matka prítomná');
   if(str)parts.push(`sila ${str}/10`);
   if(agr)parts.push(`agresivita ${agr}/5`);
-  if(hasQc)parts.push('matečníky prítomné');
+  if(hasQc)parts.push('matečníky');
   if(swarm)parts.push('rojenie');
-  if(treat)parts.push('prebieha liečenie');
+  if(treat)parts.push('liečenie');
   if(feed)parts.push('kŕmenie');
   const summary=parts.length?parts.join(' · ').replace(/^\w/,c=>c.toUpperCase())+'.':'Bežná obhliadka zaznamenaná.';
-  // colony name
-  let colony=curColony;
-  if(!colony){ const m=txt.match(/včelstvo\s*(\d+|[a-zA-Z])\b/i); colony=m?'Včelstvo '+m[1]:null; }
-  const stanoviste = selStanoviste!==null ? config.stanovistia[selStanoviste]?.name : null;
-  const ul = selUl;
-  return{id:Date.now(),date:new Date().toISOString(),colony,stanoviste,ul,tags,agr,str,summary,rec,urgency,next,raw:txt};
+  const stanoviste=selSt!==null?config.stanovistia[selSt]?.name:null;
+  return{id:Date.now(),date:new Date().toISOString(),stanoviste,ul:selUl,tags,agr,str,summary,rec,urgency,next,raw:txt};
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // RENDER NOTES
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function renderFilters(){
-  const wrap=document.getElementById('n-filters');
-  wrap.innerHTML='';
-  const add=(label,val)=>{
+  const wrap=document.getElementById('n-filters'); wrap.innerHTML='';
+  const add=(lbl,val)=>{
     const b=document.createElement('button');
-    b.className='n-filter'+(filterStanoviste===val?' active':'');
-    b.textContent=label;
-    b.onclick=()=>{ filterStanoviste=val; renderFilters(); renderNotes(); };
+    b.className='n-filter'+(filterSt===val?' active':'');
+    b.textContent=lbl;
+    b.onclick=()=>{filterSt=val;renderFilters();renderNotes();};
     wrap.appendChild(b);
   };
   add('Všetky','all');
@@ -885,29 +918,28 @@ function renderNotes(){
   renderFilters();
   const list=document.getElementById('n-list');
   let filtered=notes;
-  if(filterStanoviste!=='all') filtered=notes.filter(n=>n.stanoviste===filterStanoviste);
+  if(filterSt!=='all') filtered=notes.filter(n=>n.stanoviste===filterSt);
   document.getElementById('n-cnt').textContent=filtered.length+' záznamov';
   if(!filtered.length){
     list.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Zatiaľ žiadne zápisky.</div>`;
     return;
   }
-  list.innerHTML=filtered.map((n,i)=>{
+  list.innerHTML=filtered.map(n=>{
+    const ri=notes.indexOf(n);
     const d=new Date(n.date);
-    const ds=d.toLocaleDateString('sk-SK',{day:'numeric',month:'short',year:'numeric'})+'<br>'+d.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+    const ds=d.toLocaleDateString('sk-SK',{day:'numeric',month:'short',year:'numeric'})
+            +' '+d.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
     const tags=(n.tags||[]).map(t=>`<span class="tag t-${t.t}">${escH(t.l)}</span>`).join('');
     const strTag=n.str!=null?`<span class="tag t-info">Sila ${n.str}/10</span>`:'';
     const agg=n.agr!=null?renderAgg(n.agr):'';
     const uc=n.urgency==='urgent'?'#E86A4A':n.urgency==='soon'?'var(--honey-l)':'var(--dim)';
-    const colonyLabel=n.colony||(n.ul?`Úľ ${n.ul}`:'Včelstvo ?');
-    const ri=notes.indexOf(n);
+    const title=n.stanoviste?(n.ul?`Včelstvo ${n.ul}`:n.stanoviste):'Záznam';
+    const loc=n.stanoviste?escH(n.stanoviste)+(n.ul?` · včelstvo ${n.ul}`:''):'';
     return `<div class="card" id="card-${ri}">
       <div onclick="toggleCard(${ri})">
         <div class="c-hdr">
-          <div class="c-name"><div class="c-dot" style="background:${uc}"></div>${escH(colonyLabel)}</div>
-          <div class="c-meta">
-            <div class="c-date">${ds}</div>
-            ${n.stanoviste?`<div class="c-stanoviste">${escH(n.stanoviste)}${n.ul?' · úľ '+n.ul:''}</div>`:''}
-          </div>
+          <div class="c-name"><div class="c-dot" style="background:${uc}"></div>${escH(title)}</div>
+          <div class="c-meta"><div class="c-date">${ds}</div>${loc?`<div class="c-loc">${loc}</div>`:''}</div>
         </div>
         <div class="c-tags">${tags}${strTag}</div>
         ${agg}
@@ -926,16 +958,16 @@ function toggleCard(i){
   if(r)r.style.display=o?'block':'none';
   if(d)d.style.display=o?'flex':'none';
 }
-function deleteNote(i){ if(!confirm('Vymazať?'))return; notes.splice(i,1); persist(); renderNotes(); renderDash(); renderCfg(); toast('Vymazané'); }
+function deleteNote(i){if(!confirm('Vymazať?'))return;notes.splice(i,1);persist();renderNotes();renderDash();document.getElementById('cfg-notes-cnt').textContent=notes.length;toast('Vymazané');}
 function renderAgg(v){
   const cols=['#5A8C3A','#8CB03A','#C8C83A','#C88C2A','#C84A2A'];
   const dots=[1,2,3,4,5].map(i=>`<div class="agg-d" style="background:${i<=v?cols[v-1]:'rgba(255,255,255,.1)'}"></div>`).join('');
   return `<div class="agg-row"><span class="agg-l">Agresivita</span>${dots}<span style="font-size:10px;color:var(--dim);margin-left:3px">${v}/5</span></div>`;
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // RENDER DASH
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function renderDash(){
   const pad=document.getElementById('d-pad');
   if(!notes.length){
@@ -949,119 +981,120 @@ function renderDash(){
   const todos=notes.filter(n=>n.next&&n.urgency!=='normal').map(n=>{
     const cls=n.urgency==='urgent'?'urg':'';
     const badge=n.urgency==='urgent'?'<span class="tbadge tb-u">Urgentné</span>':'<span class="tbadge tb-s">Čoskoro</span>';
-    const loc=(n.stanoviste?escH(n.stanoviste)+' · ':'')+escH(n.colony||n.ul?'Úľ '+(n.ul||'?'):'?');
-    return `<div class="todo ${cls}"><div class="todo-ico">${n.urgency==='urgent'?'⚠️':'🔔'}</div><div><div class="todo-col">${loc}</div><div class="todo-act">${escH(n.next)} ${badge}</div></div></div>`;
+    const loc=n.stanoviste?(n.ul?escH(n.stanoviste)+' · vč. '+n.ul:escH(n.stanoviste)):escH(n.ul?'Včelstvo '+n.ul:'—');
+    return `<div class="todo ${cls}"><div style="font-size:13px;flex-shrink:0">${n.urgency==='urgent'?'⚠️':'🔔'}</div><div><div class="todo-col">${loc}</div><div class="todo-act">${escH(n.next)} ${badge}</div></div></div>`;
   }).join('');
-  // per-stanoviste summary
   const stCards=config.stanovistia.map(st=>{
-    const stNotes=notes.filter(n=>n.stanoviste===st.name);
-    const stDanger=stNotes.filter(n=>(n.tags||[]).some(t=>t.t==='danger')).length;
-    const stWarn=stNotes.filter(n=>n.urgency==='urgent'||n.urgency==='soon').length;
-    return `<div class="st-card">
-      <div><div class="st-card-name">${escH(st.name)}</div><div class="st-card-sub">${st.ule} úľov · ${stNotes.length} zápiskov</div></div>
-      <div class="st-card-badges">
-        ${stDanger?`<span class="tag t-danger">${stDanger} problém</span>`:''}
-        ${stWarn&&!stDanger?`<span class="tag t-warn">${stWarn} pozor</span>`:''}
-        ${!stDanger&&!stWarn&&stNotes.length?`<span class="tag t-ok">OK</span>`:''}
-      </div>
-    </div>`;
+    const stn=notes.filter(n=>n.stanoviste===st.name);
+    const sd=stn.filter(n=>(n.tags||[]).some(t=>t.t==='danger')).length;
+    const sw2=stn.filter(n=>n.urgency==='urgent'||n.urgency==='soon').length;
+    return `<div class="st-card"><div><div class="st-card-name">${escH(st.name)}</div><div class="st-card-sub">${st.ule} včelstiev · ${stn.length} zápiskov</div></div>
+    <div class="st-card-badges">${sd?`<span class="tag t-danger">${sd} problém</span>`:sw2?`<span class="tag t-warn">${sw2} pozor</span>`:stn.length?'<span class="tag t-ok">OK</span>':''}</div></div>`;
   }).join('');
   pad.innerHTML=`
-    <div><div class="s-lbl">Štatistiky</div>
-    <div class="stats">
+    <div><div class="s-lbl">Štatistiky</div><div class="stats">
       <div class="stat"><div class="stat-n">${notes.length}</div><div class="stat-l">Zápisky</div></div>
       <div class="stat"><div class="stat-n">${danger}</div><div class="stat-l">Problémy</div></div>
       <div class="stat"><div class="stat-n">${avgA}</div><div class="stat-l">Avg. agres.</div></div>
       <div class="stat"><div class="stat-n">${avgS}</div><div class="stat-l">Avg. sila</div></div>
     </div></div>
-    ${stCards?`<div><div class="s-lbl">Stanovištia</div><div class="stanoviste-cards">${stCards}</div></div>`:''}
+    ${stCards?`<div><div class="s-lbl">Stanovištia</div><div class="st-cards">${stCards}</div></div>`:''}
     ${todos?`<div><div class="s-lbl">Čo je potrebné urobiť</div><div class="todo-list">${todos}</div></div>`:''}
     <button class="clr-btn" onclick="clearAll()">Vymazať všetky zápisky</button>`;
 }
 
-// ═══════════════════════════════════════════════════════════
-// SETTINGS
-// ═══════════════════════════════════════════════════════════
-function applyConfig(){
-  document.getElementById('vcelnica-name').textContent = config.vcelnica||'včelársky zápisník';
-}
-
-function renderCfg(){
-  document.getElementById('cfg-vcelnica').value = config.vcelnica||'';
-  document.getElementById('cfg-notes-count').textContent = notes.length;
-  const list=document.getElementById('cfg-st-list');
-  list.innerHTML='';
-  config.stanovistia.forEach((st,i)=>{
-    const row=document.createElement('div');
-    row.className='cfg-st-row';
-    row.innerHTML=`<input class="cfg-st-name" value="${escH(st.name)}" placeholder="Názov stanovišťa" maxlength="30">
-      <input type="number" class="cfg-st-num" value="${st.ule}" min="1" max="99" title="Počet úľov">
-      <button class="cfg-del" onclick="cfgDelSt(${i})">✕</button>`;
-    list.appendChild(row);
-  });
-}
-
-function cfgAddSt(){
-  const list=document.getElementById('cfg-st-list');
+// ═══════════════════════════════════════════
+// SETUP SCREEN
+// ═══════════════════════════════════════════
+function setupAddSt(){
+  const list=document.getElementById('setup-st-list');
   const i=list.children.length+1;
   const row=document.createElement('div');
-  row.className='cfg-st-row';
-  row.innerHTML=`<input class="cfg-st-name" placeholder="Stanovište ${i}" maxlength="30">
-    <input type="number" class="cfg-st-num" value="5" min="1" max="99">
-    <button class="cfg-del" onclick="this.parentElement.remove()">✕</button>`;
+  row.className='st-row';
+  row.innerHTML=`<input class="st-name-inp" placeholder="Stanovište ${i}" maxlength="30"><input type="number" class="st-num" min="1" max="99" value="5" title="Počet včelstiev"><button class="st-del" onclick="this.parentElement.remove()">✕</button>`;
   list.appendChild(row);
 }
 
-function cfgDelSt(i){
-  config.stanovistia.splice(i,1);
-  persist(); renderCfg(); renderStChips();
+function saveSetup(){
+  const vcelnica=document.getElementById('setup-vcelnica').value.trim();
+  const rows=document.querySelectorAll('#setup-st-list .st-row');
+  if(!rows.length){alert('Pridaj aspoň jedno stanovište');return;}
+  const stanovistia=[];
+  rows.forEach((r,i)=>{
+    const n=r.querySelector('.st-name-inp');
+    const u=r.querySelector('.st-num');
+    stanovistia.push({
+      name:(n&&n.value.trim())||('Stanovište '+(i+1)),
+      ule:Math.max(1,parseInt(u&&u.value||'5')||5)
+    });
+  });
+  config={vcelnica:vcelnica||'Moja včelnica',stanovistia};
+  persist();
+  document.getElementById('s-setup').classList.add('hidden');
+  tryPermission();
 }
 
+// first 2 rows pre-filled
+(function(){
+  setupAddSt(); setupAddSt();
+})();
+
+// ═══════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════
+function applyConfig(){
+  document.getElementById('vcelnica-name').textContent=config.vcelnica||'včelársky zápisník';
+}
+function renderCfg(){
+  document.getElementById('cfg-vcelnica').value=config.vcelnica||'';
+  document.getElementById('cfg-notes-cnt').textContent=notes.length;
+  const list=document.getElementById('cfg-st-list'); list.innerHTML='';
+  config.stanovistia.forEach((st,i)=>{
+    const row=document.createElement('div'); row.className='cfg-st-row';
+    row.innerHTML=`<input class="cfg-st-name" value="${escH(st.name)}" placeholder="Stanovište" maxlength="30"><input type="number" class="cfg-st-num" value="${st.ule}" min="1" max="99"><button class="cfg-del" onclick="cfgDelSt(${i})">✕</button>`;
+    list.appendChild(row);
+  });
+}
+function cfgAddSt(){
+  const list=document.getElementById('cfg-st-list'),i=list.children.length+1;
+  const row=document.createElement('div'); row.className='cfg-st-row';
+  row.innerHTML=`<input class="cfg-st-name" placeholder="Stanovište ${i}" maxlength="30"><input type="number" class="cfg-st-num" value="5" min="1" max="99"><button class="cfg-del" onclick="this.parentElement.remove()">✕</button>`;
+  list.appendChild(row);
+}
+function cfgDelSt(i){config.stanovistia.splice(i,1);persist();renderCfg();renderStChips();}
 function cfgSave(){
   const vcelnica=document.getElementById('cfg-vcelnica').value.trim();
   const rows=document.querySelectorAll('#cfg-st-list .cfg-st-row');
+  if(!rows.length){toast('Pridaj aspoň jedno stanovište');return;}
   const stanovistia=[];
   rows.forEach((r,i)=>{
-    const name=r.querySelector('.cfg-st-name').value.trim()||`Stanovište ${i+1}`;
-    const ule=Math.max(1,parseInt(r.querySelector('.cfg-st-num').value)||5);
-    stanovistia.push({name,ule});
+    const n=r.querySelector('.cfg-st-name'),u=r.querySelector('.cfg-st-num');
+    stanovistia.push({name:(n&&n.value.trim())||('Stanovište '+(i+1)),ule:Math.max(1,parseInt(u&&u.value||'5')||5)});
   });
-  if(!stanovistia.length){toast('Pridaj aspoň jedno stanovište');return;}
   config={vcelnica:vcelnica||'Moja včelnica',stanovistia};
   persist(); applyConfig(); renderStChips(); renderDash();
   toast('Nastavenia uložené ✓');
 }
+function clearAll(){if(!confirm('Naozaj vymazať všetky zápisky?'))return;notes=[];persist();renderNotes();renderDash();document.getElementById('cfg-notes-cnt').textContent=0;toast('Zápisky vymazané');}
 
-function clearAll(){
-  if(!confirm('Naozaj vymazať všetky zápisky?'))return;
-  notes=[]; persist(); renderNotes(); renderDash(); renderCfg(); toast('Zápisky vymazané');
-}
-
-// ═══════════════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// TABS / DATE / UTILS
+// ═══════════════════════════════════════════
 function sw(n){
   ['r','n','d','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
     document.getElementById('view-'+k).classList.toggle('active',k===n);
   });
-  if(n==='cfg') renderCfg();
+  if(n==='cfg'){renderCfg();}
 }
-
 function tick(){
   const el=document.getElementById('top-date'); if(!el)return;
   const n=new Date();
-  el.innerHTML=n.toLocaleDateString('sk-SK',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()
-    +'<br>'+n.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+  el.innerHTML=n.toLocaleDateString('sk-SK',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()+'<br>'+n.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
 }
-
 function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-let tt; function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('on');
-  clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('on'),2600);
-}
+let tt;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),2600);}
 </script>
 </body>
 </html>
