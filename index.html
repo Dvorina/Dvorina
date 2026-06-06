@@ -550,10 +550,14 @@ function launchApp(withMic){
 }
 
 // ═══════════════════════════════════════════
-// SPEECH RECOGNITION — SINGLE SESSION
-// The key insight: ONE SR session runs the whole time.
-// We track which results we already saved to avoid duplicates.
+// SPEECH RECOGNITION
+// Chrome Android ends SR every ~3s of silence even with continuous=true.
+// Fix: use e.resultIndex to only process NEW results per event.
+// Global Set tracks processed segments to prevent duplicates across restarts.
 // ═══════════════════════════════════════════
+let srProcessed = new Set();
+function srHash(txt){ return txt.trim().slice(0,50); }
+
 function startSR(){
   if(srRunning) return;
   const W = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -565,75 +569,72 @@ function startSR(){
   SR.interimResults = true;
   SR.maxAlternatives = 1;
 
-  // pointer: how many results are already committed
-  let committedCount = 0;
-
   SR.onresult = function(e){
-    // 1. Save any NEW final results since last time
-    for(let i = committedCount; i < e.results.length; i++){
-      if(e.results[i].isFinal){
-        const word = e.results[i][0].transcript;
-        committedCount = i + 1;
+    // Only process results from e.resultIndex (new ones this event)
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      if(!e.results[i].isFinal) continue;
+      const txt = e.results[i][0].transcript.trim();
+      if(!txt) continue;
 
-        // Check for voice commands FIRST (don't add commands to transcript)
-        const lo = word.toLowerCase().trim();
+      // Deduplicate using content hash — prevents same sentence twice
+      const h = srHash(txt);
+      if(srProcessed.has(h)) continue;
+      srProcessed.add(h);
+      if(srProcessed.size > 100) srProcessed.clear();
 
-        // START command — only when not recording
-        if(!recActive){
-          if(lo.includes('začíname') || lo.includes('začínam') || lo.includes('začni')){
-            startRec(); continue;
-          }
+      const lo = txt.toLowerCase();
+
+      // START command (only when idle)
+      if(!recActive){
+        if(lo.includes('začíname') || lo.includes('začínam') || lo.includes('začni')){
+          startRec(); continue;
         }
+      }
 
-        // UL selection — always active (even during recording)
-        const ulMatch = lo.match(/včelstvo\s*(jedna?|dve|tri|štyri|päť|šesť|sedem|osem|deväť|desať|\d+)/i);
-        if(ulMatch){
-          const num = wordToNum(ulMatch[1]);
-          if(num && selSt !== null) selectUlVoice(num);
-          if(recActive){ savedChunks.push(word); updateTbox(); }
-          continue;
-        }
+      // ÚĽ voice selection (always active)
+      const ulMatch = lo.match(/včelstvo\s*(jedna?|dve|tri|štyri|päť|šesť|sedem|osem|deväť|desať|\d+)/i);
+      if(ulMatch){
+        const num = wordToNum(ulMatch[1]);
+        if(num !== null && selSt !== null) selectUlVoice(num);
+        if(recActive){ savedChunks.push(txt); updateTbox(); }
+        continue;
+      }
 
-        // STOP command — only when recording
-        if(recActive){
-          if(lo.includes('koniec') || lo.includes('hotovo')){
-            stopRecAndSave(); continue;
-          }
-          // Normal speech — add to transcript
-          savedChunks.push(word);
-          updateTbox();
+      // STOP command (only when recording)
+      if(recActive){
+        if(lo.includes('koniec') || lo.includes('hotovo')){
+          stopRecAndSave(); continue;
         }
+        savedChunks.push(txt);
+        updateTbox();
       }
     }
 
-    // 2. Show interim (live) text while recording
+    // Interim text preview while recording
     if(recActive){
       let interim = '';
-      for(let i = committedCount; i < e.results.length; i++){
+      for(let i = e.resultIndex; i < e.results.length; i++){
         if(!e.results[i].isFinal) interim += e.results[i][0].transcript;
       }
-      showTboxLive(savedChunks.join(' '), interim);
+      if(interim) showTboxLive(savedChunks.join(' '), interim);
     }
   };
 
   SR.onerror = function(e){
-    console.log('SR error:', e.error);
+    srRunning = false;
     if(e.error==='not-allowed'||e.error==='service-not-allowed'){
       micGranted=false; setMicPill('denied');
       document.getElementById('denied-banner').classList.add('show');
+      return;
     }
-    srRunning = false;
-    // restart after short delay unless it was a permissions error
-    if(e.error!=='not-allowed' && e.error!=='service-not-allowed'){
-      setTimeout(startSR, 1000);
-    }
+    setTimeout(startSR, 800);
   };
 
   SR.onend = function(){
+    // Chrome Android fires onend every ~3s — this is normal
+    // Immediately restart, srProcessed Set prevents any duplicate processing
     srRunning = false;
-    committedCount = 0; // reset on new session
-    // auto restart - this is the key to keeping it always listening
-    setTimeout(startSR, 300);
+    setTimeout(startSR, 80);
   };
 
   try{
@@ -641,7 +642,7 @@ function startSR(){
     srRunning = true;
   }catch(e){
     srRunning = false;
-    setTimeout(startSR, 1000);
+    setTimeout(startSR, 800);
   }
 }
 
@@ -819,10 +820,31 @@ function sendManual(){
 // ═══════════════════════════════════════════
 // SAVE NOTE
 // ═══════════════════════════════════════════
+function cleanDuplicates(chunks){
+  // Remove consecutive duplicate words and repeated phrases
+  const words = chunks.join(' ').split(/\s+/).filter(Boolean);
+  const result = [];
+  let i = 0;
+  while(i < words.length){
+    // Check for repeated phrase of length 1-6 words
+    let skipped = false;
+    for(let len = 6; len >= 1; len--){
+      if(i + len*2 <= words.length){
+        const phrase = words.slice(i, i+len).join(' ').toLowerCase();
+        const next   = words.slice(i+len, i+len*2).join(' ').toLowerCase();
+        if(phrase === next){ i += len; skipped = true; break; }
+      }
+    }
+    if(!skipped){ result.push(words[i]); i++; }
+  }
+  return result.join(' ');
+}
+
 function saveNote(){
-  const txt=savedChunks.join(' ').trim();
+  const raw = savedChunks.join(' ').trim();
+  const txt = cleanDuplicates(savedChunks);
   if(!txt) return;
-  const note=parseNote(txt);
+  const note=parseNote(txt, raw);
   notes.unshift(note); persist();
   renderNotes(); renderDash();
   // reset
@@ -838,7 +860,8 @@ function saveNote(){
 // ═══════════════════════════════════════════
 // SMART PARSER
 // ═══════════════════════════════════════════
-function parseNote(txt){
+function parseNote(txt, raw){
+  raw = raw || txt;
   const tags=[];
   const noQ  =/chýba\s*matka|bez\s*matky|nenašiel\s*matku|nevidím\s*matku|nevidel\s*matku/i.test(txt);
   const noE  =/chýbaj[uú]\s*vaj[ií]čka|nevidím\s*vaj[ií]čka|bez\s*vaj[ií]čiek/i.test(txt);
@@ -895,7 +918,7 @@ function parseNote(txt){
   if(feed)parts.push('kŕmenie');
   const summary=parts.length?parts.join(' · ').replace(/^\w/,c=>c.toUpperCase())+'.':'Bežná obhliadka zaznamenaná.';
   const stanoviste=selSt!==null?config.stanovistia[selSt]?.name:null;
-  return{id:Date.now(),date:new Date().toISOString(),stanoviste,ul:selUl,tags,agr,str,summary,rec,urgency,next,raw:txt};
+  return{id:Date.now(),date:new Date().toISOString(),stanoviste,ul:selUl,tags,agr,str,summary,rec,urgency,next,raw:raw};
 }
 
 // ═══════════════════════════════════════════
