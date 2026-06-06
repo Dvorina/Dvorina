@@ -71,8 +71,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .pill-set{color:var(--honey-l);border-color:var(--bs);background:rgba(200,132,26,.08)}
 
 /* TABS */
-.tabs{display:flex;border-bottom:.5px solid var(--b);background:var(--dark2);flex-shrink:0}
-.tab{flex:1;padding:9px 0;font-size:10px;letter-spacing:.5px;color:var(--dim);cursor:pointer;text-align:center;border:none;background:none;text-transform:uppercase;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabs{display:flex;border-bottom:.5px solid var(--b);background:var(--dark2);flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;min-width:60px;padding:9px 10px;font-size:10px;letter-spacing:.5px;color:var(--dim);cursor:pointer;text-align:center;border:none;background:none;text-transform:uppercase;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
 .tab svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .tab.active{color:var(--honey-l);border-bottom-color:var(--honey)}
 
@@ -230,6 +231,80 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .empty svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1;opacity:.2;display:block;margin:0 auto 10px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark3);border:.5px solid var(--bs);border-radius:22px;padding:8px 18px;font-size:12px;color:var(--text);opacity:0;transition:all .3s;z-index:400;pointer-events:none;max-width:90vw;text-align:center;white-space:nowrap}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+/* HISTÓRIA */
+.hist-colony{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.hist-colony-hdr{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.hist-colony-name{font-family:"Cormorant Garamond",serif;font-size:17px;color:var(--honey-l);display:flex;align-items:center;gap:6px}
+.hist-colony-meta{font-size:11px;color:var(--dim);text-align:right;line-height:1.6}
+.hist-timeline{padding:0 14px 12px;display:none;flex-direction:column;gap:0}
+.hist-timeline.open{display:flex}
+.hist-entry{display:flex;gap:12px;padding:8px 0;border-bottom:.5px solid var(--b)}
+.hist-entry:last-child{border-bottom:none}
+.hist-dot-col{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;width:16px}
+.hist-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.hist-line{width:1px;flex:1;background:var(--b);margin:3px 0}
+.hist-body{flex:1}
+.hist-date{font-size:10px;color:var(--dim);letter-spacing:.5px;margin-bottom:3px}
+.hist-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+.hist-sum{font-size:12px;color:var(--muted);line-height:1.6}
+.hist-rec{font-size:11px;color:var(--honey-l);margin-top:3px;border-left:2px solid var(--honey);padding-left:7px;line-height:1.6}
+
+/* KALENDÁR */
+.kal-month{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.kal-month-hdr{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.kal-month-name{font-family:"Cormorant Garamond",serif;font-size:17px;color:var(--honey-l)}
+.kal-month-badge{font-size:10px;padding:2px 8px;border-radius:20px}
+.kal-current{background:rgba(200,132,26,.15);color:var(--honey-l);border:.5px solid var(--bs)}
+.kal-past{background:rgba(255,255,255,.05);color:var(--dim);border:.5px solid var(--b)}
+.kal-future{background:rgba(74,120,200,.1);color:#88AAEE;border:.5px solid rgba(74,120,200,.3)}
+.kal-body{padding:0 14px 12px;display:none;flex-direction:column;gap:7px}
+.kal-body.open{display:flex}
+.kal-task{display:flex;gap:9px;align-items:flex-start;padding:8px 10px;border-radius:6px;border:.5px solid var(--b);background:var(--dark2)}
+.kal-task.done{opacity:.45}
+.kal-task-ico{font-size:15px;flex-shrink:0;margin-top:1px}
+.kal-task-body{flex:1}
+.kal-task-title{font-size:13px;color:var(--text);margin-bottom:2px;line-height:1.4}
+.kal-task-sub{font-size:11px;color:var(--dim);line-height:1.5}
+.kal-task-cb{width:18px;height:18px;border-radius:4px;border:.5px solid var(--bs);background:none;cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;color:var(--honey-l);font-size:12px;transition:all .2s}
+.kal-task-cb.checked{background:rgba(200,132,26,.2);border-color:var(--honey)}
+.kal-add-row{display:flex;gap:7px;margin-top:4px}
+.kal-add-inp{flex:1;background:var(--dark2);border:.5px solid var(--b);border-radius:5px;padding:8px 10px;font-size:12px;color:var(--text);font-family:"DM Sans",sans-serif;outline:none}
+.kal-add-inp:focus{border-color:var(--honey)}
+.kal-add-inp::placeholder{color:var(--dim)}
+.kal-add-btn{background:none;border:.5px solid var(--bs);border-radius:5px;padding:8px 12px;color:var(--honey-l);cursor:pointer;font-size:12px;font-family:"DM Sans",sans-serif}
+
+/* ROJ */
+.roj-card{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:13px;cursor:pointer;transition:border-color .2s}
+.roj-card.open{border-color:var(--honey)}
+.roj-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+.roj-card-name{font-family:"Cormorant Garamond",serif;font-size:17px;color:var(--honey-l);display:flex;align-items:center;gap:5px}
+.roj-card-date{font-size:10px;color:var(--dim);text-align:right;line-height:1.6}
+.roj-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.roj-detail{display:none;flex-direction:column;gap:8px;margin-top:8px;padding-top:8px;border-top:.5px solid var(--b)}
+.roj-detail.open{display:flex}
+.roj-checks{display:flex;flex-direction:column;gap:6px}
+.roj-check{display:flex;gap:8px;align-items:center;padding:7px 10px;background:var(--dark2);border-radius:6px;border:.5px solid var(--b)}
+.roj-check-ico{font-size:13px;flex-shrink:0}
+.roj-check-body{flex:1}
+.roj-check-title{font-size:12px;color:var(--text);margin-bottom:1px}
+.roj-check-date{font-size:10px;color:var(--dim)}
+.roj-check-cb{width:18px;height:18px;border-radius:4px;border:.5px solid var(--bs);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--honey-l);font-size:12px;transition:all .2s}
+.roj-check-cb.checked{background:rgba(200,132,26,.2);border-color:var(--honey)}
+.roj-del-btn{background:none;border:.5px solid rgba(200,74,42,.4);border-radius:5px;padding:5px 11px;font-size:11px;color:#E86A4A;cursor:pointer;font-family:"DM Sans",sans-serif;align-self:flex-end}
+
+/* ROJ MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:flex-end;justify-content:center;z-index:300;padding:0}
+.modal-ov.show{display:flex}
+.modal-box{background:var(--dark2);border:.5px solid var(--bs);border-radius:16px 16px 0 0;padding:22px 18px 32px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--honey-l);margin-bottom:16px}
+.modal-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:5px;margin-top:12px;display:block}
+.modal-inp{width:100%;background:var(--dark3);border:.5px solid var(--b);border-radius:6px;padding:11px 12px;font-size:13px;color:var(--text);font-family:"DM Sans",sans-serif;outline:none;margin-bottom:4px}
+.modal-inp:focus{border-color:var(--honey)}
+.modal-inp::placeholder{color:var(--dim)}
+.modal-select{width:100%;background:var(--dark3);border:.5px solid var(--b);border-radius:6px;padding:11px 12px;font-size:13px;color:var(--text);font-family:"DM Sans",sans-serif;outline:none;appearance:none}
+.modal-row{display:flex;gap:8px;margin-top:14px}
+.modal-save{flex:2;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:13px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer}
+.modal-cancel{flex:1;background:none;border:.5px solid var(--b);border-radius:6px;padding:13px;font-family:"DM Sans",sans-serif;font-size:12px;color:var(--dim);cursor:pointer;text-transform:uppercase;letter-spacing:1px}
 </style>
 </head>
 <body>
@@ -300,6 +375,18 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="tab" id="tab-d" onclick="sw('d')">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       Prehľad
+    </button>
+    <button class="tab" id="tab-hist" onclick="sw('hist')">
+      <svg viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/><polyline points="3 16 3 11 8 11"/></svg>
+      História
+    </button>
+    <button class="tab" id="tab-kal" onclick="sw('kal')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Kalendár
+    </button>
+    <button class="tab" id="tab-roj" onclick="sw('roj')">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Rojenie
     </button>
     <button class="tab" id="tab-cfg" onclick="sw('cfg')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -393,6 +480,25 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <!-- DASH -->
     <div class="view" id="view-d">
       <div class="d-pad" id="d-pad"></div>
+    </div>
+
+    <!-- HISTÓRIA -->
+    <div class="view" id="view-hist">
+      <div class="d-pad" id="hist-pad"></div>
+    </div>
+
+    <!-- KALENDÁR -->
+    <div class="view" id="view-kal">
+      <div class="d-pad" id="kal-pad"></div>
+    </div>
+
+    <!-- ROJOVÝ DENNÍK -->
+    <div class="view" id="view-roj">
+      <div style="padding:12px 15px 6px;border-bottom:.5px solid var(--b);display:flex;justify-content:space-between;align-items:center">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:18px">Rojový denník</div>
+        <button onclick="openRojModal()" style="background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:7px 13px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--dark);cursor:pointer;font-family:'DM Sans',sans-serif">+ Pridať roj</button>
+      </div>
+      <div id="roj-list" style="padding:10px 15px;display:flex;flex-direction:column;gap:9px"></div>
     </div>
 
     <!-- SETTINGS -->
@@ -537,6 +643,7 @@ function launchApp(withMic){
   renderStChips();
   renderNotes(); renderDash();
   document.getElementById('m-inp').addEventListener('keydown',e=>{if(e.key==='Enter')sendManual();});
+  loadKal(); loadRoj();
   if(withMic){
     setMicPill('ok');
     startSR();
@@ -1101,14 +1208,347 @@ function cfgSave(){
 function clearAll(){if(!confirm('Naozaj vymazať všetky zápisky?'))return;notes=[];persist();renderNotes();renderDash();document.getElementById('cfg-notes-cnt').textContent=0;toast('Zápisky vymazané');}
 
 // ═══════════════════════════════════════════
+// HISTÓRIA VČELSTVA
+// ═══════════════════════════════════════════
+function renderHist(){
+  const pad = document.getElementById('hist-pad');
+  if(!notes.length){
+    pad.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/><polyline points="3 16 3 11 8 11"/></svg>História sa zobrazí po uložení zápiskov.</div>';
+    return;
+  }
+  // Group notes by stanoviste + ul
+  const groups = {};
+  notes.forEach(n => {
+    const key = (n.stanoviste||'Neznáme') + '___' + (n.ul||0);
+    if(!groups[key]) groups[key] = {stanoviste: n.stanoviste||'Neznáme', ul: n.ul, entries:[]};
+    groups[key].entries.push(n);
+  });
+  let html = '';
+  Object.values(groups).forEach((g,gi) => {
+    const sorted = [...g.entries].sort((a,b)=>new Date(a.date)-new Date(b.date));
+    const last = sorted[sorted.length-1];
+    const uc = last.urgency==='urgent'?'#E86A4A':last.urgency==='soon'?'var(--honey-l)':'var(--ok)';
+    const title = g.ul ? `Včelstvo ${g.ul}` : g.stanoviste;
+    const sub = g.ul ? g.stanoviste : '';
+    html += `<div class="hist-colony">
+      <div class="hist-colony-hdr" onclick="toggleHist(${gi})">
+        <div class="hist-colony-name"><div class="c-dot" style="background:${uc}"></div>${escH(title)}</div>
+        <div class="hist-colony-meta">${sub?escH(sub)+'<br>':''}${sorted.length} záznamov</div>
+      </div>
+      <div class="hist-timeline" id="hist-tl-${gi}">`;
+    sorted.forEach((n,ei) => {
+      const d = new Date(n.date);
+      const ds = d.toLocaleDateString('sk-SK',{day:'numeric',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+      const tags = (n.tags||[]).map(t=>`<span class="tag t-${t.t}" style="font-size:9px;padding:1px 6px">${escH(t.l)}</span>`).join('');
+      const dotC = n.urgency==='urgent'?'#E86A4A':n.urgency==='soon'?'var(--honey-l)':'var(--ok)';
+      const isLast = ei===sorted.length-1;
+      html += `<div class="hist-entry">
+        <div class="hist-dot-col">
+          <div class="hist-dot" style="background:${dotC}"></div>
+          ${!isLast?'<div class="hist-line"></div>':''}
+        </div>
+        <div class="hist-body">
+          <div class="hist-date">${ds}</div>
+          ${tags?`<div class="hist-tags">${tags}</div>`:''}
+          <div class="hist-sum">${escH(n.summary||'')}</div>
+          ${n.rec?`<div class="hist-rec">${escH(n.rec)}</div>`:''}
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  pad.innerHTML = html;
+}
+function toggleHist(i){
+  const tl = document.getElementById('hist-tl-'+i);
+  if(tl) tl.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════
+// SEZÓNNY KALENDÁR
+// ═══════════════════════════════════════════
+const KAL_SK = 'dv_kal_v1';
+let kalDone = {}; // {monthIdx_taskIdx: true}
+let kalCustom = {}; // {monthIdx: [{title, done}]}
+
+function loadKal(){
+  try{ kalDone   = JSON.parse(localStorage.getItem(KAL_SK+'_done'))   || {}; }catch(e){}
+  try{ kalCustom = JSON.parse(localStorage.getItem(KAL_SK+'_custom')) || {}; }catch(e){}
+}
+function saveKal(){
+  localStorage.setItem(KAL_SK+'_done',   JSON.stringify(kalDone));
+  localStorage.setItem(KAL_SK+'_custom', JSON.stringify(kalCustom));
+}
+
+const MESIACE = [
+  { m:'Január',    tasks:[
+    {ico:'❄️', t:'Zimná kontrola — ticho pri úľoch, prievan',       sub:'Nekontroluj vnútro, len prislúchaj'},
+    {ico:'🍯', t:'Skontroluj zásoby — pri silnom mraze môžu hladovať', sub:'Priložiť kand podľa potreby'},
+    {ico:'📊', t:'Vypracuj plán sezóny',                             sub:'Nákup materiálu, liekov, matiek'},
+  ]},
+  { m:'Február',   tasks:[
+    {ico:'☀️', t:'Prvý jarný výlet — sleduj aktivitu',               sub:'Pri teplom dni doobeda'},
+    {ico:'🍞', t:'Stimulačné kŕmenie pri výlete',                    sub:'Riedky sirup 1:1 alebo kand s pyľom'},
+    {ico:'🐝', t:'Kontrola kladenosti — hľadaj čerstvý plod',        sub:'Len pri teplote nad 12°C'},
+  ]},
+  { m:'Marec',     tasks:[
+    {ico:'🌸', t:'Jarná prehliadka — prvá kompletná kontrola',       sub:'Matka, plod, zásoby, zdravie'},
+    {ico:'🦠', t:'Liečenie varroa — kyselina šťavelová (kap)',       sub:'Kap pri bezplodovom stave'},
+    {ico:'📦', t:'Vymeň staré tmavé plásty',                         sub:'Max. 3–4 roky starý plást'},
+    {ico:'🍬', t:'Dobrý čas na stimulačné kŕmenie',                  sub:'Podporí rast rodiny'},
+  ]},
+  { m:'Apríl',     tasks:[
+    {ico:'🌻', t:'Kontrola priestoru — pridaj medzeru',              sub:'Predchádzaj rojeniu'},
+    {ico:'🐣', t:'Výmena alebo zlepšenie matiek',                    sub:'Zakúp plemenné matky'},
+    {ico:'⚠️', t:'Sleduj rojové nálady — matečníky',                 sub:'Kontrola každých 7–9 dní'},
+    {ico:'📈', t:'Rodiny silno rastú — sleduj plodový priestor',     sub:'Pridaj nástavky podľa potreby'},
+  ]},
+  { m:'Máj',       tasks:[
+    {ico:'🚨', t:'Rojenie — najaktívnejší mesiac',                   sub:'Kontrola každých 7 dní, buď pripravený'},
+    {ico:'🍯', t:'Prvé medobranie — repka, ovocie',                  sub:'Kontroluj zrelé medobrane plásty'},
+    {ico:'🔲', t:'Pridávaj medzistienky — rodiny sú silné',          sub:'Lepšie stavať teraz ako neskôr'},
+  ]},
+  { m:'Jún',       tasks:[
+    {ico:'🌿', t:'Medobranie — agát, lipy',                          sub:'Sleduj nektárovú snôšku'},
+    {ico:'🐝', t:'Kontrola matiek po rojení',                        sub:'Overenie kladenosti novej matky'},
+    {ico:'🏠', t:'Odloženece — najlepší čas na tvorbu',              sub:'Silné rodiny, dostatok matiek'},
+  ]},
+  { m:'Júl',       tasks:[
+    {ico:'☀️', t:'Tienenie úľov v horúčave',                         sub:'Chrán pred prehriatím'},
+    {ico:'🍯', t:'Letné medobranie — lieska, lipa',                  sub:'Sleduj snôšku, odber podľa zrelosti'},
+    {ico:'💧', t:'Zabezpeč dostatok vody v blízkosti',               sub:'Plytká nádoba s kameňmi'},
+    {ico:'🦠', t:'Sleduj varroa — práh zásahu = 3 roztoče/deň',     sub:'Alkoholová alebo cukrová skúška'},
+  ]},
+  { m:'August',    tasks:[
+    {ico:'🦠', t:'Liečenie varroa — kyselina mravčia / oxalová',    sub:'Základ jesenného ošetrenia'},
+    {ico:'🐝', t:'Výmena starých matiek — posledná šanca',           sub:'Mladá matka = silná zimovačka'},
+    {ico:'🍯', t:'Záverečné medobranie',                             sub:'Nechaj dostatok medu na zimu'},
+    {ico:'⚠️', t:'Sleduj lúpeženie — cudzie včely pri úli',          sub:'Zúžiť vchod, kontrolovať'},
+  ]},
+  { m:'September', tasks:[
+    {ico:'🍂', t:'Jesenná prehliadka — zásoby, matka, zdravie',     sub:'Min. 15kg medu na zimu na rodinu'},
+    {ico:'🍬', t:'Jesenné kŕmenie — doplniť zásoby',                sub:'Hustý sirup 2:1, max. do 15.9.'},
+    {ico:'🦠', t:'Dokončenie liečenia varroa',                       sub:'Pred koncom plodovej sezóny'},
+    {ico:'🐭', t:'Ochrana pred myšami — mrežky',                    sub:'Nasadiť pred chladom'},
+  ]},
+  { m:'Október',   tasks:[
+    {ico:'❄️', t:'Príprava na zimu — izolácia, vetranie',           sub:'Zimný vchod, prievan no nie prievan'},
+    {ico:'🏋️', t:'Váženie úľov — kontrola zásob',                   sub:'Minimálna zimná hmotnosť'},
+    {ico:'📝', t:'Záznamy zo sezóny — sumarizácia',                  sub:'Výnosy, zdravie, plány na budúci rok'},
+  ]},
+  { m:'November',  tasks:[
+    {ico:'🔕', t:'Nerušiť rodiny — zimné zhluky sa formujú',         sub:'Len tichá vonkajšia kontrola'},
+    {ico:'🛠️', t:'Oprava a dezinfekcia prázdnych zariadení',         sub:'Horák, roztok sódy'},
+    {ico:'📚', t:'Vzdelávanie — kurzy, literatúra',                  sub:'Čas na prípravu na ďalší rok'},
+  ]},
+  { m:'December',  tasks:[
+    {ico:'❄️', t:'Zimná kontrola — stučanie pri úľoch',              sub:'Prípadne priložiť kand'},
+    {ico:'📋', t:'Objednaj materiál na jar',                          sub:'Medzistienky, lieky, zariadenie'},
+    {ico:'🎯', t:'Plánuj sezónu — počet rodín, ciele',              sub:'Nové úle, miesta, plemenárstvo'},
+  ]},
+];
+
+function renderKal(){
+  loadKal();
+  const pad = document.getElementById('kal-pad');
+  const now = new Date();
+  const curMonth = now.getMonth(); // 0-11
+  let html = '<div style="padding:0 0 10px;font-size:11px;color:var(--dim);line-height:1.8">Predvyplnené úlohy pre každý mesiac. Môžeš si pridať vlastné. Zaškrtnuté úlohy sa pamätajú.</div>';
+  MESIACE.forEach((mes, mi) => {
+    const isCur = mi === curMonth;
+    const isPast = mi < curMonth;
+    const badgeCls = isCur?'kal-current':isPast?'kal-past':'kal-future';
+    const badgeTxt = isCur?'Aktuálny mesiac':isPast?'Prebehnutý':'Nadchádzajúci';
+    const custom = kalCustom[mi] || [];
+    const allTasks = [...mes.tasks.map((t,ti)=>({...t, key:`${mi}_${ti}`, custom:false})),
+                      ...custom.map((t,ci)=>({...t, ico:'✏️', key:`${mi}_c${ci}`, custom:true, ci}))];
+    const doneCount = allTasks.filter(t=>kalDone[t.key]).length;
+    html += `<div class="kal-month">
+      <div class="kal-month-hdr" onclick="toggleKal(${mi})">
+        <div class="kal-month-name">${mes.m}</div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-size:10px;color:var(--dim)">${doneCount}/${allTasks.length}</span>
+          <span class="kal-month-badge ${badgeCls}">${badgeTxt}</span>
+        </div>
+      </div>
+      <div class="kal-body ${isCur?'open':''}" id="kal-body-${mi}">`;
+    allTasks.forEach(t => {
+      const done = !!kalDone[t.key];
+      html += `<div class="kal-task ${done?'done':''}">
+        <div class="kal-task-ico">${t.ico}</div>
+        <div class="kal-task-body">
+          <div class="kal-task-title" style="${done?'text-decoration:line-through;color:var(--dim)':''}">${escH(t.t)}</div>
+          ${t.sub?`<div class="kal-task-sub">${escH(t.sub)}</div>`:''}
+        </div>
+        <div class="kal-task-cb ${done?'checked':''}" onclick="toggleKalTask('${t.key}', ${mi})" title="${done?'Označiť ako nedone':'Označiť ako hotovo'}">${done?'✓':''}</div>
+      </div>`;
+    });
+    html += `<div class="kal-add-row">
+      <input class="kal-add-inp" id="kal-inp-${mi}" placeholder="Pridať vlastnú úlohu...">
+      <button class="kal-add-btn" onclick="addKalTask(${mi})">+</button>
+    </div>`;
+    html += `</div></div>`;
+  });
+  pad.innerHTML = html;
+}
+
+function toggleKal(mi){
+  const b = document.getElementById('kal-body-'+mi);
+  if(b) b.classList.toggle('open');
+}
+function toggleKalTask(key, mi){
+  if(kalDone[key]) delete kalDone[key]; else kalDone[key]=true;
+  saveKal(); renderKal();
+  // re-open the month
+  setTimeout(()=>{const b=document.getElementById('kal-body-'+mi);if(b)b.classList.add('open');},10);
+}
+function addKalTask(mi){
+  const inp = document.getElementById('kal-inp-'+mi);
+  if(!inp||!inp.value.trim()) return;
+  if(!kalCustom[mi]) kalCustom[mi]=[];
+  kalCustom[mi].push({t:inp.value.trim(), sub:'', done:false});
+  saveKal(); renderKal();
+  setTimeout(()=>{const b=document.getElementById('kal-body-'+mi);if(b)b.classList.add('open');},10);
+}
+
+// ═══════════════════════════════════════════
+// ROJOVÝ DENNÍK
+// ═══════════════════════════════════════════
+const ROJ_SK = 'dv_roj_v1';
+let roje = [];
+function loadRoj(){ try{ roje=JSON.parse(localStorage.getItem(ROJ_SK))||[]; }catch(e){} }
+function saveRoj(){ localStorage.setItem(ROJ_SK,JSON.stringify(roje)); }
+
+const ROJ_TYPY = {
+  prirodzeny:         {label:'Prirodzený roj',       ico:'🐝', color:'var(--honey-l)'},
+  odlozenec_s_matkou: {label:'Odloženec s matkou',   ico:'👑', color:'#7ABF52'},
+  odlozenec_bez_matky:{label:'Odloženec bez matky',  ico:'🔶', color:'var(--warn)'},
+  zakupeny:           {label:'Zakúpený roj',          ico:'💰', color:'#88AAEE'},
+};
+
+function getKontroly(typ, datumStr){
+  const d = new Date(datumStr);
+  const add = days => { const n=new Date(d); n.setDate(n.getDate()+days); return n.toLocaleDateString('sk-SK',{day:'numeric',month:'short'}); };
+  if(typ === 'odlozenec_bez_matky') return [
+    {ico:'🔍', t:'Kontrola — prijali matečník / začali stavať?',  dn: add(5)},
+    {ico:'👑', t:'Prvý výlet matky — hľadaj vajíčka',             dn: add(14)},
+    {ico:'🥚', t:'Overenie kladenosti matky',                      dn: add(21)},
+    {ico:'💪', t:'Sila rodiny — pridaj plást / medzistienku',     dn: add(35)},
+  ];
+  if(typ === 'odlozenec_s_matkou') return [
+    {ico:'🥚', t:'Prvá kontrola — vajíčka, kladenosť',            dn: add(5)},
+    {ico:'💪', t:'Hodnotenie sily, prípadne kŕmenie',              dn: add(14)},
+    {ico:'🏠', t:'Rozšírenie priestoru ak treba',                  dn: add(28)},
+    {ico:'🍯', t:'Hodnotenie sezóny, príprava na zimu',            dn: add(60)},
+  ];
+  // prirodzeny, zakupeny
+  return [
+    {ico:'🥚', t:'Kontrola — sú vajíčka? Matka kladie?',         dn: add(7)},
+    {ico:'💪', t:'Sila rodiny, kŕmenie ak treba',                 dn: add(21)},
+    {ico:'🏠', t:'Rozšírenie priestoru',                           dn: add(35)},
+    {ico:'🍯', t:'Hodnotenie — príprava na zimu',                  dn: add(90)},
+  ];
+}
+
+function openRojModal(){
+  loadRoj();
+  const modal = document.getElementById('roj-modal');
+  modal.classList.add('show');
+  // set today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('roj-datum').value = today;
+}
+function closeRojModal(){
+  document.getElementById('roj-modal').classList.remove('show');
+}
+document.addEventListener('click', e=>{
+  if(e.target===document.getElementById('roj-modal')) closeRojModal();
+});
+
+function saveRojEntry(){
+  const typ   = document.getElementById('roj-typ').value;
+  const datum = document.getElementById('roj-datum').value;
+  const um    = document.getElementById('roj-umiestnenie').value.trim();
+  const zdr   = document.getElementById('roj-zdroj').value.trim();
+  const poz   = document.getElementById('roj-poznamka').value.trim();
+  if(!datum){ alert('Zadaj dátum'); return; }
+  const kontroly = getKontroly(typ, datum).map(k=>({...k, done:false}));
+  roje.unshift({id:Date.now(), typ, datum, umiestnenie:um, zdroj:zdr, poznamka:poz, kontroly});
+  saveRoj(); closeRojModal(); renderRoj();
+  toast('Roj uložený');
+  // clear
+  ['roj-umiestnenie','roj-zdroj','roj-poznamka'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+}
+
+function renderRoj(){
+  loadRoj();
+  const list = document.getElementById('roj-list');
+  if(!roje.length){
+    list.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Žiadne záznamy o rojení.<br>Klepni + Pridať roj.</div>';
+    return;
+  }
+  list.innerHTML = roje.map((r,ri)=>{
+    const T = ROJ_TYPY[r.typ]||ROJ_TYPY.prirodzeny;
+    const d = new Date(r.datum).toLocaleDateString('sk-SK',{day:'numeric',month:'long',year:'numeric'});
+    const doneK = r.kontroly.filter(k=>k.done).length;
+    const pendK = r.kontroly.filter(k=>!k.done).length;
+    const kontroly = r.kontroly.map((k,ki)=>`
+      <div class="roj-check">
+        <div class="roj-check-ico">${k.ico}</div>
+        <div class="roj-check-body">
+          <div class="roj-check-title" style="${k.done?'text-decoration:line-through;color:var(--dim)':''}">${escH(k.t)}</div>
+          <div class="roj-check-date">Plánované: ${k.dn}</div>
+        </div>
+        <div class="roj-check-cb ${k.done?'checked':''}" onclick="toggleRojCheck(${ri},${ki})">${k.done?'✓':''}</div>
+      </div>`).join('');
+    return `<div class="roj-card" id="roj-card-${ri}">
+      <div onclick="toggleRojCard(${ri})">
+        <div class="roj-card-hdr">
+          <div class="roj-card-name" style="color:${T.color}">${T.ico} ${T.label}</div>
+          <div class="roj-card-date">${d}${r.umiestnenie?'<br>'+escH(r.umiestnenie):''}</div>
+        </div>
+        <div class="roj-tags">
+          <span class="tag t-info">${doneK}/${r.kontroly.length} kontrol hotovo</span>
+          ${pendK?`<span class="tag t-warn">${pendK} čaká</span>`:'<span class="tag t-ok">Všetko hotovo</span>'}
+        </div>
+        ${r.poznamka?`<div style="font-size:12px;color:var(--muted);line-height:1.6">${escH(r.poznamka)}</div>`:''}
+      </div>
+      <div class="roj-detail" id="roj-det-${ri}">
+        <div class="roj-checks">${kontroly}</div>
+        ${r.zdroj?`<div style="font-size:11px;color:var(--dim)">Zdroj: ${escH(r.zdroj)}</div>`:''}
+        <button class="roj-del-btn" onclick="deleteRoj(${ri})">Vymazať záznam</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleRojCard(ri){
+  const c=document.getElementById('roj-card-'+ri), d=document.getElementById('roj-det-'+ri);
+  const o=c.classList.toggle('open'); if(d)d.classList.toggle('open',o);
+}
+function toggleRojCheck(ri,ki){
+  roje[ri].kontroly[ki].done = !roje[ri].kontroly[ki].done;
+  saveRoj(); renderRoj();
+  setTimeout(()=>{
+    const c=document.getElementById('roj-card-'+ri),d=document.getElementById('roj-det-'+ri);
+    if(c)c.classList.add('open'); if(d)d.classList.add('open');
+  },10);
+}
+function deleteRoj(ri){ if(!confirm('Vymazať?'))return; roje.splice(ri,1); saveRoj(); renderRoj(); }
+
+
+// ═══════════════════════════════════════════
 // TABS / DATE / UTILS
 // ═══════════════════════════════════════════
 function sw(n){
-  ['r','n','d','cfg'].forEach(k=>{
+  ['r','n','d','hist','kal','roj','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
     document.getElementById('view-'+k).classList.toggle('active',k===n);
   });
-  if(n==='cfg'){renderCfg();}
+  if(n==='cfg')  renderCfg();
+  if(n==='hist') renderHist();
+  if(n==='kal')  renderKal();
+  if(n==='roj')  renderRoj();
 }
 function tick(){
   const el=document.getElementById('top-date'); if(!el)return;
@@ -1119,5 +1559,31 @@ function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 let tt;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),2600);}
 </script>
+<!-- ROJ MODAL -->
+<div class="modal-ov" id="roj-modal">
+  <div class="modal-box">
+    <div class="modal-title">🐝 Nový roj / odloženec</div>
+    <span class="modal-label">Typ</span>
+    <select class="modal-select" id="roj-typ">
+      <option value="prirodzeny">Prirodzený roj</option>
+      <option value="odlozenec_s_matkou">Odloženec s matkou</option>
+      <option value="odlozenec_bez_matky">Odloženec bez matky</option>
+      <option value="zakupeny">Zakúpený roj</option>
+    </select>
+    <span class="modal-label">Dátum zachytenia / vytvorenia</span>
+    <input class="modal-inp" type="date" id="roj-datum">
+    <span class="modal-label">Stanovište a úľ</span>
+    <input class="modal-inp" id="roj-umiestnenie" placeholder="napr. Záhrada · Úľ 3">
+    <span class="modal-label">Zdrojové včelstvo (odkiaľ)</span>
+    <input class="modal-inp" id="roj-zdroj" placeholder="napr. Záhrada · Včelstvo 1 (dobrovoľné)">
+    <span class="modal-label">Poznámka</span>
+    <input class="modal-inp" id="roj-poznamka" placeholder="Veľkosť, hmotnosť, farba matky...">
+    <div class="modal-row">
+      <button class="modal-save" onclick="saveRojEntry()">Uložiť</button>
+      <button class="modal-cancel" onclick="closeRojModal()">Zrušiť</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
+<!-- PATCH MARKER - will be replaced -->
