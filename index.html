@@ -1256,7 +1256,16 @@ function cfgSave(){
   const stanovistia=[];
   rows.forEach((r,i)=>{
     const n=r.querySelector('.cfg-st-name'),u=r.querySelector('.cfg-st-num');
-    stanovistia.push({name:(n&&n.value.trim())||('Stanovište '+(i+1)),ule:Math.max(1,parseInt(u&&u.value||'5')||5)});
+    const name=(n&&n.value.trim())||('Stanovište '+(i+1));
+    const ule=Math.max(1,parseInt(u&&u.value||'5')||5);
+    // Preserve existing GPS coords — find matching stanoviste by index
+    const existing = config.stanovistia[i];
+    const lat = existing ? existing.lat : undefined;
+    const lon = existing ? existing.lon : undefined;
+    const entry = {name, ule};
+    if(lat !== undefined) entry.lat = lat;
+    if(lon !== undefined) entry.lon = lon;
+    stanovistia.push(entry);
   });
   config={vcelnica:vcelnica||'Moja včelnica',stanovistia};
   persist(); applyConfig(); renderStChips(); renderDash();
