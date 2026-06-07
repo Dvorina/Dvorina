@@ -340,6 +340,25 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .modal-row{display:flex;gap:8px;margin-top:14px}
 .modal-save{flex:2;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:13px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer}
 .modal-cancel{flex:1;background:none;border:.5px solid var(--b);border-radius:6px;padding:13px;font-family:"DM Sans",sans-serif;font-size:12px;color:var(--dim);cursor:pointer;text-transform:uppercase;letter-spacing:1px}
+
+/* MATKA — farby a prehľad */
+.ul-chip{width:38px;height:38px;border-radius:8px;border:.5px solid var(--b);background:var(--dark3);font-size:14px;color:var(--muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:500;position:relative;flex-direction:column;gap:0}
+.ul-chip.active{border-color:var(--honey);background:rgba(200,132,26,.12);color:var(--honey-l)}
+.ul-queen-dot{width:8px;height:8px;border-radius:50%;position:absolute;bottom:3px;right:3px;border:1px solid rgba(0,0,0,.3)}
+.ul-queen-q{position:absolute;top:2px;right:3px;font-size:8px;line-height:1}
+.queen-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.queen-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.queen-legend-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,.2);flex-shrink:0}
+.queen-overview{display:flex;flex-direction:column;gap:7px}
+.queen-row{background:var(--dark3);border:.5px solid var(--b);border-radius:8px;padding:11px 13px;display:flex;align-items:center;gap:10px}
+.queen-row.warn-2{border-color:rgba(200,132,26,.5)}
+.queen-row.warn-3{border-color:rgba(200,74,42,.5)}
+.queen-dot-big{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(0,0,0,.2);flex-shrink:0}
+.queen-info{flex:1}
+.queen-name{font-size:13px;color:var(--text);font-weight:500;margin-bottom:2px}
+.queen-age{font-size:11px;color:var(--muted);line-height:1.5}
+.queen-badge{font-size:10px;padding:2px 8px;border-radius:20px;border:.5px solid}
+.queen-set-btn{background:none;border:.5px solid var(--b);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -422,6 +441,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="tab" id="tab-roj" onclick="sw('roj')">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       Rojenie
+    </button>
+    <button class="tab" id="tab-mat" onclick="sw('mat')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-6 0-8 2-8 3v1h16v-1c0-1-2-3-8-3z"/></svg>
+      Matky
     </button>
     <button class="tab" id="tab-poc" onclick="sw('poc')">
       <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
@@ -538,6 +561,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <button onclick="openRojModal()" style="background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:7px 13px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--dark);cursor:pointer;font-family:'DM Sans',sans-serif">+ Pridať roj</button>
       </div>
       <div id="roj-list" style="padding:10px 15px;display:flex;flex-direction:column;gap:9px"></div>
+    </div>
+
+    <!-- MATKY -->
+    <div class="view" id="view-mat">
+      <div style="padding:12px 15px 6px;border-bottom:.5px solid var(--b);display:flex;justify-content:space-between;align-items:center">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:18px">Prehľad matiek</div>
+      </div>
+      <div style="padding:10px 15px 28px">
+        <div class="queen-legend" id="queen-legend"></div>
+        <div class="queen-overview" id="queen-overview"></div>
+      </div>
     </div>
 
     <!-- POČASIE -->
@@ -688,7 +722,7 @@ function launchApp(withMic){
   renderStChips();
   renderNotes(); renderDash();
   document.getElementById('m-inp').addEventListener('keydown',e=>{if(e.key==='Enter')sendManual();});
-  loadKal(); loadRoj();
+  loadKal(); loadRoj(); loadQueens();
   if(withMic){
     setMicPill('ok');
     startSR();
@@ -922,7 +956,7 @@ function renderStChips(){
 
 function selectSt(i){
   selSt=i; selUl=null;
-  renderStChips(); renderUlChips();
+  renderStChips(); renderUlChipsWithQueens();
   document.getElementById('ul-section').style.display='flex';
   document.getElementById('ul-section').style.flexDirection='column';
   document.getElementById('ul-section').style.gap='6px';
@@ -1831,8 +1865,205 @@ function refreshPoc(){
   renderPoc();
 }
 
+
+// ═══════════════════════════════════════════
+// MATKY — farby, vek, upozornenia
+// ═══════════════════════════════════════════
+const SK_QUEENS = 'dv_queens_v1';
+let queens = {}; // key: "stIdx_ulIdx" => {year, note, setDate}
+
+function loadQueens(){ try{ queens=JSON.parse(localStorage.getItem(SK_QUEENS))||{}; }catch(e){} }
+function saveQueens(){ localStorage.setItem(SK_QUEENS, JSON.stringify(queens)); }
+
+function queenColor(year){
+  if(!year) return null;
+  const d = year % 10;
+  if(d===1||d===6) return {bg:'#E8E8E8', label:'Biela',   text:'#333'};
+  if(d===2||d===7) return {bg:'#D4B800', label:'Žltá',    text:'#333'};
+  if(d===3||d===8) return {bg:'#C84A2A', label:'Červená', text:'#fff'};
+  if(d===4||d===9) return {bg:'#3A8C3A', label:'Zelená',  text:'#fff'};
+  if(d===5||d===0) return {bg:'#3A6BC8', label:'Modrá',   text:'#fff'};
+  return null;
+}
+
+function queenAge(year){
+  if(!year) return null;
+  return new Date().getFullYear() - year;
+}
+
+function queenKey(stIdx, ulIdx){ return stIdx+'_'+ulIdx; }
+
+// Parse queen year from voice/text
+function parseQueenYear(txt){
+  const lo = txt.toLowerCase();
+  const curYear = new Date().getFullYear();
+  // explicit year
+  const yearMatch = lo.match(/(20\d{2})/);
+  if(yearMatch) return parseInt(yearMatch[1]);
+  // relative words
+  if(/tohtoročn|nová\s*matka|tento\s*rok|mladá\s*matka|čerstvá/i.test(txt)) return curYear;
+  if(/minuloročn|rok\s*star|ročná\s*matka|1\s*rok|jednoročn/i.test(txt)) return curYear-1;
+  if(/predminuloročn|2\s*rok|dvojročn|dve\s*rok/i.test(txt)) return curYear-2;
+  if(/3\s*rok|trojročn|tri\s*rok/i.test(txt)) return curYear-3;
+  if(/4\s*rok|štyri\s*rok|štvorročn/i.test(txt)) return curYear-4;
+  return null;
+}
+
+function renderQueenChip(stIdx, ulNum){
+  const key = queenKey(stIdx, ulNum-1);
+  const q = queens[key];
+  const age = q ? queenAge(q.year) : null;
+  const col = q ? queenColor(q.year) : null;
+
+  let dotHtml = '';
+  let chipStyle = '';
+  if(col){
+    dotHtml = `<div class="ul-queen-dot" style="background:${col.bg}"></div>`;
+  } else {
+    dotHtml = `<div class="ul-queen-q">❓</div>`;
+  }
+  return { dotHtml, chipStyle, age, col };
+}
+
+function renderQueenOverview(){
+  loadQueens();
+  const leg = document.getElementById('queen-legend');
+  const ov  = document.getElementById('queen-overview');
+  if(!leg || !ov) return;
+
+  const curYear = new Date().getFullYear();
+  // Legend
+  const colors = [
+    {bg:'#3A6BC8',label:'Modrá — r. '+[1,6].map(d=>(Math.floor(curYear/10)*10+d)).filter(y=>y>=curYear-2&&y<=curYear+5).join(', ')},
+    {bg:'#E8E8E8',label:'Biela'},
+    {bg:'#D4B800',label:'Žltá'},
+    {bg:'#C84A2A',label:'Červená'},
+    {bg:'#3A8C3A',label:'Zelená'},
+  ];
+  leg.innerHTML = colors.map(c=>`<div class="queen-legend-item"><div class="queen-legend-dot" style="background:${c.bg}"></div>${c.label}</div>`).join('');
+
+  // Overview
+  let html = '';
+  let warnings = [];
+  config.stanovistia.forEach((st, si) => {
+    for(let ui=0; ui<st.ule; ui++){
+      const key = queenKey(si, ui);
+      const q = queens[key];
+      const age = q ? queenAge(q.year) : null;
+      const col = q ? queenColor(q.year) : null;
+      const name = `${st.name} · Včelstvo ${ui+1}`;
+      let badgeHtml = '', rowCls = '', ageTxt = '';
+      if(!q){
+        ageTxt = 'Vek matky nezadaný';
+        badgeHtml = `<span class="queen-badge" style="border-color:var(--b);color:var(--dim)">❓ Nezadané</span>`;
+      } else {
+        ageTxt = `Rok: ${q.year} · Vek: ${age} ${age===1?'rok':age<5?'roky':'rokov'}`;
+        if(age>=3){
+          rowCls='warn-3';
+          badgeHtml=`<span class="queen-badge" style="border-color:rgba(200,74,42,.5);color:#E86A4A">⚠️ Vymeniť!</span>`;
+          warnings.push({name, age});
+        } else if(age===2){
+          rowCls='warn-2';
+          badgeHtml=`<span class="queen-badge" style="border-color:rgba(200,132,26,.5);color:var(--honey-l)">⏰ Plánovať výmenu</span>`;
+        } else {
+          badgeHtml=`<span class="queen-badge" style="border-color:rgba(90,140,58,.4);color:#7ABF52">✓ V poriadku</span>`;
+        }
+      }
+      const dotBg = col ? col.bg : 'var(--dim)';
+      html += `<div class="queen-row ${rowCls}">
+        <div class="queen-dot-big" style="background:${dotBg}"></div>
+        <div class="queen-info">
+          <div class="queen-name">${escH(name)}</div>
+          <div class="queen-age">${ageTxt}${q&&q.note?` · ${escH(q.note)}`:''}</div>
+          <div style="margin-top:5px">${badgeHtml}</div>
+        </div>
+        <button class="queen-set-btn" onclick="openQueenModal(${si},${ui})">✏️ Upraviť</button>
+      </div>`;
+    }
+  });
+  ov.innerHTML = html || '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-6 0-8 2-8 3v1h16v-1c0-1-2-3-8-3z"/></svg>Nastav počet včelstiev v Nastaveniach.</div>';
+}
+
+function renderUlChipsWithQueens(){
+  const wrap=document.getElementById('ul-chips'); wrap.innerHTML='';
+  if(selSt===null) return;
+  loadQueens();
+  const count=config.stanovistia[selSt].ule;
+  for(let i=1;i<=count;i++){
+    const key=queenKey(selSt,i-1);
+    const q=queens[key];
+    const col=q?queenColor(q.year):null;
+    const age=q?queenAge(q.year):null;
+    const c=document.createElement('div');
+    c.className='ul-chip'+(selUl===i?' active':'');
+    c.id='ul-chip-'+i;
+    c.style.position='relative';
+    // border color by queen age
+    if(col && age>=3)      c.style.borderColor='rgba(200,74,42,.6)';
+    else if(col && age>=2) c.style.borderColor='rgba(200,132,26,.5)';
+    c.innerHTML = `${i}${col
+      ? `<div style="width:7px;height:7px;border-radius:50%;background:${col.bg};position:absolute;bottom:2px;right:2px;border:1px solid rgba(0,0,0,.2)"></div>`
+      : `<div style="position:absolute;top:1px;right:2px;font-size:8px;color:var(--dim)">?</div>`}`;
+    c.onclick=(n=>()=>selectUl(n))(i);
+    wrap.appendChild(c);
+  }
+}
+
+// Queen edit modal
+function openQueenModal(si, ui){
+  loadQueens();
+  const key=queenKey(si,ui);
+  const q=queens[key]||{};
+  const st=config.stanovistia[si];
+  document.getElementById('qm-title').textContent=`${st.name} · Včelstvo ${ui+1}`;
+  document.getElementById('qm-year').value=q.year||new Date().getFullYear();
+  document.getElementById('qm-note').value=q.note||'';
+  document.getElementById('qm-si').value=si;
+  document.getElementById('qm-ui').value=ui;
+  updateQueenPreview();
+  document.getElementById('queen-modal').classList.add('show');
+}
+function closeQueenModal(){ document.getElementById('queen-modal').classList.remove('show'); }
+function updateQueenPreview(){
+  const year=parseInt(document.getElementById('qm-year').value)||0;
+  const col=queenColor(year);
+  const age=year?queenAge(year):null;
+  const prev=document.getElementById('qm-preview');
+  if(col){
+    prev.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--dark3);border-radius:8px;border:.5px solid var(--b)">
+      <div style="width:28px;height:28px;border-radius:50%;background:${col.bg};border:2px solid rgba(0,0,0,.2);flex-shrink:0"></div>
+      <div><div style="font-size:13px;color:var(--text)">${col.label} — ${year}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Vek: ${age} ${age===1?'rok':age<5?'roky':'rokov'}${age>=3?' ⚠️ Odporúčame vymeniť':age===2?' ⏰ Plánovať výmenu':' ✓ V poriadku'}</div></div>
+    </div>`;
+  } else {
+    prev.innerHTML='';
+  }
+}
+function saveQueenModal(){
+  const si=parseInt(document.getElementById('qm-si').value);
+  const ui=parseInt(document.getElementById('qm-ui').value);
+  const year=parseInt(document.getElementById('qm-year').value)||0;
+  const note=document.getElementById('qm-note').value.trim();
+  if(!year||year<2000||year>2099){toast('Zadaj platný rok (napr. 2024)');return;}
+  const key=queenKey(si,ui);
+  queens[key]={year,note,setDate:new Date().toISOString()};
+  saveQueens();
+  closeQueenModal();
+  renderQueenOverview();
+  if(selSt===si) renderUlChipsWithQueens();
+  toast('Matka uložená');
+}
+function clearQueenModal(){
+  const si=parseInt(document.getElementById('qm-si').value);
+  const ui=parseInt(document.getElementById('qm-ui').value);
+  delete queens[queenKey(si,ui)];
+  saveQueens(); closeQueenModal(); renderQueenOverview();
+  if(selSt===si) renderUlChipsWithQueens();
+  toast('Záznam matky vymazaný');
+}
+
 function sw(n){
-  ['r','n','d','hist','kal','roj','poc','cfg'].forEach(k=>{
+  ['r','n','d','hist','kal','roj','mat','poc','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
     document.getElementById('view-'+k).classList.toggle('active',k===n);
   });
@@ -1840,6 +2071,7 @@ function sw(n){
   if(n==='hist') renderHist();
   if(n==='kal')  renderKal();
   if(n==='roj')  renderRoj();
+  if(n==='mat')  renderQueenOverview();
   if(n==='poc')  renderPoc();
 }
 function tick(){
@@ -1851,6 +2083,24 @@ function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 let tt;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),2600);}
 </script>
+<!-- QUEEN MODAL -->
+<div class="modal-ov" id="queen-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="qm-title">Matka</div>
+    <div id="qm-preview" style="margin-bottom:12px"></div>
+    <span class="modal-label">Rok narodenia matky</span>
+    <input class="modal-inp" type="number" id="qm-year" min="2000" max="2099" oninput="updateQueenPreview()">
+    <span class="modal-label">Poznámka (voliteľné)</span>
+    <input class="modal-inp" id="qm-note" placeholder="napr. Carnica, záložná, po rojení...">
+    <input type="hidden" id="qm-si">
+    <input type="hidden" id="qm-ui">
+    <div class="modal-row" style="margin-top:14px">
+      <button class="modal-save" onclick="saveQueenModal()">Uložiť</button>
+      <button class="modal-cancel" onclick="closeQueenModal()">Zrušiť</button>
+    </div>
+    <button onclick="clearQueenModal()" style="width:100%;margin-top:10px;background:none;border:.5px solid rgba(200,74,42,.3);border-radius:6px;padding:9px;font-size:11px;color:#E86A4A;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px;text-transform:uppercase">Vymazať záznam matky</button>
+  </div>
+</div>
 <!-- ROJ MODAL -->
 <div class="modal-ov" id="roj-modal">
   <div class="modal-box">
