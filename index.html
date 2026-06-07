@@ -302,6 +302,41 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .modal-inp:focus{border-color:var(--honey)}
 .modal-inp::placeholder{color:var(--dim)}
 .modal-select{width:100%;background:var(--dark3);border:.5px solid var(--b);border-radius:6px;padding:11px 12px;font-size:13px;color:var(--text);font-family:"DM Sans",sans-serif;outline:none;appearance:none}
+/* POČASIE */
+.poc-st-selector{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.poc-st-btn{padding:7px 14px;border-radius:20px;border:.5px solid var(--b);background:var(--dark3);font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s;font-family:"DM Sans",sans-serif}
+.poc-st-btn.active{border-color:var(--honey);background:rgba(200,132,26,.12);color:var(--honey-l)}
+.poc-gps-btn{display:flex;align-items:center;gap:7px;background:none;border:.5px solid var(--bs);border-radius:8px;padding:9px 14px;font-size:12px;color:var(--honey-l);cursor:pointer;font-family:"DM Sans",sans-serif;width:100%;justify-content:center;transition:all .2s;margin-bottom:12px}
+.poc-gps-btn:hover{background:rgba(200,132,26,.08)}
+.poc-gps-btn.loading{opacity:.6;cursor:default}
+.poc-cards-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.poc-day-card{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:11px 8px;text-align:center}
+.poc-day-card.today{border-color:var(--honey)}
+.poc-day-name{font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.poc-ico{font-size:24px;margin-bottom:6px}
+.poc-temp{font-family:"Cormorant Garamond",serif;font-size:22px;color:var(--honey-l);line-height:1}
+.poc-temp-min{font-size:11px;color:var(--dim);margin-top:2px}
+.poc-rain{font-size:11px;color:#88AAEE;margin-top:4px}
+.poc-wind{font-size:10px;color:var(--dim);margin-top:2px}
+.poc-detail-box{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:13px;margin-bottom:12px}
+.poc-detail-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.poc-detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:.5px solid var(--b);font-size:12px}
+.poc-detail-row:last-child{border-bottom:none}
+.poc-detail-lbl{color:var(--muted)}
+.poc-detail-val{color:var(--text);font-weight:500}
+.poc-monthly-box{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);padding:13px;margin-bottom:12px}
+.poc-monthly-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.poc-monthly-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:.5px solid var(--b);font-size:12px}
+.poc-monthly-row:last-child{border-bottom:none}
+.poc-monthly-lbl{color:var(--muted)}
+.poc-monthly-bar-wrap{flex:1;margin:0 10px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.poc-monthly-bar{height:100%;background:linear-gradient(90deg,#88AAEE,#4A78C8);border-radius:2px}
+.poc-monthly-val{color:#88AAEE;min-width:40px;text-align:right}
+.poc-no-gps{text-align:center;padding:30px 20px;color:var(--dim);font-size:13px;line-height:2}
+.poc-updated{font-size:10px;color:var(--dim);text-align:center;margin-top:8px}
+.poc-bee-tip{background:rgba(200,132,26,.07);border:.5px solid var(--bs);border-radius:var(--r);padding:12px 14px;margin-bottom:12px}
+.poc-bee-tip-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--honey);margin-bottom:6px}
+.poc-bee-tip-txt{font-size:12px;color:var(--muted);line-height:1.8}
 .modal-row{display:flex;gap:8px;margin-top:14px}
 .modal-save{flex:2;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:13px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer}
 .modal-cancel{flex:1;background:none;border:.5px solid var(--b);border-radius:6px;padding:13px;font-family:"DM Sans",sans-serif;font-size:12px;color:var(--dim);cursor:pointer;text-transform:uppercase;letter-spacing:1px}
@@ -387,6 +422,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="tab" id="tab-roj" onclick="sw('roj')">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       Rojenie
+    </button>
+    <button class="tab" id="tab-poc" onclick="sw('poc')">
+      <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+      Počasie
     </button>
     <button class="tab" id="tab-cfg" onclick="sw('cfg')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -501,6 +540,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       <div id="roj-list" style="padding:10px 15px;display:flex;flex-direction:column;gap:9px"></div>
     </div>
 
+    <!-- POČASIE -->
+    <div class="view" id="view-poc">
+      <div id="poc-pad" style="padding:14px 15px 28px"></div>
+    </div>
+
     <!-- SETTINGS -->
     <div class="view" id="view-cfg">
       <div class="cfg-pad">
@@ -509,7 +553,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
           <div class="cfg-row"><div class="cfg-row-lbl">Názov<input class="cfg-inp" id="cfg-vcelnica" placeholder="Moja včelnica"></div></div>
         </div>
         <div class="cfg-box">
-          <div class="cfg-box-title">Stanovištia a počet včelstiev</div>
+          <div class="cfg-box-title">Stanovištia, počet včelstiev a GPS</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.8;margin-bottom:10px">Pre každé stanovište môžeš načítať GPS polohu — použije sa na počasie a zrážky.</div>
           <div id="cfg-st-list"></div>
           <button class="cfg-add" onclick="cfgAddSt()">+ Pridať stanovište</button>
           <button class="cfg-save" onclick="cfgSave()">Uložiť nastavenia</button>
@@ -1180,8 +1225,20 @@ function renderCfg(){
   document.getElementById('cfg-notes-cnt').textContent=notes.length;
   const list=document.getElementById('cfg-st-list'); list.innerHTML='';
   config.stanovistia.forEach((st,i)=>{
-    const row=document.createElement('div'); row.className='cfg-st-row';
-    row.innerHTML=`<input class="cfg-st-name" value="${escH(st.name)}" placeholder="Stanovište" maxlength="30"><input type="number" class="cfg-st-num" value="${st.ule}" min="1" max="99"><button class="cfg-del" onclick="cfgDelSt(${i})">✕</button>`;
+    const hasGps = st.lat && st.lon;
+    const gpsLabel = hasGps ? `📍 ${st.lat.toFixed(4)}, ${st.lon.toFixed(4)}` : '📍 Načítať GPS';
+    const row=document.createElement('div');
+    row.style.cssText='margin-bottom:10px;background:var(--dark2);border:.5px solid var(--b);border-radius:8px;padding:10px';
+    row.innerHTML=`
+      <div class="cfg-st-row" style="margin-bottom:7px">
+        <input class="cfg-st-name" value="${escH(st.name)}" placeholder="Stanovište" maxlength="30">
+        <input type="number" class="cfg-st-num" value="${st.ule}" min="1" max="99">
+        <button class="cfg-del" onclick="cfgDelSt(${i})">✕</button>
+      </div>
+      <button class="poc-gps-btn" id="gps-btn-${i}" onclick="getGpsForSt(${i})" style="margin-bottom:0;font-size:11px;padding:7px 12px">
+        ${gpsLabel}
+      </button>
+      ${hasGps ? `<div style="font-size:10px;color:var(--dim);margin-top:4px;text-align:center">Klepni pre aktualizáciu polohy</div>` : ''}`;
     list.appendChild(row);
   });
 }
@@ -1540,8 +1597,233 @@ function deleteRoj(ri){ if(!confirm('Vymazať?'))return; roje.splice(ri,1); save
 // ═══════════════════════════════════════════
 // TABS / DATE / UTILS
 // ═══════════════════════════════════════════
+
+// ═══════════════════════════════════════════
+// GPS PRE STANOVIŠTE
+// ═══════════════════════════════════════════
+function getGpsForSt(i){
+  if(!navigator.geolocation){ toast('GPS nie je dostupné'); return; }
+  const btn = document.getElementById('gps-btn-'+i);
+  if(btn){ btn.classList.add('loading'); btn.textContent='⏳ Načítavam GPS...'; }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      config.stanovistia[i].lat = lat;
+      config.stanovistia[i].lon = lon;
+      persist();
+      renderCfg();
+      toast('GPS uložená pre '+config.stanovistia[i].name);
+      // clear weather cache for this st so it refreshes
+      delete weatherCache[i];
+    },
+    err => {
+      if(btn){ btn.classList.remove('loading'); btn.textContent='📍 Načítať GPS'; }
+      if(err.code===1) toast('GPS prístup zamietnutý');
+      else toast('GPS chyba: '+err.message);
+    },
+    { enableHighAccuracy:true, timeout:15000, maximumAge:0 }
+  );
+}
+
+// ═══════════════════════════════════════════
+// POČASIE — Open-Meteo (zadarmo, bez kľúča)
+// ═══════════════════════════════════════════
+const SK_POC = 'dv_poc_cache';
+let weatherCache = {};
+let selPocSt = null;
+
+const WMO_ICONS = {
+  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',
+  45:'🌫️',48:'🌫️',
+  51:'🌦️',53:'🌦️',55:'🌧️',
+  61:'🌧️',63:'🌧️',65:'🌧️',
+  71:'❄️',73:'❄️',75:'❄️',77:'🌨️',
+  80:'🌦️',81:'🌧️',82:'⛈️',
+  85:'🌨️',86:'🌨️',
+  95:'⛈️',96:'⛈️',99:'⛈️'
+};
+const WMO_NAMES = {
+  0:'Jasno',1:'Prevažne jasno',2:'Polojasno',3:'Zamračené',
+  45:'Hmla',48:'Hmla s námrazou',
+  51:'Slabá mrholka',53:'Mrholka',55:'Silná mrholka',
+  61:'Slabý dážď',63:'Dážď',65:'Silný dážď',
+  71:'Slabý sneh',73:'Sneh',75:'Silný sneh',77:'Snehové krúpy',
+  80:'Prehánky',81:'Silné prehánky',82:'Búrkové prehánky',
+  85:'Snehové prehánky',86:'Silné snehové prehánky',
+  95:'Búrka',96:'Búrka s krúpami',99:'Ťažká búrka s krúpami'
+};
+const MESIAC_NAMES = ['Január','Február','Marec','Apríl','Máj','Jún','Júl','August','September','Október','November','December'];
+
+function beeTip(maxTemp, rain, windspeed){
+  if(maxTemp < 8)  return '🥶 Včely nevyletia — príliš chladno. Kontrola len z vonku.';
+  if(rain > 5)     return '🌧️ Dnes nelietajú — silný dážď. Vhodný čas na zápisy a planovanie.';
+  if(windspeed > 30) return '💨 Silný vietor — včely môžu byť podráždené. Opatrnosť pri kontrole.';
+  if(maxTemp > 35) return '🌡️ Veľmi horúco — tienenie úľov, dostatok vody v blízkosti stanovišťa.';
+  if(maxTemp >= 20 && rain < 2) return '✅ Ideálne podmienky pre kontrolu — teplé, suché počasie.';
+  if(maxTemp >= 14) return '🌤️ Včely aktívne lietajú — dobrý deň na kontrolu pri teplotách nad 14°C.';
+  return '⚠️ Podmienky na hranici — kontroluj len ak je nad 10°C a bez silného vetra.';
+}
+
+async function fetchWeather(lat, lon, stIdx){
+  // 3-day forecast
+  const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FPrague&forecast_days=3`;
+  // Monthly precipitation (past 12 months)
+  const now = new Date();
+  const endDate = now.toISOString().split('T')[0];
+  const startD = new Date(now); startD.setMonth(startD.getMonth()-11); startD.setDate(1);
+  const startDate = startD.toISOString().split('T')[0];
+  const histUrl = `https://api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FPrague`;
+
+  const [fRes, hRes] = await Promise.all([fetch(forecastUrl), fetch(histUrl)]);
+  const fData = await fRes.json();
+  const hData = await hRes.json();
+
+  // Aggregate monthly precipitation
+  const monthly = {};
+  if(hData.daily && hData.daily.time){
+    hData.daily.time.forEach((dateStr, i) => {
+      const d = new Date(dateStr);
+      const key = d.getFullYear()+'-'+(d.getMonth()+1);
+      const mName = MESIAC_NAMES[d.getMonth()]+' '+d.getFullYear();
+      if(!monthly[key]) monthly[key] = {name:mName, total:0, month:d.getMonth()};
+      monthly[key].total += hData.daily.precipitation_sum[i]||0;
+    });
+  }
+
+  return {
+    forecast: fData.daily,
+    monthly: Object.values(monthly).slice(-12),
+    updated: new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'})
+  };
+}
+
+async function renderPoc(){
+  const pad = document.getElementById('poc-pad');
+  const stList = config.stanovistia.filter(s=>s.lat&&s.lon);
+
+  if(!stList.length){
+    pad.innerHTML = `<div class="poc-no-gps">
+      <div style="font-size:36px;margin-bottom:12px">🗺️</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text);margin-bottom:8px">Žiadne GPS súradnice</div>
+      Pridaj GPS polohu k stanovišťam v záložke <strong style="color:var(--honey-l)">Nastavenia</strong><br>
+      Počasie sa načíta automaticky.
+    </div>`;
+    return;
+  }
+
+  // St selector
+  if(selPocSt===null || !config.stanovistia[selPocSt]?.lat) {
+    selPocSt = config.stanovistia.findIndex(s=>s.lat&&s.lon);
+  }
+
+  let stSelHtml = '<div class="poc-st-selector">';
+  stList.forEach(st => {
+    const i = config.stanovistia.indexOf(st);
+    stSelHtml += `<button class="poc-st-btn ${i===selPocSt?'active':''}" onclick="selectPocSt(${i})">${escH(st.name)}</button>`;
+  });
+  stSelHtml += '</div>';
+
+  const st = config.stanovistia[selPocSt];
+  pad.innerHTML = stSelHtml + `<div style="text-align:center;padding:20px;color:var(--dim)"><div style="font-size:24px;margin-bottom:8px">⏳</div>Načítavam počasie...</div>`;
+
+  try{
+    if(!weatherCache[selPocSt]) {
+      weatherCache[selPocSt] = await fetchWeather(st.lat, st.lon, selPocSt);
+    }
+    const data = weatherCache[selPocSt];
+    const f = data.forecast;
+    const days = f.time.map((d,i) => {
+      const date = new Date(d);
+      const dayNames = ['Ned','Pon','Uto','Str','Štvr','Pia','Sob'];
+      const isToday = i===0;
+      const wmo = f.weathercode[i];
+      return {
+        name: isToday ? 'Dnes' : dayNames[date.getDay()],
+        date: date.toLocaleDateString('sk-SK',{day:'numeric',month:'numeric'}),
+        ico: WMO_ICONS[wmo]||'🌤️',
+        desc: WMO_NAMES[wmo]||'',
+        tmax: Math.round(f.temperature_2m_max[i]),
+        tmin: Math.round(f.temperature_2m_min[i]),
+        rain: (f.precipitation_sum[i]||0).toFixed(1),
+        wind: Math.round(f.windspeed_10m_max[i]),
+        today: isToday
+      };
+    });
+
+    // Bee tip based on today
+    const tip = beeTip(days[0].tmax, parseFloat(days[0].rain), days[0].wind);
+
+    // Forecast cards
+    let cardsHtml = '<div class="poc-cards-row">';
+    days.forEach(d => {
+      cardsHtml += `<div class="poc-day-card ${d.today?'today':''}">
+        <div class="poc-day-name">${d.name}<br><span style="font-size:9px">${d.date}</span></div>
+        <div class="poc-ico">${d.ico}</div>
+        <div class="poc-temp">${d.tmax}°</div>
+        <div class="poc-temp-min">${d.tmin}°</div>
+        <div class="poc-rain">💧 ${d.rain}mm</div>
+        <div class="poc-wind">💨 ${d.wind}km/h</div>
+      </div>`;
+    });
+    cardsHtml += '</div>';
+
+    // Today detail
+    const tod = days[0];
+    const detailHtml = `<div class="poc-detail-box">
+      <div class="poc-detail-title">Dnešný deň — detail</div>
+      <div class="poc-detail-row"><span class="poc-detail-lbl">Počasie</span><span class="poc-detail-val">${tod.ico} ${tod.desc}</span></div>
+      <div class="poc-detail-row"><span class="poc-detail-lbl">Max. teplota</span><span class="poc-detail-val">${tod.tmax}°C</span></div>
+      <div class="poc-detail-row"><span class="poc-detail-lbl">Min. teplota</span><span class="poc-detail-val">${tod.tmin}°C</span></div>
+      <div class="poc-detail-row"><span class="poc-detail-lbl">Zrážky</span><span class="poc-detail-val">${tod.rain} mm</span></div>
+      <div class="poc-detail-row"><span class="poc-detail-lbl">Max. vietor</span><span class="poc-detail-val">${tod.wind} km/h</span></div>
+      <div class="poc-detail-row"><span class="poc-detail-lbl">Stanovište</span><span class="poc-detail-val">${escH(st.name)}</span></div>
+    </div>`;
+
+    // Bee tip
+    const tipHtml = `<div class="poc-bee-tip">
+      <div class="poc-bee-tip-title">🐝 Odporúčanie pre včelára</div>
+      <div class="poc-bee-tip-txt">${tip}</div>
+    </div>`;
+
+    // Monthly precipitation
+    let monthlyHtml = '<div class="poc-monthly-box"><div class="poc-monthly-title">🌧️ Mesačné zrážky — posledných 12 mesiacov</div>';
+    const maxRain = Math.max(...data.monthly.map(m=>m.total), 1);
+    data.monthly.forEach(m => {
+      const pct = Math.round((m.total/maxRain)*100);
+      monthlyHtml += `<div class="poc-monthly-row">
+        <span class="poc-monthly-lbl">${m.name}</span>
+        <div class="poc-monthly-bar-wrap"><div class="poc-monthly-bar" style="width:${pct}%"></div></div>
+        <span class="poc-monthly-val">${m.total.toFixed(0)}mm</span>
+      </div>`;
+    });
+    monthlyHtml += '</div>';
+
+    const updHtml = `<div class="poc-updated">Aktualizované: ${data.updated} · GPS: ${st.lat.toFixed(4)}, ${st.lon.toFixed(4)}</div>`;
+
+    // Refresh button
+    const refreshHtml = `<button onclick="refreshPoc()" style="background:none;border:.5px solid var(--b);border-radius:7px;padding:9px;color:var(--dim);font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:4px">🔄 Obnoviť počasie</button>`;
+
+    pad.innerHTML = stSelHtml + tipHtml + cardsHtml + detailHtml + monthlyHtml + updHtml + refreshHtml;
+
+  } catch(e) {
+    pad.innerHTML = stSelHtml + `<div class="poc-no-gps">⚠️ Nepodarilo sa načítať počasie.<br>Skontroluj internetové pripojenie.<br><br><button onclick="renderPoc()" style="background:none;border:.5px solid var(--bs);border-radius:20px;padding:7px 16px;color:var(--honey-l);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px">Skúsiť znova</button></div>`;
+  }
+}
+
+function selectPocSt(i){
+  selPocSt = i;
+  delete weatherCache[i]; // force refresh when switching
+  renderPoc();
+}
+
+function refreshPoc(){
+  if(selPocSt!==null) delete weatherCache[selPocSt];
+  renderPoc();
+}
+
 function sw(n){
-  ['r','n','d','hist','kal','roj','cfg'].forEach(k=>{
+  ['r','n','d','hist','kal','roj','poc','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
     document.getElementById('view-'+k).classList.toggle('active',k===n);
   });
@@ -1549,6 +1831,7 @@ function sw(n){
   if(n==='hist') renderHist();
   if(n==='kal')  renderKal();
   if(n==='roj')  renderRoj();
+  if(n==='poc')  renderPoc();
 }
 function tick(){
   const el=document.getElementById('top-date'); if(!el)return;
