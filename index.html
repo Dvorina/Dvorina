@@ -615,6 +615,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
             "Včelstvo [číslo]" → vyberie úľ
           </div>
           <button class="cfg-mic-btn" onclick="recheckMic()">Znova požiadať o povolenie mikrofónu</button>
+          <button class="cfg-mic-btn" id="mic-toggle-btn" onclick="toggleMicEnabled()" style="margin-top:6px;color:var(--dim)">🎙 Vyp. mikrofón</button>
         </div>
         <div class="cfg-box">
           <div class="cfg-box-title">Dáta</div>
@@ -1471,7 +1472,8 @@ function renderKal(){
     const badgeCls = isCur?'kal-current':isPast?'kal-past':'kal-future';
     const badgeTxt = isCur?'Aktuálny mesiac':isPast?'Prebehnutý':'Nadchádzajúci';
     const custom = kalCustom[mi] || [];
-    const allTasks = [...mes.tasks.map((t,ti)=>({...t, key:`${mi}_${ti}`, custom:false})),
+    const allTasks = [...mes.tasks.map((t,ti)=>({...t, key:`${mi}_${ti}`, custom:false}))
+                      .filter(t=>!kalDone[t.key+'_hidden']),
                       ...custom.map((t,ci)=>({...t, ico:'✏️', key:`${mi}_c${ci}`, custom:true, ci}))];
     const doneCount = allTasks.filter(t=>kalDone[t.key]).length;
     html += `<div class="kal-month">
@@ -1485,6 +1487,9 @@ function renderKal(){
       <div class="kal-body ${isCur?'open':''}" id="kal-body-${mi}">`;
     allTasks.forEach(t => {
       const done = !!kalDone[t.key];
+      const delBtn = t.custom
+        ? `<button onclick="deleteKalCustom(${mi},${t.ci})" style="background:none;border:none;color:var(--dim);font-size:14px;cursor:pointer;padding:0 4px;flex-shrink:0" title="Odstrániť">✕</button>`
+        : `<button onclick="deleteKalBuiltin('${t.key}',${mi})" style="background:none;border:none;color:var(--dim);font-size:14px;cursor:pointer;padding:0 4px;flex-shrink:0;opacity:.4" title="Odstrániť">✕</button>`;
       html += `<div class="kal-task ${done?'done':''}">
         <div class="kal-task-ico">${t.ico}</div>
         <div class="kal-task-body">
@@ -1492,6 +1497,7 @@ function renderKal(){
           ${t.sub?`<div class="kal-task-sub">${escH(t.sub)}</div>`:''}
         </div>
         <div class="kal-task-cb ${done?'checked':''}" onclick="toggleKalTask('${t.key}', ${mi})" title="${done?'Označiť ako nedone':'Označiť ako hotovo'}">${done?'✓':''}</div>
+        ${delBtn}
       </div>`;
     });
     html += `<div class="kal-add-row">
@@ -1720,34 +1726,47 @@ function beeTip(maxTemp, rain, windspeed){
 }
 
 async function fetchWeather(lat, lon, stIdx){
-  // 3-day forecast
-  const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FPrague&forecast_days=3&models=icon_eu`;
-  // Monthly precipitation (past 12 months)
   const now = new Date();
   const endDate = now.toISOString().split('T')[0];
   const startD = new Date(now); startD.setMonth(startD.getMonth()-11); startD.setDate(1);
   const startDate = startD.toISOString().split('T')[0];
-  const histUrl = `https://api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FPrague`;
+
+  const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+    +`&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max`
+    +`&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,relativehumidity_2m`
+    +`&timezone=Europe%2FPrague&forecast_days=3&models=icon_eu`;
+
+  const histUrl = `https://api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}`
+    +`&start_date=${startDate}&end_date=${endDate}`
+    +`&daily=precipitation_sum,temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague`;
 
   const [fRes, hRes] = await Promise.all([fetch(forecastUrl), fetch(histUrl)]);
   const fData = await fRes.json();
   const hData = await hRes.json();
 
-  // Aggregate monthly precipitation
+  // Monthly aggregation
   const monthly = {};
   if(hData.daily && hData.daily.time){
     hData.daily.time.forEach((dateStr, i) => {
       const d = new Date(dateStr);
       const key = d.getFullYear()+'-'+(d.getMonth()+1);
       const mName = MESIAC_NAMES[d.getMonth()]+' '+d.getFullYear();
-      if(!monthly[key]) monthly[key] = {name:mName, total:0, month:d.getMonth()};
+      if(!monthly[key]) monthly[key] = {name:mName, total:0, tmax:[], tmin:[]};
       monthly[key].total += hData.daily.precipitation_sum[i]||0;
+      if(hData.daily.temperature_2m_max[i]!=null) monthly[key].tmax.push(hData.daily.temperature_2m_max[i]);
+      if(hData.daily.temperature_2m_min[i]!=null) monthly[key].tmin.push(hData.daily.temperature_2m_min[i]);
     });
   }
+  const monthlyArr = Object.values(monthly).slice(-12).map(m=>({
+    ...m,
+    avgMax: m.tmax.length ? (m.tmax.reduce((a,b)=>a+b,0)/m.tmax.length).toFixed(1) : null,
+    avgMin: m.tmin.length ? (m.tmin.reduce((a,b)=>a+b,0)/m.tmin.length).toFixed(1) : null,
+  }));
 
   return {
     forecast: fData.daily,
-    monthly: Object.values(monthly).slice(-12),
+    hourly: fData.hourly,
+    monthly: monthlyArr,
     updated: new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'})
   };
 }
@@ -1786,6 +1805,8 @@ async function renderPoc(){
       weatherCache[selPocSt] = await fetchWeather(st.lat, st.lon, selPocSt);
     }
     const data = weatherCache[selPocSt];
+    window._lastHourly = data.hourly;
+    window._lastForecastDays = data.forecast.time;
     const f = data.forecast;
     const days = f.time.map((d,i) => {
       const date = new Date(d);
@@ -1806,21 +1827,21 @@ async function renderPoc(){
     });
 
     // Bee tip based on today
-    const tip = beeTip(days[0].tmax, parseFloat(days[0].rain), days[0].wind);
-
-    // Forecast cards
+    // Forecast cards — clickable for hourly
     let cardsHtml = '<div class="poc-cards-row">';
-    days.forEach(d => {
-      cardsHtml += `<div class="poc-day-card ${d.today?'today':''}">
+    days.forEach((d,di) => {
+      cardsHtml += `<div class="poc-day-card ${d.today?'today':''}" onclick="showHourly(${di})" style="cursor:pointer" id="poc-day-${di}">
         <div class="poc-day-name">${d.name}<br><span style="font-size:9px">${d.date}</span></div>
         <div class="poc-ico">${d.ico}</div>
         <div class="poc-temp">${d.tmax}°</div>
         <div class="poc-temp-min">${d.tmin}°</div>
         <div class="poc-rain">💧 ${d.rain}mm</div>
         <div class="poc-wind">💨 ${d.wind}km/h</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:3px">▼ hodiny</div>
       </div>`;
     });
     cardsHtml += '</div>';
+    cardsHtml += '<div id="poc-hourly-wrap" style="display:none;margin-bottom:12px"></div>';
 
     // Today detail
     const tod = days[0];
@@ -1834,24 +1855,29 @@ async function renderPoc(){
       <div class="poc-detail-row"><span class="poc-detail-lbl">Stanovište</span><span class="poc-detail-val">${escH(st.name)}</span></div>
     </div>`;
 
-    // Bee tip
-    const tipHtml = `<div class="poc-bee-tip">
-      <div class="poc-bee-tip-title">🐝 Odporúčanie pre včelára</div>
-      <div class="poc-bee-tip-txt">${tip}</div>
-    </div>`;
+    const tipHtml = '';
 
     // Monthly precipitation
-    let monthlyHtml = '<div class="poc-monthly-box"><div class="poc-monthly-title">🌧️ Mesačné zrážky — posledných 12 mesiacov</div>';
+    let monthlyHtml = `<div class="poc-monthly-box">
+      <div class="poc-monthly-title" onclick="toggleMonthly()" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+        <span>🌧️ Mesačné zrážky — posledných 12 mesiacov</span>
+        <span id="poc-monthly-arrow" style="color:var(--honey-l);font-size:12px">▼</span>
+      </div>
+      <div id="poc-monthly-rows" style="display:block">`;
     const maxRain = Math.max(...data.monthly.map(m=>m.total), 1);
     data.monthly.forEach(m => {
       const pct = Math.round((m.total/maxRain)*100);
+      const tempStr = m.avgMax ? `${m.avgMin}° / ${m.avgMax}°` : '';
       monthlyHtml += `<div class="poc-monthly-row">
-        <span class="poc-monthly-lbl">${m.name}</span>
+        <span class="poc-monthly-lbl" style="min-width:90px">${m.name}</span>
         <div class="poc-monthly-bar-wrap"><div class="poc-monthly-bar" style="width:${pct}%"></div></div>
-        <span class="poc-monthly-val">${m.total.toFixed(0)}mm</span>
+        <div style="text-align:right;min-width:70px">
+          <span class="poc-monthly-val">${m.total.toFixed(1)}mm</span>
+          ${tempStr?`<div style="font-size:9px;color:var(--dim)">${tempStr}</div>`:''}
+        </div>
       </div>`;
     });
-    monthlyHtml += '</div>';
+    monthlyHtml += '</div></div>';
 
     const updHtml = `<div class="poc-updated">Aktualizované: ${data.updated} · GPS: ${st.lat.toFixed(4)}, ${st.lon.toFixed(4)}</div>`;
 
@@ -2137,6 +2163,92 @@ function clearUlQueen(){
   closeUlQueenPanel();
   renderUlChipsWithQueens();
   toast('Záznam matky vymazaný');
+}
+
+// ══════════════════════════════════════════
+// HODINOVÁ PREDPOVEĎ
+// ══════════════════════════════════════════
+let activeHourlyDay = null;
+function showHourly(dayIdx){
+  const wrap = document.getElementById('poc-hourly-wrap');
+  if(!wrap) return;
+  if(activeHourlyDay === dayIdx){ wrap.style.display='none'; activeHourlyDay=null; return; }
+  activeHourlyDay = dayIdx;
+  wrap.style.display='block';
+  const h = window._lastHourly;
+  const days = window._lastForecastDays;
+  if(!h || !days){ wrap.innerHTML='<div style="color:var(--dim);font-size:12px;padding:8px">Hodinové dáta nie sú dostupné.</div>'; return; }
+  const dayStr = days[dayIdx];
+  const idxs = h.time.map((t,i)=>t.startsWith(dayStr)?i:-1).filter(i=>i>=0);
+  let html = `<div style="background:var(--dark3);border:.5px solid var(--honey);border-radius:var(--r);padding:13px">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--honey);margin-bottom:10px">
+      Hodinová predpoveď — ${new Date(dayStr).toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'})}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px">`;
+  idxs.forEach(i => {
+    const hour = h.time[i].split('T')[1]||'';
+    const temp = Math.round(h.temperature_2m[i]);
+    const rain = (h.precipitation[i]||0).toFixed(1);
+    const wmo  = h.weathercode[i];
+    const ico  = WMO_ICONS[wmo]||'🌤️';
+    const wind = Math.round(h.windspeed_10m[i]);
+    const hum  = h.relativehumidity_2m[i];
+    const rainColor = parseFloat(rain)>0 ? '#88AAEE' : 'var(--dim)';
+    html += `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid var(--b)">
+      <span style="font-size:11px;color:var(--dim);min-width:36px">${hour.slice(0,5)}</span>
+      <span style="font-size:16px">${ico}</span>
+      <span style="font-size:13px;color:var(--text);min-width:34px;font-weight:500">${temp}°</span>
+      <span style="font-size:11px;color:${rainColor};min-width:36px">💧${rain}mm</span>
+      <span style="font-size:11px;color:var(--dim);min-width:40px">💨${wind}km/h</span>
+      <span style="font-size:11px;color:var(--dim)">💦${hum}%</span>
+    </div>`;
+  });
+  html += '</div></div>';
+  wrap.innerHTML = html;
+  wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function toggleMonthly(){
+  const rows = document.getElementById('poc-monthly-rows');
+  const arrow = document.getElementById('poc-monthly-arrow');
+  if(!rows) return;
+  const open = rows.style.display !== 'none';
+  rows.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.textContent = open ? '▶' : '▼';
+}
+
+// ══════════════════════════════════════════
+// MIC OFF BUTTON
+// ══════════════════════════════════════════
+let micEnabled = true;
+function toggleMicEnabled(){
+  micEnabled = !micEnabled;
+  const btn = document.getElementById('mic-toggle-btn');
+  if(micEnabled){
+    startSR();
+    if(btn){ btn.textContent='🎙 Vyp. mikrofón'; btn.style.color='var(--dim)'; }
+    toast('Mikrofón zapnutý');
+  } else {
+    if(SR){ try{SR.abort();}catch(e){} srRunning=false; }
+    if(recActive) stopRecAndSave();
+    if(btn){ btn.textContent='🎙 Zap. mikrofón'; btn.style.color='var(--honey-l)'; }
+    toast('Mikrofón vypnutý');
+  }
+}
+
+
+function deleteKalCustom(mi, ci){
+  if(!kalCustom[mi]) return;
+  kalCustom[mi].splice(ci,1);
+  saveKal(); renderKal();
+  setTimeout(()=>{const b=document.getElementById('kal-body-'+mi);if(b)b.classList.add('open');},10);
+}
+function deleteKalBuiltin(key, mi){
+  // Mark as hidden in kalDone with special value
+  kalDone[key+'_hidden'] = true;
+  saveKal(); renderKal();
+  setTimeout(()=>{const b=document.getElementById('kal-body-'+mi);if(b)b.classList.add('open');},10);
+  toast('Úloha skrytá');
 }
 function sw(n){
   ['r','n','d','hist','kal','roj','poc','cfg'].forEach(k=>{
