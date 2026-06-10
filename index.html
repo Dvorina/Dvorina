@@ -442,10 +442,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       Rojenie
     </button>
-    <button class="tab" id="tab-mat" onclick="sw('mat')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-6 0-8 2-8 3v1h16v-1c0-1-2-3-8-3z"/></svg>
-      Matky
-    </button>
     <button class="tab" id="tab-poc" onclick="sw('poc')">
       <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
       Počasie
@@ -482,6 +478,32 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <div class="sel-section" id="ul-section" style="display:none">
           <div class="sel-label">Včelstvo <span id="ul-voice-hint" style="color:var(--honey);font-size:10px;margin-left:6px">— povedz číslo včelstva</span></div>
           <div class="ul-chips" id="ul-chips"></div>
+          <!-- queen legend inline -->
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px" id="ul-queen-legend">
+            <span style="font-size:10px;color:var(--dim)">⚪Biela &nbsp;🟡Žltá &nbsp;🔴Červená &nbsp;🟢Zelená &nbsp;🔵Modrá &nbsp;· ?=nezadaná &nbsp;⚠=vymeniť</span>
+          </div>
+        </div>
+        <!-- queen panel -->
+        <div id="ul-queen-panel" style="display:none;background:var(--dark3);border:.5px solid var(--bs);border-radius:10px;padding:13px;flex-direction:column;gap:9px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--honey-l)" id="uqp-title">Matka včelstva</div>
+            <button onclick="closeUlQueenPanel()" style="background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer">✕</button>
+          </div>
+          <div id="uqp-preview"></div>
+          <div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Rok narodenia matky</div>
+            <input type="number" id="uqp-year" min="2000" max="2099" oninput="updateUqpPreview()"
+              style="width:100%;background:var(--dark2);border:.5px solid var(--b);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none">
+          </div>
+          <div>
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Poznámka</div>
+            <input type="text" id="uqp-note" placeholder="napr. Carnica, záložná..." maxlength="60"
+              style="width:100%;background:var(--dark2);border:.5px solid var(--b);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none">
+          </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="saveUlQueen()" style="flex:2;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:11px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer">Uložiť</button>
+            <button onclick="clearUlQueen()" style="flex:1;background:none;border:.5px solid rgba(200,74,42,.4);border-radius:6px;padding:11px;font-family:'DM Sans',sans-serif;font-size:11px;color:#E86A4A;cursor:pointer;text-transform:uppercase;letter-spacing:1px">Vymazať</button>
+          </div>
         </div>
 
         <!-- mic -->
@@ -561,17 +583,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <button onclick="openRojModal()" style="background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:7px 13px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--dark);cursor:pointer;font-family:'DM Sans',sans-serif">+ Pridať roj</button>
       </div>
       <div id="roj-list" style="padding:10px 15px;display:flex;flex-direction:column;gap:9px"></div>
-    </div>
-
-    <!-- MATKY -->
-    <div class="view" id="view-mat">
-      <div style="padding:12px 15px 6px;border-bottom:.5px solid var(--b);display:flex;justify-content:space-between;align-items:center">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:18px">Prehľad matiek</div>
-      </div>
-      <div style="padding:10px 15px 28px">
-        <div class="queen-legend" id="queen-legend"></div>
-        <div class="queen-overview" id="queen-overview"></div>
-      </div>
     </div>
 
     <!-- POČASIE -->
@@ -1710,7 +1721,7 @@ function beeTip(maxTemp, rain, windspeed){
 
 async function fetchWeather(lat, lon, stIdx){
   // 3-day forecast
-  const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FPrague&forecast_days=3`;
+  const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FPrague&forecast_days=3&models=icon_eu`;
   // Monthly precipitation (past 12 months)
   const now = new Date();
   const endDate = now.toISOString().split('T')[0];
@@ -1994,17 +2005,29 @@ function renderUlChipsWithQueens(){
     const q=queens[key];
     const col=q?queenColor(q.year):null;
     const age=q?queenAge(q.year):null;
+    const isSelected=selUl===i;
     const c=document.createElement('div');
-    c.className='ul-chip'+(selUl===i?' active':'');
     c.id='ul-chip-'+i;
-    c.style.position='relative';
-    // border color by queen age
-    if(col && age>=3)      c.style.borderColor='rgba(200,74,42,.6)';
-    else if(col && age>=2) c.style.borderColor='rgba(200,132,26,.5)';
-    c.innerHTML = `${i}${col
-      ? `<div style="width:7px;height:7px;border-radius:50%;background:${col.bg};position:absolute;bottom:2px;right:2px;border:1px solid rgba(0,0,0,.2)"></div>`
-      : `<div style="position:absolute;top:1px;right:2px;font-size:8px;color:var(--dim)">?</div>`}`;
-    c.onclick=(n=>()=>selectUl(n))(i);
+    c.style.cssText=`
+      width:46px;height:46px;border-radius:9px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      cursor:pointer;transition:all .2s;position:relative;
+      font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;
+      border:2px solid ${isSelected?'var(--honey)':col?'transparent':'var(--b)'};
+      background:${col?col.bg:'var(--dark3)'};
+      color:${col?col.text:'var(--muted)'};
+      box-shadow:${isSelected?'0 0 0 2px rgba(200,132,26,.4)':'none'};
+    `;
+    // warning border for old queens
+    if(col && age>=3)      c.style.border='2px solid #C84A2A';
+    else if(col && age>=2) c.style.border='2px solid var(--honey)';
+
+    const badge = !col
+      ? `<div style="position:absolute;top:2px;right:3px;font-size:9px;opacity:.6">?</div>`
+      : age>=3 ? `<div style="position:absolute;top:2px;right:2px;font-size:9px">⚠</div>` : '';
+
+    c.innerHTML=`${i}${badge}`;
+    c.onclick=(n=>()=>{selectUl(n);openUlQueenPanel(n);})(i);
     wrap.appendChild(c);
   }
 }
@@ -2062,8 +2085,61 @@ function clearQueenModal(){
   toast('Záznam matky vymazaný');
 }
 
+
+function openUlQueenPanel(ulNum){
+  loadQueens();
+  const key=queenKey(selSt,ulNum-1);
+  const q=queens[key]||{};
+  const st=config.stanovistia[selSt];
+  document.getElementById('uqp-title').textContent=st.name+' · Včelstvo '+ulNum;
+  document.getElementById('uqp-year').value=q.year||new Date().getFullYear();
+  document.getElementById('uqp-note').value=q.note||'';
+  document.getElementById('uqp-year').dataset.si=selSt;
+  document.getElementById('uqp-year').dataset.ui=ulNum-1;
+  updateUqpPreview();
+  const panel=document.getElementById('ul-queen-panel');
+  panel.style.display='flex';
+}
+function closeUlQueenPanel(){
+  document.getElementById('ul-queen-panel').style.display='none';
+}
+function updateUqpPreview(){
+  const year=parseInt(document.getElementById('uqp-year').value)||0;
+  const col=queenColor(year);
+  const age=year?queenAge(year):null;
+  const prev=document.getElementById('uqp-preview');
+  if(col){
+    prev.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--dark2);border-radius:7px">
+      <div style="width:24px;height:24px;border-radius:50%;background:${col.bg};border:2px solid rgba(0,0,0,.2);flex-shrink:0"></div>
+      <div><div style="font-size:12px;color:var(--text)">${col.label} — ${year}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:1px">Vek: ${age} ${age===1?'rok':age<5?'roky':'rokov'} ${age>=3?'⚠️ Vymeniť!':age===2?'⏰ Plánovať výmenu':'✓ V poriadku'}</div></div>
+    </div>`;
+  } else { prev.innerHTML=''; }
+}
+function saveUlQueen(){
+  const year=parseInt(document.getElementById('uqp-year').value)||0;
+  const note=document.getElementById('uqp-note').value.trim();
+  const si=parseInt(document.getElementById('uqp-year').dataset.si);
+  const ui=parseInt(document.getElementById('uqp-year').dataset.ui);
+  if(!year||year<2000||year>2099){toast('Zadaj platný rok');return;}
+  loadQueens();
+  queens[queenKey(si,ui)]={year,note,setDate:new Date().toISOString()};
+  saveQueens();
+  closeUlQueenPanel();
+  renderUlChipsWithQueens();
+  toast('Matka uložená ✓');
+}
+function clearUlQueen(){
+  const si=parseInt(document.getElementById('uqp-year').dataset.si);
+  const ui=parseInt(document.getElementById('uqp-year').dataset.ui);
+  delete queens[queenKey(si,ui)];
+  saveQueens();
+  closeUlQueenPanel();
+  renderUlChipsWithQueens();
+  toast('Záznam matky vymazaný');
+}
 function sw(n){
-  ['r','n','d','hist','kal','roj','mat','poc','cfg'].forEach(k=>{
+  ['r','n','d','hist','kal','roj','poc','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
     document.getElementById('view-'+k).classList.toggle('active',k===n);
   });
@@ -2071,7 +2147,6 @@ function sw(n){
   if(n==='hist') renderHist();
   if(n==='kal')  renderKal();
   if(n==='roj')  renderRoj();
-  if(n==='mat')  renderQueenOverview();
   if(n==='poc')  renderPoc();
 }
 function tick(){
