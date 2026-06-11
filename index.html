@@ -359,6 +359,23 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .queen-age{font-size:11px;color:var(--muted);line-height:1.5}
 .queen-badge{font-size:10px;padding:2px 8px;border-radius:20px;border:.5px solid}
 .queen-set-btn{background:none;border:.5px solid var(--b);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px;white-space:nowrap}
+
+/* LPIS MAPA */
+.lpis-st-bar{display:flex;gap:7px;flex-wrap:wrap;padding:10px 15px 8px;border-bottom:.5px solid var(--b);background:var(--dark2);flex-shrink:0}
+.lpis-st-btn{padding:6px 13px;border-radius:20px;border:.5px solid var(--b);background:var(--dark3);font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.lpis-st-btn.active{border-color:var(--honey);background:rgba(200,132,26,.12);color:var(--honey-l)}
+.lpis-radius-row{display:flex;align-items:center;gap:8px;padding:8px 15px;border-bottom:.5px solid var(--b);background:var(--dark2);flex-shrink:0}
+.lpis-radius-lbl{font-size:11px;color:var(--dim);letter-spacing:1px}
+.lpis-radius-btn{padding:4px 11px;border-radius:20px;border:.5px solid var(--b);background:none;font-size:11px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.lpis-radius-btn.active{border-color:var(--honey);color:var(--honey-l)}
+#lpis-map{flex:1;min-height:320px;position:relative}
+.lpis-legend{padding:10px 15px;background:var(--dark2);border-top:.5px solid var(--b);flex-shrink:0}
+.lpis-legend-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.lpis-legend-grid{display:flex;flex-wrap:wrap;gap:6px}
+.lpis-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.lpis-legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.lpis-info-box{padding:10px 15px;background:var(--dark2);border-top:.5px solid var(--b);font-size:11px;color:var(--dim);line-height:1.8;flex-shrink:0}
+.lpis-no-gps{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:30px 20px;text-align:center;color:var(--dim);font-size:13px;line-height:2}
 </style>
 </head>
 <body>
@@ -441,6 +458,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="tab" id="tab-roj" onclick="sw('roj')">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       Rojenie
+    </button>
+    <button class="tab" id="tab-lpis" onclick="sw('lpis')">
+      <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      Znáška
     </button>
     <button class="tab" id="tab-poc" onclick="sw('poc')">
       <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
@@ -583,6 +604,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
         <button onclick="openRojModal()" style="background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:7px 13px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--dark);cursor:pointer;font-family:'DM Sans',sans-serif">+ Pridať roj</button>
       </div>
       <div id="roj-list" style="padding:10px 15px;display:flex;flex-direction:column;gap:9px"></div>
+    </div>
+
+    <!-- ZNÁŠKA / LPIS -->
+    <div class="view" id="view-lpis">
+      <div id="lpis-pad" style="padding:0;height:100%;display:flex;flex-direction:column"></div>
     </div>
 
     <!-- POČASIE -->
@@ -825,14 +851,12 @@ function startSR(){
       document.getElementById('denied-banner').classList.add('show');
       return;
     }
-    setTimeout(startSR, 800);
+    if(micEnabled) setTimeout(startSR, 800);
   };
 
   SR.onend = function(){
-    // Chrome Android fires onend every ~3s — this is normal
-    // Immediately restart, srProcessed Set prevents any duplicate processing
     srRunning = false;
-    setTimeout(startSR, 80);
+    if(micEnabled) setTimeout(startSR, 80);
   };
 
   try{
@@ -2172,7 +2196,25 @@ let activeHourlyDay = null;
 function showHourly(dayIdx){
   const wrap = document.getElementById('poc-hourly-wrap');
   if(!wrap) return;
-  if(activeHourlyDay === dayIdx){ wrap.style.display='none'; activeHourlyDay=null; return; }
+  if(activeHourlyDay === dayIdx){ 
+    wrap.style.display='none'; 
+    activeHourlyDay=null;
+    // remove highlight from all
+    [0,1,2].forEach(i=>{const c=document.getElementById('poc-day-'+i);if(c)c.style.borderColor='';});
+    return; 
+  }
+  // highlight selected, unhighlight others
+  [0,1,2].forEach(i=>{
+    const c=document.getElementById('poc-day-'+i);
+    if(!c) return;
+    if(i===dayIdx){
+      c.style.borderColor='var(--honey)';
+      c.style.background='rgba(200,132,26,.08)';
+    } else {
+      c.style.borderColor= i===0 ? 'var(--honey)' : ''; // today keeps its border
+      c.style.background='';
+    }
+  });
   activeHourlyDay = dayIdx;
   wrap.style.display='block';
   const h = window._lastHourly;
@@ -2225,13 +2267,19 @@ function toggleMicEnabled(){
   micEnabled = !micEnabled;
   const btn = document.getElementById('mic-toggle-btn');
   if(micEnabled){
+    srRunning = false;
     startSR();
     if(btn){ btn.textContent='🎙 Vyp. mikrofón'; btn.style.color='var(--dim)'; }
+    setMicPill('ok');
     toast('Mikrofón zapnutý');
   } else {
-    if(SR){ try{SR.abort();}catch(e){} srRunning=false; }
+    // Stop SR and prevent auto-restart via micEnabled flag
+    if(SR){ try{SR.abort();}catch(e){} }
+    srRunning = false;
     if(recActive) stopRecAndSave();
     if(btn){ btn.textContent='🎙 Zap. mikrofón'; btn.style.color='var(--honey-l)'; }
+    setMicPill('off');
+    setStatus('off','Mikrofón vypnutý','Klepni Zap. mikrofón pre obnovenie');
     toast('Mikrofón vypnutý');
   }
 }
@@ -2250,8 +2298,253 @@ function deleteKalBuiltin(key, mi){
   setTimeout(()=>{const b=document.getElementById('kal-body-'+mi);if(b)b.classList.add('open');},10);
   toast('Úloha skrytá');
 }
+
+// ══════════════════════════════════════════
+// LPIS MAPA ZNÁŠKY
+// Vrstvy: OSM Overpass pre plodiny + LPIS WMS overlay
+// ══════════════════════════════════════════
+let lpisMap = null;
+let lpisRadius = 3; // km
+let selLpisSt = null;
+let lpisLayerGroup = null;
+let lpisCircle = null;
+
+// Farby a názvy plodín podľa LPIS kódov a OSM tagov
+const CROP_COLORS = {
+  // OSM landuse
+  'farmland':       {color:'#D4B800', fill:'rgba(212,184,0,.35)',   label:'Pole (neznáma plodina)'},
+  'meadow':         {color:'#4A8C3A', fill:'rgba(74,140,58,.35)',   label:'Lúka / Pastvina'},
+  'orchard':        {color:'#7ABF52', fill:'rgba(122,191,82,.35)',  label:'Sad'},
+  'forest':         {color:'#2A5C2A', fill:'rgba(42,92,42,.4)',     label:'Les'},
+  'grass':          {color:'#5AAA3A', fill:'rgba(90,170,58,.3)',    label:'Trávnik'},
+  'allotments':     {color:'#C8A020', fill:'rgba(200,160,32,.3)',   label:'Záhradky'},
+  'vineyard':       {color:'#8B3A8B', fill:'rgba(139,58,139,.3)',   label:'Vinica'},
+  'plant_nursery':  {color:'#3A8B5A', fill:'rgba(58,139,90,.3)',    label:'Škôlka'},
+  // OSM natural
+  'wood':           {color:'#1A4C1A', fill:'rgba(26,76,26,.4)',     label:'Les'},
+  'scrub':          {color:'#6A9A4A', fill:'rgba(106,154,74,.3)',   label:'Kroviny'},
+  'wetland':        {color:'#4A7A9A', fill:'rgba(74,122,154,.3)',   label:'Mokraď'},
+  'heath':          {color:'#AA7A3A', fill:'rgba(170,122,58,.3)',   label:'Vres'},
+  // Crops by name
+  'rapeseed':       {color:'#FFD700', fill:'rgba(255,215,0,.45)',   label:'Repka olejná 🌼'},
+  'sunflower':      {color:'#FFA500', fill:'rgba(255,165,0,.4)',    label:'Slnečnica 🌻'},
+  'phacelia':       {color:'#9370DB', fill:'rgba(147,112,219,.4)', label:'Facélia 💜'},
+  'buckwheat':      {color:'#F5F5DC', fill:'rgba(245,245,220,.4)', label:'Pohánka ⬜'},
+  'maize':          {color:'#DAA520', fill:'rgba(218,165,32,.35)', label:'Kukurica'},
+  'wheat':          {color:'#C8A050', fill:'rgba(200,160,80,.35)', label:'Pšenica'},
+  'clover':         {color:'#DC143C', fill:'rgba(220,20,60,.35)',  label:'Ďatelina 🌸'},
+  'lavender':       {color:'#967BB6', fill:'rgba(150,123,182,.4)', label:'Levanduľa'},
+  'default':        {color:'#888888', fill:'rgba(136,136,136,.2)', label:'Iná plocha'},
+};
+
+function getCropStyle(properties){
+  const p = properties;
+  // Check crop type
+  const crop = (p.crop||p.produce||p.plant||'').toLowerCase();
+  for(const key of Object.keys(CROP_COLORS)){
+    if(crop.includes(key)) return {...CROP_COLORS[key], cropName: CROP_COLORS[key].label};
+  }
+  // Check landuse/natural
+  const lu = (p.landuse||p.natural||p.leisure||'').toLowerCase();
+  if(CROP_COLORS[lu]) return {...CROP_COLORS[lu], cropName: CROP_COLORS[lu].label};
+  // Specific keywords
+  if(lu.includes('orchard')||crop.includes('fruit')) return {...CROP_COLORS['orchard'], cropName:'Sad'};
+  if(lu.includes('forest')||lu.includes('wood')) return {...CROP_COLORS['forest'], cropName:'Les'};
+  if(lu.includes('meadow')||lu.includes('grass')) return {...CROP_COLORS['meadow'], cropName:'Lúka'};
+  return {...CROP_COLORS['default'], cropName: lu||crop||'Neznáma plocha'};
+}
+
+async function renderLpis(){
+  const pad = document.getElementById('lpis-pad');
+  const stList = config.stanovistia.filter(s=>s.lat&&s.lon);
+
+  if(!stList.length){
+    pad.innerHTML = `<div class="lpis-no-gps">
+      <div style="font-size:40px;margin-bottom:12px">🗺️</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text);margin-bottom:8px">Žiadne GPS súradnice</div>
+      Pridaj GPS polohu k stanovišťam v <strong style="color:var(--honey-l)">Nastaveniach</strong>
+    </div>`;
+    return;
+  }
+
+  if(selLpisSt===null) selLpisSt=config.stanovistia.findIndex(s=>s.lat&&s.lon);
+
+  // Build UI
+  let stBtns = stList.map(st=>{
+    const i=config.stanovistia.indexOf(st);
+    return `<button class="lpis-st-btn ${i===selLpisSt?'active':''}" onclick="selectLpisSt(${i})">${escH(st.name)}</button>`;
+  }).join('');
+
+  const radii = [1,2,3,5];
+  let radBtns = radii.map(r=>`<button class="lpis-radius-btn ${r===lpisRadius?'active':''}" onclick="setLpisRadius(${r})">${r} km</button>`).join('');
+
+  pad.innerHTML = `
+    <div class="lpis-st-bar">${stBtns}</div>
+    <div class="lpis-radius-row">
+      <span class="lpis-radius-lbl">Okruh:</span>${radBtns}
+      <span style="margin-left:auto;font-size:10px;color:var(--dim)" id="lpis-loading">Načítavam...</span>
+    </div>
+    <div id="lpis-map"></div>
+    <div class="lpis-legend"><div class="lpis-legend-title">Legenda</div><div class="lpis-legend-grid" id="lpis-legend-grid"></div></div>
+    <div class="lpis-info-box" id="lpis-info">Klepni na plochu pre detail. Dáta: OpenStreetMap + LPIS WMS overlay.</div>
+  `;
+
+  // Load Leaflet if not loaded
+  if(!window.L){
+    await loadLeaflet();
+  }
+  initLpisMap();
+}
+
+function loadLeaflet(){
+  return new Promise(resolve=>{
+    if(window.L){ resolve(); return; }
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+    document.head.appendChild(css);
+    const script=document.createElement('script');
+    script.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    script.onload=resolve;
+    document.head.appendChild(script);
+  });
+}
+
+async function initLpisMap(){
+  const st = config.stanovistia[selLpisSt];
+  if(!st||!st.lat) return;
+  const mapEl = document.getElementById('lpis-map');
+  if(!mapEl) return;
+
+  // Set map height
+  const viewH = window.innerHeight;
+  mapEl.style.height = (viewH - 280) + 'px';
+
+  // Destroy old map
+  if(lpisMap){ lpisMap.remove(); lpisMap=null; }
+
+  lpisMap = L.map('lpis-map', {zoomControl:true, attributionControl:false}).setView([st.lat, st.lon], 13);
+
+  // Dark OSM tiles
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom:19, subdomains:'abcd'
+  }).addTo(lpisMap);
+
+  // LPIS WMS overlay (Slovakia - ZBGIS)
+  const lpisWMS = L.tileLayer.wms('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?', {
+    layers: 'RS_LPIS',
+    format: 'image/png',
+    transparent: true,
+    opacity: 0.55,
+    maxZoom: 19,
+    attribution: 'LPIS © GKÚ'
+  });
+  lpisWMS.addTo(lpisMap);
+
+  // Circle for radius
+  const radiusM = lpisRadius * 1000;
+  lpisCircle = L.circle([st.lat, st.lon], {
+    radius: radiusM,
+    color: '#C8841A',
+    weight: 2,
+    fillColor: 'rgba(200,132,26,.05)',
+    fillOpacity: 1,
+    dashArray: '6,4'
+  }).addTo(lpisMap);
+
+  // Center marker
+  L.circleMarker([st.lat, st.lon], {
+    radius:8, color:'#E8A832', weight:2,
+    fillColor:'#C8841A', fillOpacity:1
+  }).addTo(lpisMap).bindPopup(`<b>${escH(st.name)}</b><br>Včelnica`);
+
+  // Fetch OSM data via Overpass
+  const loadEl = document.getElementById('lpis-loading');
+  if(loadEl) loadEl.textContent = 'Načítavam plodiny...';
+
+  try{
+    const data = await fetchOverpass(st.lat, st.lon, radiusM);
+    displayOverpassData(data, st.lat, st.lon);
+    if(loadEl) loadEl.textContent = `${data.elements.length} plôch nájdených`;
+  } catch(e){
+    if(loadEl) loadEl.textContent = 'Chyba načítania';
+  }
+
+  lpisMap.fitBounds(lpisCircle.getBounds(), {padding:[10,10]});
+}
+
+async function fetchOverpass(lat, lon, radiusM){
+  const r = radiusM;
+  const query = `[out:json][timeout:25];
+(
+  way["landuse"~"farmland|meadow|orchard|vineyard|forest|grass|allotments|plant_nursery"](around:${r},${lat},${lon});
+  way["natural"~"wood|scrub|wetland|heath|grassland"](around:${r},${lat},${lon});
+  way["crop"](around:${r},${lat},${lon});
+  relation["landuse"~"farmland|meadow|orchard|vineyard|forest"](around:${r},${lat},${lon});
+);
+out body;>;out skel qt;`;
+
+  const res = await fetch('https://overpass-api.de/api/interpreter', {
+    method:'POST',
+    body: 'data=' + encodeURIComponent(query)
+  });
+  return res.json();
+}
+
+function displayOverpassData(data, centerLat, centerLon){
+  if(!lpisMap) return;
+  if(lpisLayerGroup){ lpisLayerGroup.remove(); }
+  lpisLayerGroup = L.layerGroup().addTo(lpisMap);
+
+  const nodes = {};
+  data.elements.forEach(el=>{ if(el.type==='node') nodes[el.id]={lat:el.lat,lon:el.lon}; });
+
+  const usedCrops = {};
+
+  data.elements.forEach(el=>{
+    if(el.type!=='way'||!el.nodes) return;
+    const coords = el.nodes.map(id=>nodes[id]).filter(Boolean).map(n=>[n.lat,n.lon]);
+    if(coords.length < 3) return;
+
+    const style = getCropStyle(el.tags||{});
+    usedCrops[style.cropName] = style;
+
+    const poly = L.polygon(coords, {
+      color: style.color,
+      weight: 1,
+      fillColor: style.color,
+      fillOpacity: 0.3,
+    }).addTo(lpisLayerGroup);
+
+    const name = el.tags?.name||el.tags?.crop||el.tags?.landuse||el.tags?.natural||'';
+    poly.on('click', ()=>{
+      const info = document.getElementById('lpis-info');
+      if(info) info.innerHTML = `<strong style="color:var(--text)">${style.cropName}</strong>${name?' — '+escH(name):''}<br>
+        <span style="color:var(--dim)">Landuse: ${el.tags?.landuse||'—'} · Natural: ${el.tags?.natural||'—'} · Crop: ${el.tags?.crop||'—'}</span>`;
+    });
+  });
+
+  // Update legend
+  const grid = document.getElementById('lpis-legend-grid');
+  if(grid){
+    grid.innerHTML = Object.entries(usedCrops).map(([name,style])=>
+      `<div class="lpis-legend-item"><div class="lpis-legend-dot" style="background:${style.color}"></div>${name}</div>`
+    ).join('');
+  }
+}
+
+function selectLpisSt(i){
+  selLpisSt=i;
+  renderLpis();
+}
+
+function setLpisRadius(r){
+  lpisRadius=r;
+  renderLpis();
+}
+
 function sw(n){
-  ['r','n','d','hist','kal','roj','poc','cfg'].forEach(k=>{
+  ['r','n','d','hist','kal','roj','lpis','poc','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
     document.getElementById('view-'+k).classList.toggle('active',k===n);
   });
@@ -2260,6 +2553,7 @@ function sw(n){
   if(n==='kal')  renderKal();
   if(n==='roj')  renderRoj();
   if(n==='poc')  renderPoc();
+  if(n==='lpis') renderLpis();
 }
 function tick(){
   const el=document.getElementById('top-date'); if(!el)return;
