@@ -376,6 +376,56 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .lpis-legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
 .lpis-info-box{padding:10px 15px;background:var(--dark2);border-top:.5px solid var(--b);font-size:11px;color:var(--dim);line-height:1.8;flex-shrink:0}
 .lpis-no-gps{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:30px 20px;text-align:center;color:var(--dim);font-size:13px;line-height:2}
+
+/* PREHLIADKY */
+.preh-hdr{padding:12px 15px 8px;border-bottom:.5px solid var(--b);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.preh-title{font-family:'Cormorant Garamond',serif;font-size:18px}
+.preh-new-btn{background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:6px;padding:7px 13px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--dark);cursor:pointer;font-family:'DM Sans',sans-serif}
+.preh-list{padding:10px 15px;display:flex;flex-direction:column;gap:9px}
+.preh-card{background:var(--dark3);border:.5px solid var(--b);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.preh-card.active-preh{border-color:var(--honey)}
+.preh-card-hdr{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.preh-card-left{display:flex;flex-direction:column;gap:3px}
+.preh-card-date{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--honey-l)}
+.preh-card-meta{font-size:11px;color:var(--dim);letter-spacing:.5px}
+.preh-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.preh-export-btn{background:none;border:.5px solid var(--bs);border-radius:20px;padding:4px 11px;font-size:10px;color:var(--honey-l);cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px;white-space:nowrap}
+.preh-body{display:none;border-top:.5px solid var(--b)}
+.preh-body.open{display:block}
+.preh-vcely{padding:10px 14px;display:flex;flex-direction:column;gap:7px}
+.preh-vcel-card{background:var(--dark2);border:.5px solid var(--b);border-radius:8px;padding:11px 13px;cursor:pointer;transition:border-color .2s}
+.preh-vcel-card.open{border-color:var(--honey)}
+.preh-vcel-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.preh-vcel-name{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--honey-l);display:flex;align-items:center;gap:6px}
+.preh-vcel-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}
+.preh-vcel-detail{display:none;flex-direction:column;gap:6px;margin-top:8px;padding-top:8px;border-top:.5px solid var(--b)}
+.preh-vcel-detail.open{display:flex}
+.preh-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.preh-stat{background:var(--dark3);border-radius:6px;padding:8px 10px}
+.preh-stat-lbl{font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+.preh-stat-val{font-size:15px;color:var(--text);font-family:'Cormorant Garamond',serif}
+.preh-notes{font-size:12px;color:var(--muted);line-height:1.7;padding:8px 10px;background:var(--dark3);border-radius:6px}
+.preh-rec{border-left:2px solid var(--honey);padding:7px 10px;background:rgba(200,132,26,.07);border-radius:0 5px 5px 0;font-size:12px;color:#E8D4A0;line-height:1.7}
+
+/* QUICK ENTRY PANEL */
+.qe-panel{position:fixed;inset:0;background:rgba(10,8,6,.9);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.qe-panel.show{display:flex}
+.qe-box{background:var(--dark2);border:.5px solid var(--bs);border-radius:16px 16px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding:18px 16px 30px}
+.qe-title{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--honey-l);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.qe-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.qe-field{display:flex;flex-direction:column;gap:4px}
+.qe-field.full{grid-column:1/-1}
+.qe-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.qe-inp{background:var(--dark3);border:.5px solid var(--b);border-radius:6px;padding:10px 11px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:100%}
+.qe-inp:focus{border-color:var(--honey)}
+.qe-inp::placeholder{color:var(--dim)}
+.qe-slider-row{display:flex;align-items:center;gap:8px}
+.qe-slider{flex:1;accent-color:var(--honey)}
+.qe-slider-val{font-size:14px;color:var(--honey-l);min-width:24px;text-align:right;font-family:'Cormorant Garamond',serif}
+.qe-save{width:100%;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:8px;padding:13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer;margin-top:10px}
+.qe-tags-row{display:flex;flex-wrap:wrap;gap:6px}
+.qe-tag{padding:6px 12px;border-radius:20px;border:.5px solid var(--b);background:var(--dark3);font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.qe-tag.on{border-color:var(--honey);background:rgba(200,132,26,.15);color:var(--honey-l)}
 </style>
 </head>
 <body>
@@ -454,6 +504,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <button class="tab" id="tab-kal" onclick="sw('kal')">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       Kalendár
+    </button>
+    <button class="tab" id="tab-preh" onclick="sw('preh')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+      Prehliadky
     </button>
     <button class="tab" id="tab-roj" onclick="sw('roj')">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -595,6 +649,15 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     <!-- KALENDÁR -->
     <div class="view" id="view-kal">
       <div class="d-pad" id="kal-pad"></div>
+    </div>
+
+    <!-- PREHLIADKY -->
+    <div class="view" id="view-preh" style="display:flex;flex-direction:column">
+      <div class="preh-hdr">
+        <div class="preh-title">Prehliadky</div>
+        <button class="preh-new-btn" onclick="newPrehliadka()">+ Nová prehliadka</button>
+      </div>
+      <div class="preh-list" id="preh-list"></div>
     </div>
 
     <!-- ROJOVÝ DENNÍK -->
@@ -897,6 +960,7 @@ function startRec(){
   if(recActive) return;
   recActive = true;
   savedChunks = [];
+  srProcessed.clear(); // reset so 2nd colony doesn't filter as duplicates
   document.getElementById('mic').classList.add('on');
   document.getElementById('mic-lbl').textContent = 'Nahrávam — klepni pre zastavenie';
   document.getElementById('mic-lbl').classList.add('on');
@@ -2544,7 +2608,7 @@ function setLpisRadius(r){
 }
 
 function sw(n){
-  ['r','n','d','hist','kal','roj','lpis','poc','cfg'].forEach(k=>{
+  ['r','n','d','hist','kal','preh','roj','lpis','poc','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
     document.getElementById('view-'+k).classList.toggle('active',k===n);
   });
@@ -2554,6 +2618,7 @@ function sw(n){
   if(n==='roj')  renderRoj();
   if(n==='poc')  renderPoc();
   if(n==='lpis') renderLpis();
+  if(n==='preh') renderPrehliadky();
 }
 function tick(){
   const el=document.getElementById('top-date'); if(!el)return;
@@ -2582,6 +2647,68 @@ function toast(msg){const el=document.getElementById('toast');el.textContent=msg
     <button onclick="clearQueenModal()" style="width:100%;margin-top:10px;background:none;border:.5px solid rgba(200,74,42,.3);border-radius:6px;padding:9px;font-size:11px;color:#E86A4A;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px;text-transform:uppercase">Vymazať záznam matky</button>
   </div>
 </div>
+
+<!-- QUICK ENTRY PANEL -->
+<div class="qe-panel" id="qe-panel">
+  <div class="qe-box">
+    <div class="qe-title">
+      <span id="qe-title-txt">Zápisok</span>
+      <button onclick="closeQE()" style="background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer">✕</button>
+    </div>
+
+    <div class="qe-grid">
+      <div class="qe-field full">
+        <div class="qe-lbl">Sila včelstva — obsadené uličky</div>
+        <div class="qe-slider-row">
+          <input type="range" class="qe-slider" id="qe-sila" min="0" max="20" value="8" oninput="document.getElementById('qe-sila-val').textContent=this.value">
+          <div class="qe-slider-val" id="qe-sila-val">8</div>
+        </div>
+      </div>
+      <div class="qe-field full">
+        <div class="qe-lbl">Bodavosť / Agresivita (1–5)</div>
+        <div class="qe-slider-row">
+          <input type="range" class="qe-slider" id="qe-agr" min="1" max="5" value="2" oninput="document.getElementById('qe-agr-val').textContent=this.value">
+          <div class="qe-slider-val" id="qe-agr-val">2</div>
+        </div>
+      </div>
+      <div class="qe-field full">
+        <div class="qe-lbl">Množstvo zásob (1–5)</div>
+        <div class="qe-slider-row">
+          <input type="range" class="qe-slider" id="qe-zasoby" min="1" max="5" value="3" oninput="document.getElementById('qe-zasoby-val').textContent=this.value">
+          <div class="qe-slider-val" id="qe-zasoby-val">3</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qe-field" style="margin-bottom:10px">
+      <div class="qe-lbl">Stav včelstva</div>
+      <div class="qe-tags-row" id="qe-tags-row">
+        <div class="qe-tag" onclick="this.classList.toggle('on')">✓ Matka prítomná</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">⚠ Chýba matka</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">🥚 Vajíčka OK</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">❌ Bez vajíčok</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">👑 Matečníky</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">🌿 Liečenie</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">🍬 Kŕmenie</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">🐝 Rojenie</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">💪 Silné</div>
+        <div class="qe-tag" onclick="this.classList.toggle('on')">📉 Slabé</div>
+      </div>
+    </div>
+
+    <div class="qe-field" style="margin-bottom:10px">
+      <div class="qe-lbl">Rok matky</div>
+      <input type="number" class="qe-inp" id="qe-queen-year" min="2000" max="2099" placeholder="napr. 2024">
+    </div>
+
+    <div class="qe-field" style="margin-bottom:10px">
+      <div class="qe-lbl">Poznámky (z hlasového záznamu alebo ručne)</div>
+      <textarea class="qe-inp" id="qe-notes" rows="3" placeholder="Volné poznámky k včelstvu..." style="resize:none;line-height:1.6"></textarea>
+    </div>
+
+    <button class="qe-save" onclick="saveQEEntry()">Uložiť zápisok</button>
+  </div>
+</div>
 <!-- ROJ MODAL -->
 <div class="modal-ov" id="roj-modal">
   <div class="modal-box">
@@ -2607,6 +2734,324 @@ function toast(msg){const el=document.getElementById('toast');el.textContent=msg
     </div>
   </div>
 </div>
+
+<script>
+// ══════════════════════════════════════════
+// PREHLIADKY SYSTEM
+// ══════════════════════════════════════════
+const SK_PREH = 'dv_preh_v1';
+let prehliadky = []; // [{id, date, stanoviste, vcielstva:[{stIdx,ulIdx,data}]}]
+let activePreh = null;  // current prehliadka id being filled
+let qeCurrentSt = null;
+let qeCurrentUl = null;
+
+function loadPrehliadky(){ try{ prehliadky=JSON.parse(localStorage.getItem(SK_PREH))||[]; }catch(e){} }
+function savePrehliadky(){ localStorage.setItem(SK_PREH, JSON.stringify(prehliadky)); }
+
+function newPrehliadka(){
+  loadPrehliadky();
+  const now = new Date();
+  const p = {
+    id: Date.now(),
+    date: now.toISOString(),
+    stanoviste: null,
+    vcielstva: []
+  };
+  prehliadky.unshift(p);
+  activePreh = p.id;
+  savePrehliadky();
+  renderPrehliadky();
+  toast('Nová prehliadka vytvorená — vyber stanovište a včelstvo');
+}
+
+function renderPrehliadky(){
+  loadPrehliadky();
+  const list = document.getElementById('preh-list');
+  if(!list) return;
+  if(!prehliadky.length){
+    list.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Žiadne prehliadky.<br>Klepni + Nová prehliadka.</div>';
+    return;
+  }
+  list.innerHTML = prehliadky.map((p,pi)=>{
+    const d = new Date(p.date);
+    const ds = d.toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const ts = d.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+    const count = p.vcielstva.length;
+    const isActive = p.id === activePreh;
+    const stName = p.stanoviste!==null ? (config.stanovistia[p.stanoviste]?.name||'') : '';
+
+    // Build vcielstvo cards
+    let vcelHtml = '';
+    if(config.stanovistia.length){
+      // St selector for this prehliadka
+      const stBtns = config.stanovistia.map((st,si)=>
+        `<button class="qe-tag ${p.stanoviste===si?'on':''}" onclick="setPrehSt(${pi},${si})" style="font-size:11px">${escH(st.name)}</button>`
+      ).join('');
+      vcelHtml += `<div style="padding:10px 14px;border-bottom:.5px solid var(--b)">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:7px">Stanovište</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${stBtns}</div>
+      </div>`;
+
+      // Ul chips
+      if(p.stanoviste!==null){
+        const st = config.stanovistia[p.stanoviste];
+        let chips = '';
+        for(let ui=0;ui<st.ule;ui++){
+          const entry = p.vcielstva.find(v=>v.stIdx===p.stanoviste&&v.ulIdx===ui);
+          const hasData = !!entry;
+          loadQueens();
+          const q = queens[queenKey(p.stanoviste,ui)];
+          const col = q?queenColor(q.year):null;
+          chips += `<div onclick="openQEForPreh(${pi},${p.stanoviste},${ui})" style="
+            width:44px;height:44px;border-radius:8px;border:1.5px solid ${hasData?'var(--honey)':'var(--b)'};
+            background:${col?col.bg:hasData?'rgba(200,132,26,.1)':'var(--dark3)'};
+            color:${col?col.text:hasData?'var(--honey-l)':'var(--muted)'};
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            cursor:pointer;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;
+            position:relative;transition:all .2s">
+            ${ui+1}
+            ${hasData?`<div style="position:absolute;bottom:2px;right:2px;width:6px;height:6px;border-radius:50%;background:var(--ok)"></div>`:''}
+          </div>`;
+        }
+        vcelHtml += `<div style="padding:10px 14px;border-bottom:.5px solid var(--b)">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:7px">Včelstvo — klepni pre zápisok</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">${chips}</div>
+        </div>`;
+      }
+    }
+
+    // Recorded entries summary
+    if(p.vcielstva.length){
+      vcelHtml += `<div class="preh-vcely">`;
+      p.vcielstva.forEach((v,vi)=>{
+        const stN = config.stanovistia[v.stIdx]?.name||'?';
+        const uc = v.data.urgency==='urgent'?'#E86A4A':v.data.urgency==='soon'?'var(--honey-l)':'var(--ok)';
+        const tags = (v.data.tags||[]).map(t=>`<span class="tag t-${t.t}" style="font-size:9px;padding:1px 6px">${escH(t.l)}</span>`).join('');
+        vcelHtml += `<div class="preh-vcel-card" onclick="togglePrehVcel(${pi},${vi})">
+          <div class="preh-vcel-hdr">
+            <div class="preh-vcel-name"><div class="c-dot" style="background:${uc}"></div>${escH(stN)} · Včelstvo ${v.ulIdx+1}</div>
+            <button onclick="event.stopPropagation();deletePrehVcel(${pi},${vi})" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px">✕</button>
+          </div>
+          <div class="preh-vcel-tags">${tags}</div>
+          <div class="preh-vcel-detail" id="pvd-${pi}-${vi}">
+            <div class="preh-stat-grid">
+              <div class="preh-stat"><div class="preh-stat-lbl">Sila (uličky)</div><div class="preh-stat-val">${v.data.sila||'—'}</div></div>
+              <div class="preh-stat"><div class="preh-stat-lbl">Agresivita</div><div class="preh-stat-val">${v.data.agr||'—'}/5</div></div>
+              <div class="preh-stat"><div class="preh-stat-lbl">Zásoby</div><div class="preh-stat-val">${v.data.zasoby||'—'}/5</div></div>
+              <div class="preh-stat"><div class="preh-stat-lbl">Matka rok</div><div class="preh-stat-val">${v.data.queenYear||'—'}</div></div>
+            </div>
+            ${v.data.notes?`<div class="preh-notes">${escH(v.data.notes)}</div>`:''}
+            ${v.data.rec?`<div class="preh-rec">${escH(v.data.rec)}</div>`:''}
+          </div>
+        </div>`;
+      });
+      vcelHtml += '</div>';
+    }
+
+    return `<div class="preh-card ${isActive?'active-preh':''}" id="preh-card-${pi}">
+      <div class="preh-card-hdr" onclick="togglePrehCard(${pi})">
+        <div class="preh-card-left">
+          <div class="preh-card-date">${ds}</div>
+          <div class="preh-card-meta">${ts}${stName?' · '+escH(stName):''} · ${count} včelstiev</div>
+        </div>
+        <div class="preh-card-right">
+          <button class="preh-export-btn" onclick="event.stopPropagation();exportPrehliadka(${pi})">📊 Export</button>
+          <button onclick="event.stopPropagation();deletePrehliadka(${pi})" style="background:none;border:.5px solid rgba(200,74,42,.3);border-radius:20px;padding:3px 9px;font-size:10px;color:#E86A4A;cursor:pointer;font-family:'DM Sans',sans-serif">Vymazať</button>
+        </div>
+      </div>
+      <div class="preh-body ${isActive?'open':''}" id="preh-body-${pi}">${vcelHtml}</div>
+    </div>`;
+  }).join('');
+
+  // Export all button
+  if(prehliadky.length > 1){
+    list.innerHTML += `<button onclick="exportAllPrehliadky()" style="width:100%;background:none;border:.5px solid var(--bs);border-radius:8px;padding:11px;color:var(--honey-l);font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px">📊 Exportovať všetky prehliadky</button>`;
+  }
+}
+
+function togglePrehCard(pi){
+  const body = document.getElementById('preh-body-'+pi);
+  if(body) body.classList.toggle('open');
+}
+
+function togglePrehVcel(pi,vi){
+  const el = document.getElementById(`pvd-${pi}-${vi}`);
+  if(el){ el.classList.toggle('open'); el.parentElement.classList.toggle('open'); }
+}
+
+function deletePrehVcel(pi,vi){
+  prehliadky[pi].vcielstva.splice(vi,1);
+  savePrehliadky(); renderPrehliadky();
+}
+
+function deletePrehliadka(pi){
+  if(!confirm('Vymazať celú prehliadku?')) return;
+  prehliadky.splice(pi,1);
+  if(activePreh === (prehliadky[pi]?.id)) activePreh=null;
+  savePrehliadky(); renderPrehliadky();
+}
+
+function setPrehSt(pi,si){
+  prehliadky[pi].stanoviste = si;
+  savePrehliadky(); renderPrehliadky();
+  // open the card
+  setTimeout(()=>{ const b=document.getElementById('preh-body-'+pi); if(b)b.classList.add('open'); },10);
+}
+
+function openQEForPreh(pi, stIdx, ulIdx){
+  qeCurrentSt = stIdx;
+  qeCurrentUl = ulIdx;
+  const p = prehliadky[pi];
+  const st = config.stanovistia[stIdx];
+  document.getElementById('qe-title-txt').textContent = `${st.name} · Včelstvo ${ulIdx+1}`;
+
+  // Pre-fill from existing entry
+  const existing = p.vcielstva.find(v=>v.stIdx===stIdx&&v.ulIdx===ulIdx);
+  const d = existing?.data||{};
+  document.getElementById('qe-sila').value = d.sila||8;
+  document.getElementById('qe-sila-val').textContent = d.sila||8;
+  document.getElementById('qe-agr').value = d.agr||2;
+  document.getElementById('qe-agr-val').textContent = d.agr||2;
+  document.getElementById('qe-zasoby').value = d.zasoby||3;
+  document.getElementById('qe-zasoby-val').textContent = d.zasoby||3;
+  document.getElementById('qe-queen-year').value = d.queenYear||'';
+  document.getElementById('qe-notes').value = d.notes||'';
+
+  // Reset tags
+  document.querySelectorAll('#qe-tags-row .qe-tag').forEach(t=>t.classList.remove('on'));
+  if(d.tags) d.tags.forEach(tag=>{
+    document.querySelectorAll('#qe-tags-row .qe-tag').forEach(t=>{
+      if(t.textContent.trim().includes(tag.l.trim())) t.classList.add('on');
+    });
+  });
+
+  // Store pi
+  document.getElementById('qe-panel').dataset.pi = pi;
+  document.getElementById('qe-panel').classList.add('show');
+}
+
+function closeQE(){
+  document.getElementById('qe-panel').classList.remove('show');
+}
+
+function saveQEEntry(){
+  const pi = parseInt(document.getElementById('qe-panel').dataset.pi);
+  const p = prehliadky[pi];
+  const sila = parseInt(document.getElementById('qe-sila').value);
+  const agr  = parseInt(document.getElementById('qe-agr').value);
+  const zasoby = parseInt(document.getElementById('qe-zasoby').value);
+  const qYear = parseInt(document.getElementById('qe-queen-year').value)||null;
+  const notes = document.getElementById('qe-notes').value.trim();
+
+  // Collect tags
+  const tags = [];
+  document.querySelectorAll('#qe-tags-row .qe-tag.on').forEach(t=>{
+    const txt = t.textContent.trim();
+    const isDanger = txt.includes('Chýba matka')||txt.includes('Bez vajíčok');
+    const isWarn   = txt.includes('Matečníky')||txt.includes('Rojenie')||txt.includes('Slabé')||txt.includes('Liečenie');
+    const isOk     = txt.includes('Matka prítomná')||txt.includes('Vajíčka OK')||txt.includes('Silné');
+    const isInfo   = txt.includes('Kŕmenie')||txt.includes('Liečenie');
+    const type = isDanger?'danger':isWarn?'warn':isOk?'ok':'info';
+    tags.push({l:txt.replace(/^[^\w]*/, '').trim(), t:type});
+  });
+
+  // Auto recommendation
+  const noQ  = tags.some(t=>t.l.includes('Chýba matka'));
+  const noE  = tags.some(t=>t.l.includes('Bez vajíčok'));
+  const hasQc= tags.some(t=>t.l.includes('Matečníky'));
+  let rec='', urgency='normal';
+  if(noQ&&noE){urgency='urgent';rec='Osirotené včelstvo — zaobstarať matku do 48h.';}
+  else if(noQ){urgency='urgent';rec='Chýba matka — skontrolovať matečníky, prípadne pridať záložnú.';}
+  else if(hasQc){urgency='soon';rec='Matečníky prítomné — sledovať rojenie každé 3 dni.';}
+  else if(agr>=4){urgency='soon';rec='Vysoká agresivita — skontrolovať matku a zásoby.';}
+  else if(sila<=4){urgency='soon';rec='Slabé včelstvo — skontrolovať stav, zvážiť spojenie.';}
+  else{rec='Bežná kontrola bez výrazných problémov.';}
+
+  const data = {sila, agr, zasoby, tags, queenYear:qYear, notes, rec, urgency, date:new Date().toISOString()};
+
+  // Save queen year if provided
+  if(qYear && qeCurrentSt!==null && qeCurrentUl!==null){
+    loadQueens();
+    queens[queenKey(qeCurrentSt,qeCurrentUl)] = {year:qYear, note:'Z prehliadky', setDate:new Date().toISOString()};
+    saveQueens();
+  }
+
+  // Replace or add entry
+  const existing = p.vcielstva.findIndex(v=>v.stIdx===qeCurrentSt&&v.ulIdx===qeCurrentUl);
+  if(existing>=0) p.vcielstva[existing].data = data;
+  else p.vcielstva.push({stIdx:qeCurrentSt, ulIdx:qeCurrentUl, data});
+
+  savePrehliadky();
+  closeQE();
+  renderPrehliadky();
+  // re-open card
+  const pi2=pi;
+  setTimeout(()=>{ const b=document.getElementById('preh-body-'+pi2); if(b)b.classList.add('open'); },10);
+  toast('Zápisok uložený');
+}
+
+// ══════════════════════════════════════════
+// EXPORT DO CSV / Excel
+// ══════════════════════════════════════════
+function escCsv(v){ return '"'+String(v||'').replace(/"/g,'""')+'"'; }
+
+function buildCsvFromPrehliadky(subset){
+  const header = ['Dátum prehliadky','Čas','Stanovište','Včelstvo č.','Sila (uličky)','Agresivita (1-5)','Zásoby (1-5)','Rok matky','Matka prítomná','Vajíčka','Matečníky','Liečenie','Kŕmenie','Rojenie','Urgentnosť','Odporúčanie','Poznámky'];
+  const rows = [header];
+  subset.forEach(p=>{
+    const d = new Date(p.date);
+    const dateStr = d.toLocaleDateString('sk-SK');
+    const timeStr = d.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+    p.vcielstva.forEach(v=>{
+      const st = config.stanovistia[v.stIdx]?.name||'?';
+      const tags = v.data.tags||[];
+      const hasTag = (kw)=>tags.some(t=>t.l.toLowerCase().includes(kw.toLowerCase()))?'Áno':'';
+      rows.push([
+        dateStr, timeStr,
+        st, v.ulIdx+1,
+        v.data.sila||'', v.data.agr||'', v.data.zasoby||'',
+        v.data.queenYear||'',
+        hasTag('matka prítomná'), hasTag('vajíčka'), hasTag('matečníky'),
+        hasTag('liečenie'), hasTag('kŕmenie'), hasTag('rojenie'),
+        v.data.urgency||'', v.data.rec||'', v.data.notes||''
+      ].map(escCsv));
+    });
+  });
+  return rows.map(r=>r.join(';')).join('\n');
+}
+
+function downloadCsv(csv, filename){
+  const bom = '\uFEFF'; // UTF-8 BOM for Excel
+  const blob = new Blob([bom+csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportPrehliadka(pi){
+  loadPrehliadky();
+  const p = prehliadky[pi];
+  if(!p.vcielstva.length){ toast('Žiadne zápisky na export'); return; }
+  const d = new Date(p.date).toLocaleDateString('sk-SK').replace(/\./g,'-').replace(/ /g,'');
+  const csv = buildCsvFromPrehliadky([p]);
+  downloadCsv(csv, `prehliadka_${d}.csv`);
+  toast('Export stiahnutý');
+}
+
+function exportAllPrehliadky(){
+  loadPrehliadky();
+  const withData = prehliadky.filter(p=>p.vcielstva.length);
+  if(!withData.length){ toast('Žiadne zápisky na export'); return; }
+  const csv = buildCsvFromPrehliadky(withData);
+  downloadCsv(csv, 'dvorina_vsetky_prehliadky.csv');
+  toast('Export všetkých prehliadok stiahnutý');
+}
+
+// Init
+loadPrehliadky();
+</script>
+
 </body>
 </html>
 <!-- PATCH MARKER - will be replaced -->
