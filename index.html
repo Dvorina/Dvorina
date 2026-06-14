@@ -2489,21 +2489,55 @@ async function initLpisMap(){
 
   lpisMap = L.map('lpis-map', {zoomControl:true, attributionControl:false}).setView([st.lat, st.lon], 13);
 
-  // Dark OSM tiles
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  // Satelitná mapa — lepšia pre zobrazenie plodín
+  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom:19, attribution:'Esri Satellite'
+  });
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom:19, attribution:'© OpenStreetMap'
+  });
+  const dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     maxZoom:19, subdomains:'abcd'
-  }).addTo(lpisMap);
+  });
+  satellite.addTo(lpisMap);
+  // Layer switcher
+  L.control.layers({
+    '🛰️ Satelit': satellite,
+    '🗺️ Mapa': osm,
+    '🌙 Tmavá': dark
+  }, {}, {position:'topright', collapsed:false}).addTo(lpisMap);
 
   // LPIS WMS overlay (Slovakia - ZBGIS)
+  // LPIS WMS cez corsproxy.io — obchádza CORS obmedzenie
+  const lpisProxyBase = 'https://corsproxy.io/?' + encodeURIComponent('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?');
   const lpisWMS = L.tileLayer.wms('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?', {
     layers: 'RS_LPIS',
     format: 'image/png',
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.6,
     maxZoom: 19,
     attribution: 'LPIS © GKÚ'
   });
-  lpisWMS.addTo(lpisMap);
+
+  // Custom WMS layer cez proxy
+  const LpisProxyLayer = L.TileLayer.WMS.extend({
+    getTileUrl: function(coords) {
+      const url = L.TileLayer.WMS.prototype.getTileUrl.call(this, coords);
+      // Extract query params from URL
+      const parts = url.split('?');
+      if(parts.length < 2) return url;
+      return 'https://corsproxy.io/?' + encodeURIComponent('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?' + parts[1]);
+    }
+  });
+  const lpisLayer = new LpisProxyLayer('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?', {
+    layers: 'RS_LPIS',
+    format: 'image/png',
+    transparent: true,
+    opacity: 0.6,
+    maxZoom: 19,
+    attribution: 'LPIS © GKÚ'
+  });
+  lpisLayer.addTo(lpisMap);
 
   // Circle for radius
   const radiusM = lpisRadius * 1000;
@@ -2548,8 +2582,9 @@ async function fetchOverpass(lat, lon, radiusM){
 );
 out body;>;out skel qt;`;
 
-  const res = await fetch('https://overpass-api.de/api/interpreter', {
+  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://overpass-api.de/api/interpreter'), {
     method:'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body: 'data=' + encodeURIComponent(query)
   });
   return res.json();
