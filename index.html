@@ -2480,96 +2480,121 @@ async function initLpisMap(){
   const mapEl = document.getElementById('lpis-map');
   if(!mapEl) return;
 
-  // Set map height
-  const viewH = window.innerHeight;
-  mapEl.style.height = (viewH - 280) + 'px';
-
-  // Destroy old map
+  mapEl.style.height = (window.innerHeight - 260) + 'px';
   if(lpisMap){ lpisMap.remove(); lpisMap=null; }
+  lpisMap = L.map('lpis-map', {zoomControl:true}).setView([st.lat, st.lon], 13);
 
-  lpisMap = L.map('lpis-map', {zoomControl:true, attributionControl:false}).setView([st.lat, st.lon], 13);
-
-  // Satelitná mapa — lepšia pre zobrazenie plodín
-  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom:19, attribution:'Esri Satellite'
-  });
-  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom:19, attribution:'© OpenStreetMap'
-  });
-  const dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom:19, subdomains:'abcd'
-  });
+  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, attribution:'Esri'});
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'OSM'});
   satellite.addTo(lpisMap);
-  // Layer switcher
-  L.control.layers({
-    '🛰️ Satelit': satellite,
-    '🗺️ Mapa': osm,
-    '🌙 Tmavá': dark
-  }, {}, {position:'topright', collapsed:false}).addTo(lpisMap);
+  L.control.layers({'Satelit':satellite,'Mapa':osm},{},{position:'topright',collapsed:false}).addTo(lpisMap);
 
-  // LPIS WMS overlay (Slovakia - ZBGIS)
-  // LPIS WMS cez corsproxy.io — obchádza CORS obmedzenie
-  const lpisProxyBase = 'https://corsproxy.io/?' + encodeURIComponent('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?');
-  const lpisWMS = L.tileLayer.wms('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?', {
-    layers: 'RS_LPIS',
-    format: 'image/png',
-    transparent: true,
-    opacity: 0.6,
-    maxZoom: 19,
-    attribution: 'LPIS © GKÚ'
-  });
-
-  // Custom WMS layer cez proxy
-  const LpisProxyLayer = L.TileLayer.WMS.extend({
-    getTileUrl: function(coords) {
-      const url = L.TileLayer.WMS.prototype.getTileUrl.call(this, coords);
-      // Extract query params from URL
-      const parts = url.split('?');
-      if(parts.length < 2) return url;
-      return 'https://corsproxy.io/?' + encodeURIComponent('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?' + parts[1]);
-    }
-  });
-  const lpisLayer = new LpisProxyLayer('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?', {
-    layers: 'RS_LPIS',
-    format: 'image/png',
-    transparent: true,
-    opacity: 0.6,
-    maxZoom: 19,
-    attribution: 'LPIS © GKÚ'
-  });
-  lpisLayer.addTo(lpisMap);
-
-  // Circle for radius
   const radiusM = lpisRadius * 1000;
-  lpisCircle = L.circle([st.lat, st.lon], {
-    radius: radiusM,
-    color: '#C8841A',
-    weight: 2,
-    fillColor: 'rgba(200,132,26,.05)',
-    fillOpacity: 1,
-    dashArray: '6,4'
-  }).addTo(lpisMap);
+  lpisCircle = L.circle([st.lat, st.lon], {radius:radiusM, color:'#C8841A', weight:2, fillColor:'rgba(200,132,26,.04)', fillOpacity:1, dashArray:'6,4'}).addTo(lpisMap);
+  L.circleMarker([st.lat, st.lon], {radius:9, color:'#E8A832', weight:2, fillColor:'#C8841A', fillOpacity:1}).addTo(lpisMap).bindPopup('<b>' + escH(st.name) + '</b><br>Vccelnica').openPopup();
 
-  // Center marker
-  L.circleMarker([st.lat, st.lon], {
-    radius:8, color:'#E8A832', weight:2,
-    fillColor:'#C8841A', fillOpacity:1
-  }).addTo(lpisMap).bindPopup(`<b>${escH(st.name)}</b><br>Včelnica`);
-
-  // Fetch OSM data via Overpass
   const loadEl = document.getElementById('lpis-loading');
-  if(loadEl) loadEl.textContent = 'Načítavam plodiny...';
 
-  try{
+  // OSM Overpass
+  if(loadEl) loadEl.textContent = 'Nacitavam OSM...';
+  try {
     const data = await fetchOverpass(st.lat, st.lon, radiusM);
     displayOverpassData(data, st.lat, st.lon);
-    if(loadEl) loadEl.textContent = `${data.elements.length} plôch nájdených`;
-  } catch(e){
-    if(loadEl) loadEl.textContent = 'Chyba načítania';
+    if(loadEl) loadEl.textContent = data.elements.length + ' ploch OSM';
+  } catch(e) {
+    if(loadEl) loadEl.textContent = 'OSM chyba';
   }
 
+  // LPIS WFS cez 3 proxy postupne
+  loadLpisWFS(st.lat, st.lon, radiusM, loadEl);
   lpisMap.fitBounds(lpisCircle.getBounds(), {padding:[10,10]});
 }
+
+const PROXY_LIST = [
+  function(u){ return 'https://corsproxy.io/?' + encodeURIComponent(u); },
+  function(u){ return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
+  function(u){ return 'https://proxy.cors.sh/' + u; }
+];
+
+const LPIS_PLODINY = {
+  '100':'Orná pôda','200':'Trvalý trávny porast','300':'Trvalé kultúry',
+  '110':'Repka olejná','120':'Pšenica','130':'Jačmeň','140':'Kukurica',
+  '150':'Slnečnica','160':'Pohánka','170':'Ďatelina','180':'Lucerna',
+  '190':'Mak','210':'Pastvina','220':'Lúka','310':'Sad','320':'Vinica'
+};
+const LPIS_COLORS = {
+  '110':'#FFD700','150':'#FFA500','120':'#C8A050','130':'#DAA520',
+  '140':'#8B6914','160':'#F5F5DC','170':'#DC143C','180':'#8B0000',
+  '190':'#9370DB','200':'#4A8C3A','210':'#5AAA3A','220':'#3A8C3A',
+  '310':'#7ABF52','320':'#8B3A8B','100':'#D4B800','default':'#888888'
+};
+
+async function loadLpisWFS(lat, lon, radiusM, loadEl){
+  const R = radiusM / 111320;
+  const cosLat = Math.cos(lat * Math.PI / 180);
+  const minLon = (lon - R/cosLat).toFixed(6);
+  const maxLon = (lon + R/cosLat).toFixed(6);
+  const minLat = (lat - R).toFixed(6);
+  const maxLat = (lat + R).toFixed(6);
+  const wfsUrl = 'https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=RS_LPIS&BBOX=' + minLat + ',' + minLon + ',' + maxLat + ',' + maxLon + '&SRSNAME=EPSG:4326&outputFormat=application/json&count=300';
+
+  for(let i = 0; i < PROXY_LIST.length; i++){
+    try {
+      if(loadEl) loadEl.textContent = 'LPIS proxy ' + (i+1) + '/3...';
+      const controller = new AbortController();
+      const timer = setTimeout(function(){ controller.abort(); }, 9000);
+      const res = await fetch(PROXY_LIST[i](wfsUrl), {signal: controller.signal});
+      clearTimeout(timer);
+      if(!res.ok) continue;
+      const geojson = await res.json();
+      if(!geojson || !geojson.features) continue;
+      if(geojson.features.length === 0){ if(loadEl) loadEl.textContent += ' ziadne LPIS'; continue; }
+      displayLpisGeoJSON(geojson);
+      if(loadEl) loadEl.textContent += ' + ' + geojson.features.length + ' LPIS parciel';
+      return;
+    } catch(e) { continue; }
+  }
+  // Fallback: WMS bez proxy (funguje v niektotych prehliadacoch)
+  if(lpisMap){
+    try {
+      L.tileLayer.wms('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows', {
+        layers:'RS_LPIS', format:'image/png', transparent:true, opacity:0.55, crossOrigin:false
+      }).addTo(lpisMap);
+      if(loadEl) loadEl.textContent = 'LPIS WMS (obmedzene)';
+    } catch(e) {}
+  }
+}
+
+function displayLpisGeoJSON(geojson){
+  if(!lpisMap) return;
+  if(lpisLayerGroup){ lpisLayerGroup.remove(); }
+  lpisLayerGroup = L.layerGroup().addTo(lpisMap);
+  var usedCrops = {};
+  L.geoJSON(geojson, {
+    style: function(f){
+      var kod = String((f.properties && (f.properties.KOD_PLODINY || f.properties.DRUH_POZEMKU)) || 'default');
+      var color = LPIS_COLORS[kod] || LPIS_COLORS['default'];
+      return {color:color, weight:1.5, fillColor:color, fillOpacity:0.45};
+    },
+    onEachFeature: function(f, layer){
+      var p = f.properties || {};
+      var kod = String(p.KOD_PLODINY || p.DRUH_POZEMKU || '');
+      var nazov = LPIS_PLODINY[kod] || p.NAZOV_PLODINY || p.PLODINA || 'Polnohospodarska plocha';
+      var plocha = p.VYMERA ? (p.VYMERA/10000).toFixed(2) + ' ha' : '';
+      usedCrops[nazov] = LPIS_COLORS[kod] || LPIS_COLORS['default'];
+      layer.bindPopup('<b>' + nazov + '</b>' + (plocha ? '<br>' + plocha : '') + '<br><small>Kod: ' + (kod||'—') + '</small>');
+      layer.on('click', function(){
+        var info = document.getElementById('lpis-info');
+        if(info) info.innerHTML = '<strong style="color:var(--text)">' + escH(nazov) + '</strong>' + (plocha ? ' - ' + plocha : '') + '<br><span style="color:var(--dim)">LPIS kod: ' + (kod||'—') + ' - Blok: ' + (p.KOD_BLOKU||'—') + '</span>';
+      });
+    }
+  }).addTo(lpisLayerGroup);
+  var grid = document.getElementById('lpis-legend-grid');
+  if(grid) grid.innerHTML = Object.keys(usedCrops).map(function(n){
+    return '<div class="lpis-legend-item"><div class="lpis-legend-dot" style="background:' + usedCrops[n] + '"></div>' + n + '</div>';
+  }).join('');
+}
+
 
 async function fetchOverpass(lat, lon, radiusM){
   const r = radiusM;
@@ -2591,6 +2616,7 @@ out body;>;out skel qt;`;
 }
 
 function displayOverpassData(data, centerLat, centerLon){
+  let count = 0;
   if(!lpisMap) return;
   if(lpisLayerGroup){ lpisLayerGroup.remove(); }
   lpisLayerGroup = L.layerGroup().addTo(lpisMap);
@@ -2608,6 +2634,7 @@ function displayOverpassData(data, centerLat, centerLon){
     const style = getCropStyle(el.tags||{});
     usedCrops[style.cropName] = style;
 
+    count++;
     const poly = L.polygon(coords, {
       color: style.color,
       weight: 1,
@@ -2630,6 +2657,7 @@ function displayOverpassData(data, centerLat, centerLon){
       `<div class="lpis-legend-item"><div class="lpis-legend-dot" style="background:${style.color}"></div>${name}</div>`
     ).join('');
   }
+  return count;
 }
 
 function selectLpisSt(i){
