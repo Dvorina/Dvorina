@@ -75,12 +75,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:0 0 auto;min-width:60px;padding:9px 10px;font-size:10px;letter-spacing:.5px;color:var(--dim);cursor:pointer;text-align:center;border:none;background:none;text-transform:uppercase;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px}
 .tab svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.tab.active{color:var(--honey-l);border-bottom-color:var(--honey)}
+.tab.active{color:var(--honey-l) !important;border-bottom-color:var(--honey)}
 
 /* VIEWS */
 .views{flex:1;overflow:hidden;position:relative}
-.view{position:absolute;inset:0;overflow-y:auto;display:none;-webkit-overflow-scrolling:touch}
-.view.active{display:block}
+.view{position:absolute;inset:0;overflow-y:auto;display:none !important;-webkit-overflow-scrolling:touch}
+.view.active{display:block !important}
 .view::-webkit-scrollbar{display:none}
 
 /* RECORD VIEW */
@@ -293,7 +293,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .roj-del-btn{background:none;border:.5px solid rgba(200,74,42,.4);border-radius:5px;padding:5px 11px;font-size:11px;color:#E86A4A;cursor:pointer;font-family:"DM Sans",sans-serif;align-self:flex-end}
 
 /* ROJ MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:flex-end;justify-content:center;z-index:300;padding:0}
+.modal-ov{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:flex-end;justify-content:center;z-index:999;padding:0}
 .modal-ov.show{display:flex}
 .modal-box{background:var(--dark2);border:.5px solid var(--bs);border-radius:16px 16px 0 0;padding:22px 18px 32px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
 .modal-title{font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--honey-l);margin-bottom:16px}
@@ -408,7 +408,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .preh-rec{border-left:2px solid var(--honey);padding:7px 10px;background:rgba(200,132,26,.07);border-radius:0 5px 5px 0;font-size:12px;color:#E8D4A0;line-height:1.7}
 
 /* QUICK ENTRY PANEL */
-.qe-panel{position:fixed;inset:0;background:rgba(10,8,6,.9);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.qe-panel{position:fixed;inset:0;background:rgba(10,8,6,.9);z-index:999;display:none;align-items:flex-end;justify-content:center}
 .qe-panel.show{display:flex}
 .qe-box{background:var(--dark2);border:.5px solid var(--bs);border-radius:16px 16px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding:18px 16px 30px}
 .qe-title{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--honey-l);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
@@ -541,6 +541,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
             <span id="status-sub">Povedz "Začíname" alebo klepni na mikrofón</span>
           </div>
           <div class="rec-timer" id="rec-timer">0:00</div>
+          <button id="mic-main-btn" onclick="toggleMicEnabled()" title="Zapnúť/Vypnúť mikrofón"
+            style="background:none;border:.5px solid var(--bs);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--honey-l);cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:all .2s">
+            🎙 Vyp.
+          </button>
         </div>
 
         <!-- stanovište -->
@@ -652,12 +656,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
     </div>
 
     <!-- PREHLIADKY -->
-    <div class="view" id="view-preh" style="display:flex;flex-direction:column">
+    <div class="view" id="view-preh">
       <div class="preh-hdr">
         <div class="preh-title">Prehliadky</div>
         <button class="preh-new-btn" onclick="newPrehliadka()">+ Nová prehliadka</button>
       </div>
-      <div class="preh-list" id="preh-list"></div>
+      <div class="preh-list" id="preh-list" style="padding-bottom:30px"></div>
     </div>
 
     <!-- ROJOVÝ DENNÍK -->
@@ -1951,7 +1955,7 @@ async function renderPoc(){
         <span>🌧️ Mesačné zrážky — posledných 12 mesiacov</span>
         <span id="poc-monthly-arrow" style="color:var(--honey-l);font-size:12px">▼</span>
       </div>
-      <div id="poc-monthly-rows" style="display:block">`;
+      <div id="poc-monthly-rows">`;
     const maxRain = Math.max(...data.monthly.map(m=>m.total), 1);
     data.monthly.forEach(m => {
       const pct = Math.round((m.total/maxRain)*100);
@@ -2318,9 +2322,9 @@ function toggleMonthly(){
   const rows = document.getElementById('poc-monthly-rows');
   const arrow = document.getElementById('poc-monthly-arrow');
   if(!rows) return;
-  const open = rows.style.display !== 'none';
-  rows.style.display = open ? 'none' : 'block';
-  if(arrow) arrow.textContent = open ? '▶' : '▼';
+  const isHidden = rows.style.display === 'none';
+  rows.style.display = isHidden ? 'block' : 'none';
+  if(arrow) arrow.textContent = isHidden ? '▼' : '▶';
 }
 
 // ══════════════════════════════════════════
@@ -2330,20 +2334,22 @@ let micEnabled = true;
 function toggleMicEnabled(){
   micEnabled = !micEnabled;
   const btn = document.getElementById('mic-toggle-btn');
+  const mainBtn = document.getElementById('mic-main-btn');
   if(micEnabled){
     srRunning = false;
     startSR();
     if(btn){ btn.textContent='🎙 Vyp. mikrofón'; btn.style.color='var(--dim)'; }
+    if(mainBtn){ mainBtn.textContent='🎙 Vyp.'; mainBtn.style.color='var(--honey-l)'; mainBtn.style.borderColor='var(--bs)'; }
     setMicPill('ok');
     toast('Mikrofón zapnutý');
   } else {
-    // Stop SR and prevent auto-restart via micEnabled flag
     if(SR){ try{SR.abort();}catch(e){} }
     srRunning = false;
     if(recActive) stopRecAndSave();
     if(btn){ btn.textContent='🎙 Zap. mikrofón'; btn.style.color='var(--honey-l)'; }
+    if(mainBtn){ mainBtn.textContent='🎙 Zap.'; mainBtn.style.color='#E86A4A'; mainBtn.style.borderColor='rgba(200,74,42,.4)'; }
     setMicPill('off');
-    setStatus('off','Mikrofón vypnutý','Klepni Zap. mikrofón pre obnovenie');
+    setStatus('off','Mikrofón vypnutý','Klepni 🎙 Zap. pre obnovenie');
     toast('Mikrofón vypnutý');
   }
 }
@@ -2536,33 +2542,53 @@ async function loadLpisWFS(lat, lon, radiusM, loadEl){
   const maxLon = (lon + R/cosLat).toFixed(6);
   const minLat = (lat - R).toFixed(6);
   const maxLat = (lat + R).toFixed(6);
-  const wfsUrl = 'https://zbgis.skgeodesy.sk/mkzbgis/sk/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=RS_LPIS&BBOX=' + minLat + ',' + minLon + ',' + maxLat + ',' + maxLon + '&SRSNAME=EPSG:4326&outputFormat=application/json&count=300';
+  const bbox = minLon+','+minLat+','+maxLon+','+maxLat;
 
-  for(let i = 0; i < PROXY_LIST.length; i++){
+  // Zoznam endpointov ktore skusame — od najpravdepodobnejsich
+  const LPIS_ENDPOINTS = [
+    // Slovak INSPIRE WFS
+    'https://inspire.gov.sk/arcgis/services/AF/FeatureServer/WFSServer?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=AF.AgriculturalHolding&BBOX='+bbox+'&SRSNAME=EPSG:4326&outputFormat=application/json&count=200',
+    // GeoServer ISAC
+    'https://meta.isac.sk/geoserver/wfs?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAMES=lpis:lpis_diely&BBOX='+bbox+'&SRSNAME=EPSG:4326&outputFormat=application/json&maxFeatures=200',
+    // Overpass ako fallback pre agro plochy
+    null // signal to use Overpass only
+  ];
+
+  for(let i = 0; i < LPIS_ENDPOINTS.length; i++){
+    const endpoint = LPIS_ENDPOINTS[i];
+    if(!endpoint) break;
     try {
-      if(loadEl) loadEl.textContent = 'LPIS proxy ' + (i+1) + '/3...';
+      if(loadEl) loadEl.textContent = 'LPIS endpoint ' + (i+1) + '...';
       const controller = new AbortController();
-      const timer = setTimeout(function(){ controller.abort(); }, 9000);
-      const res = await fetch(PROXY_LIST[i](wfsUrl), {signal: controller.signal});
+      const timer = setTimeout(function(){ controller.abort(); }, 7000);
+      const res = await fetch(endpoint, {signal: controller.signal, mode:'cors'});
       clearTimeout(timer);
       if(!res.ok) continue;
-      const geojson = await res.json();
-      if(!geojson || !geojson.features) continue;
-      if(geojson.features.length === 0){ if(loadEl) loadEl.textContent += ' ziadne LPIS'; continue; }
+      const text = await res.text();
+      if(!text || text.includes('ExceptionReport')) continue;
+      let geojson;
+      try { geojson = JSON.parse(text); } catch(e) { continue; }
+      if(!geojson || !geojson.features || !geojson.features.length) continue;
       displayLpisGeoJSON(geojson);
       if(loadEl) loadEl.textContent += ' + ' + geojson.features.length + ' LPIS parciel';
       return;
     } catch(e) { continue; }
   }
-  // Fallback: WMS bez proxy (funguje v niektotych prehliadacoch)
+
+  // Vsetky LPIS endpointy zlyhali
+  // Pridame agro WMS ktore nepotrebuje CORS (len obrazok)
   if(lpisMap){
     try {
+      // ZBGIS WMS - bez CORS kontroly (prehliadac moze zobrazit obrazok)
       L.tileLayer.wms('https://zbgis.skgeodesy.sk/mkzbgis/sk/ows', {
-        layers:'RS_LPIS', format:'image/png', transparent:true, opacity:0.55, crossOrigin:false
+        layers:'RS_LPIS', format:'image/png', transparent:true,
+        opacity:0.6, crossOrigin:null, maxZoom:19
       }).addTo(lpisMap);
-      if(loadEl) loadEl.textContent = 'LPIS WMS (obmedzene)';
+      if(loadEl) loadEl.textContent = 'OSM + LPIS WMS vrstva';
+      return;
     } catch(e) {}
   }
+  if(loadEl) loadEl.textContent = 'OSM data (LPIS server blokuje)';
 }
 
 function displayLpisGeoJSON(geojson){
