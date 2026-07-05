@@ -426,6 +426,36 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;
 .qe-tags-row{display:flex;flex-wrap:wrap;gap:6px}
 .qe-tag{padding:6px 12px;border-radius:20px;border:.5px solid var(--b);background:var(--dark3);font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
 .qe-tag.on{border-color:var(--honey);background:rgba(200,132,26,.15);color:var(--honey-l)}
+
+/* REVIEW PANEL — po skonceni nahravania */
+.review-overlay{position:fixed;inset:0;background:rgba(10,8,6,.92);z-index:998;display:none;align-items:flex-end;justify-content:center}
+.review-overlay.show{display:flex}
+.review-box{background:var(--dark2);border:.5px solid var(--bs);border-radius:16px 16px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:18px 16px 32px}
+.review-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--honey-l);margin-bottom:4px}
+.review-sub{font-size:11px;color:var(--dim);margin-bottom:14px;line-height:1.7}
+.review-audio{width:100%;margin-bottom:14px;border-radius:8px;overflow:hidden;background:var(--dark3);padding:10px;border:.5px solid var(--b)}
+.review-audio audio{width:100%;height:36px}
+.review-audio-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.review-transcript{background:var(--dark3);border:.5px solid var(--b);border-radius:8px;padding:11px 13px;font-size:12px;color:var(--muted);font-style:italic;line-height:1.7;margin-bottom:14px;max-height:80px;overflow-y:auto}
+.review-section{margin-bottom:14px}
+.review-section-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.review-field{display:flex;flex-direction:column;gap:4px}
+.review-field.full{grid-column:1/-1}
+.review-lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--dim)}
+.review-inp{background:var(--dark3);border:.5px solid var(--b);border-radius:6px;padding:9px 11px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:100%}
+.review-inp:focus{border-color:var(--honey)}
+.review-slider-row{display:flex;align-items:center;gap:8px}
+.review-slider{flex:1;accent-color:var(--honey)}
+.review-slider-val{font-size:15px;color:var(--honey-l);min-width:24px;text-align:right;font-family:'Cormorant Garamond',serif;font-weight:500}
+.review-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px}
+.review-tag{padding:5px 11px;border-radius:20px;border:.5px solid var(--b);background:var(--dark3);font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s}
+.review-tag.on{border-color:var(--honey);background:rgba(200,132,26,.15);color:var(--honey-l)}
+.review-btns{display:flex;gap:8px;margin-top:16px}
+.review-confirm{flex:2;background:linear-gradient(135deg,var(--honey),var(--amber));border:none;border-radius:8px;padding:13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--dark);cursor:pointer}
+.review-redo{flex:1;background:none;border:.5px solid var(--b);border-radius:8px;padding:13px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--dim);cursor:pointer;text-transform:uppercase;letter-spacing:1px}
+.review-detected{background:rgba(200,132,26,.07);border:.5px solid var(--bs);border-radius:6px;padding:8px 11px;font-size:11px;color:var(--muted);line-height:1.8;margin-bottom:10px}
+.review-detected b{color:var(--honey-l)}
 </style>
 </head>
 <body>
@@ -827,11 +857,12 @@ function launchApp(withMic){
   renderStChips();
   renderNotes(); renderDash();
   document.getElementById('m-inp').addEventListener('keydown',e=>{if(e.key==='Enter')sendManual();});
-  loadKal(); loadRoj(); loadQueens();
+  loadKal(); loadRoj(); loadQueens(); initTTS();
   if(withMic){
     setMicPill('ok');
     startSR();
     setStatus('listening','Počúvam povely','Povedz "Začíname" alebo klepni na mikrofón');
+    setTimeout(()=>speak('Dvorina pripravená. Povedz Začíname.'), 1500);
   } else {
     setMicPill('off');
     document.getElementById('denied-banner').classList.add('show');
@@ -970,6 +1001,8 @@ function startRec(){
   document.getElementById('mic-lbl').classList.add('on');
   document.getElementById('save-btn').disabled = true;
   setStatus('recording', 'Nahrávam', 'Povedz "Koniec" alebo klepni pre zastavenie a uloženie');
+  // Start audio recording
+  startAudioRecording();
   // timer
   timerSec=0;
   const te=document.getElementById('rec-timer');
@@ -989,20 +1022,20 @@ function stopRecAndSave(){
   if(!recActive) return;
   recActive=false;
   clearInterval(timerIv);
+  stopAudioRecording();
   document.getElementById('mic').classList.remove('on');
   document.getElementById('mic-lbl').classList.remove('on');
   document.getElementById('rec-timer').classList.remove('on');
   const txt = savedChunks.join(' ').trim();
   if(txt.length > 2){
-    // show final text
     const el=document.getElementById('tbox');
     el.style.color='var(--muted)'; el.style.fontStyle='italic';
     el.textContent=txt;
-    document.getElementById('save-btn').disabled=false;
-    document.getElementById('mic-lbl').textContent='Nahrávanie zastavené ✓';
-    setStatus('listening','Zápisok pripravený','Klepni Uložiť alebo pokračuj hovorením');
-    // auto-save
-    saveNote();
+    document.getElementById('mic-lbl').textContent='Kontrolujem zápisok...';
+    setStatus('listening','Skontroluj zápisok','Oprav chyby a potvrď uloženie');
+    // Start voice review
+    const parsed = parseNote(txt);
+    setTimeout(()=>startVoiceReview(txt, parsed), 300);
   } else {
     document.getElementById('mic-lbl').textContent='Nič nenahraté. Skús znova.';
     setStatus('listening','Počúvam povely','Povedz "Začíname" alebo klepni na mikrofón');
@@ -1259,7 +1292,7 @@ function renderNotes(){
         <div class="c-sum">${escH(n.summary||'')}</div>
         ${n.rec?`<div class="c-rec"><div class="c-rec-lbl">Odporúčanie</div><div class="c-rec-txt">${escH(n.rec)}</div></div>`:''}
       </div>
-      <div class="c-raw" id="raw-${ri}">${escH(n.raw||'')}</div>
+      <div class="c-raw" id="raw-${ri}">${escH(n.raw||'')}${n.audioData?renderAudioInNote(n):''}</div>
       <div class="c-del" id="del-${ri}"><button class="del-btn" onclick="deleteNote(${ri})">Vymazať</button></div>
     </div>`;
   }).join('');
@@ -2696,6 +2729,506 @@ function setLpisRadius(r){
   renderLpis();
 }
 
+
+// ══════════════════════════════════════════
+// AUDIO RECORDING (MediaRecorder)
+// ══════════════════════════════════════════
+let mediaRecorder = null;
+let audioChunks = [];
+let audioBlob = null;
+let audioUrl = null;
+let reviewData = {}; // parsed data for review
+
+function startAudioRecording(){
+  if(!navigator.mediaDevices) return;
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream, {mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/ogg'});
+    mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = ()=>{
+      audioBlob = new Blob(audioChunks, {type: mediaRecorder.mimeType||'audio/webm'});
+      audioUrl = URL.createObjectURL(audioBlob);
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    mediaRecorder.start(1000); // collect every 1s
+  }).catch(e=>{ console.log('Audio record error:', e); });
+}
+
+function stopAudioRecording(){
+  if(mediaRecorder && mediaRecorder.state !== 'inactive'){
+    mediaRecorder.stop();
+  }
+}
+
+// ══════════════════════════════════════════
+// REVIEW PANEL
+// ══════════════════════════════════════════
+const REVIEW_TAGS = [
+  {l:'Matka prítomná', t:'ok'},
+  {l:'Chýba matka', t:'danger'},
+  {l:'Vajíčka OK', t:'ok'},
+  {l:'Bez vajíčok', t:'danger'},
+  {l:'Matečníky', t:'warn'},
+  {l:'Liečenie', t:'info'},
+  {l:'Kŕmenie', t:'info'},
+  {l:'Rojenie', t:'warn'},
+  {l:'Silné', t:'ok'},
+  {l:'Slabé', t:'warn'},
+];
+
+function openReview(txt, parsedNote){
+  reviewData = parsedNote || {};
+  reviewData.rawText = txt;
+
+  // Fill transcript
+  document.getElementById('review-transcript').textContent = txt || '(žiadny prepis)';
+
+  // Audio player
+  const audioWrap = document.getElementById('review-audio-wrap');
+  const audioPlayer = document.getElementById('review-audio-player');
+  if(audioUrl){
+    audioPlayer.src = audioUrl;
+    audioWrap.style.display = 'block';
+  } else {
+    audioWrap.style.display = 'none';
+  }
+
+  // Parse values from note
+  const agr  = parsedNote?.agr  || 2;
+  const str  = parsedNote?.str  || 8;
+  const tags = parsedNote?.tags || [];
+
+  // Try to extract plod from text
+  const plodMatch = txt.match(/(\d+)\s*rámik(ov)?\s*(s\s*)?plod/i) || txt.match(/plod\s*(\d+)/i);
+  const plodVal = plodMatch ? parseInt(plodMatch[1]) : 0;
+
+  // Queen year
+  const qYear = parseQueenYear(txt) || '';
+  const qColor = qYear ? (queenColor(qYear)?.label || '') : '';
+
+  // Set sliders
+  document.getElementById('rv-sila').value = str;
+  document.getElementById('rv-sila-val').textContent = str;
+  document.getElementById('rv-agr').value = agr;
+  document.getElementById('rv-agr-val').textContent = agr;
+  document.getElementById('rv-plod').value = plodVal;
+  document.getElementById('rv-plod-val').textContent = plodVal;
+  document.getElementById('rv-zasoby').value = parsedNote?.zasoby || 3;
+  document.getElementById('rv-zasoby-val').textContent = parsedNote?.zasoby || 3;
+  document.getElementById('rv-queen').value = qYear;
+  document.getElementById('rv-queen-color').value = qColor ? qColor + ' (' + qYear + ')' : '';
+
+  // Watch queen year changes
+  document.getElementById('rv-queen').oninput = function(){
+    const y = parseInt(this.value)||0;
+    const c = y ? queenColor(y) : null;
+    document.getElementById('rv-queen-color').value = c ? c.label + ' (' + y + ')' : '';
+  };
+
+  // Build detected summary
+  const detected = [];
+  if(str)      detected.push('<b>Sila:</b> ' + str + ' uličiek');
+  if(agr)      detected.push('<b>Agresivita:</b> ' + agr + '/5');
+  if(plodVal)  detected.push('<b>Plod:</b> ' + plodVal + ' rámikov');
+  if(qYear)    detected.push('<b>Matka:</b> ' + qYear + ' (' + qColor + ')');
+  tags.forEach(t=>{ detected.push('<b>' + t.l + '</b>'); });
+  const detEl = document.getElementById('review-detected');
+  detEl.innerHTML = detected.length
+    ? '🔍 Detegované: ' + detected.join(' · ')
+    : '⚠️ Aplikácia nedetegovala štruktúrované údaje. Vyplň ručne.';
+
+  // Build tags
+  const tagsWrap = document.getElementById('rv-tags');
+  tagsWrap.innerHTML = REVIEW_TAGS.map(t=>{
+    const isOn = tags.some(pt=>pt.l.includes(t.l.split(' ')[0]));
+    return `<div class="review-tag ${isOn?'on':''}" onclick="this.classList.toggle('on')">${t.l}</div>`;
+  }).join('');
+
+  // Sub text
+  const colony = selSt!==null && selUl!==null
+    ? (config.stanovistia[selSt]?.name + ' · Včelstvo ' + selUl)
+    : 'Včelstvo';
+  document.getElementById('review-sub').textContent = colony + ' — skontroluj a potvrď zápisok.';
+
+  document.getElementById('review-overlay').classList.add('show');
+}
+
+function confirmReview(){
+  // Collect values from review form
+  const sila   = parseInt(document.getElementById('rv-sila').value);
+  const agr    = parseInt(document.getElementById('rv-agr').value);
+  const plod   = parseInt(document.getElementById('rv-plod').value);
+  const zasoby = parseInt(document.getElementById('rv-zasoby').value);
+  const qYear  = parseInt(document.getElementById('rv-queen').value)||null;
+  const txt    = reviewData.rawText || '';
+
+  // Collect tags
+  const tags = [];
+  document.querySelectorAll('#rv-tags .review-tag.on').forEach(el=>{
+    const label = el.textContent.trim();
+    const isDanger = label.includes('Chýba')||label.includes('Bez');
+    const isWarn   = label.includes('Matečníky')||label.includes('Rojenie')||label.includes('Slabé');
+    const isOk     = label.includes('prítomná')||label.includes('OK')||label.includes('Silné');
+    tags.push({l:label, t:isDanger?'danger':isWarn?'warn':isOk?'ok':'info'});
+  });
+  if(plod>0) tags.push({l:'Plod: '+plod+' rámikov', t:'ok'});
+
+  // Build note
+  const note = parseNote(txt);
+  note.str    = sila;
+  note.agr    = agr;
+  note.plod   = plod;
+  note.zasoby = zasoby;
+  note.tags   = tags;
+  note.queenYear = qYear;
+  if(qYear) note.tags.push({l:'Matka '+qYear, t:'info'});
+
+  // Recalculate recommendation
+  const noQ  = tags.some(t=>t.l.includes('Chýba matka'));
+  const noE  = tags.some(t=>t.l.includes('Bez vajíčok'));
+  const hasQc= tags.some(t=>t.l.includes('Matečníky'));
+  if(noQ&&noE){note.urgency='urgent';note.rec='Osirotené včelstvo — zaobstarať matku do 48h.';}
+  else if(noQ){note.urgency='urgent';note.rec='Chýba matka — skontrolovať matečníky.';}
+  else if(hasQc){note.urgency='soon';note.rec='Matečníky — sledovať rojenie každé 3 dni.';}
+  else if(agr>=4){note.urgency='soon';note.rec='Vysoká agresivita — skontrolovať matku a zásoby.';}
+  else if(sila<=3){note.urgency='soon';note.rec='Slabé včelstvo — skontrolovať stav.';}
+  else{note.urgency='normal';note.rec='Bežná kontrola bez výrazných problémov.';}
+
+  // Save queen year
+  if(qYear && selSt!==null && selUl!==null){
+    loadQueens();
+    queens[queenKey(selSt,selUl-1)]={year:qYear,note:'Z prehliadky',setDate:new Date().toISOString()};
+    saveQueens();
+    renderUlChipsWithQueens();
+  }
+
+  // Save audio blob as base64 if available (max 2MB)
+  if(audioBlob && audioBlob.size < 2*1024*1024){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      note.audioData = e.target.result;
+      note.audioType = audioBlob.type;
+      finalizeNote(note);
+    };
+    reader.readAsDataURL(audioBlob);
+  } else {
+    finalizeNote(note);
+  }
+}
+
+function finalizeNote(note){
+  notes.unshift(note);
+  try{ localStorage.setItem(SK_N, JSON.stringify(notes)); }catch(e){}
+  renderNotes(); renderDash();
+  savedChunks = [];
+  audioBlob = null; audioUrl = null;
+  closeReview();
+  const el=document.getElementById('tbox');
+  el.style.color='var(--ok)'; el.style.fontStyle='normal'; el.textContent='✓ Zápisok uložený';
+  document.getElementById('save-btn').disabled=true;
+  document.getElementById('rec-lbl').textContent='Klepni pre nahrávanie';
+  setStatus('listening','Zápisok uložený ✓','Povedz "Začíname" pre ďalší záznam');
+  toast('Zápisok uložený');
+  setTimeout(()=>sw('n'), 1200);
+}
+
+function closeReview(){
+  document.getElementById('review-overlay').classList.remove('show');
+  const p = document.getElementById('review-audio-player');
+  if(p){ p.pause(); p.src=''; }
+}
+
+function redoRecording(){
+  closeReview();
+  savedChunks = [];
+  audioBlob = null; audioUrl = null;
+  clearTranscript();
+  toast('Nahrávanie vymazané — začni odznova');
+}
+
+// Add audio player for saved notes
+function renderAudioInNote(note){
+  if(!note.audioData) return '';
+  return `<div style="margin-top:8px;padding:8px 10px;background:var(--dark3);border-radius:6px;border:.5px solid var(--b)">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Hlasový záznam</div>
+    <audio controls style="width:100%;height:32px" src="${note.audioData}"></audio>
+  </div>`;
+}
+
+
+// ══════════════════════════════════════════
+// HLASOVÁ SPÄTNÁ VÄZBA — Text to Speech
+// ══════════════════════════════════════════
+let ttsEnabled = true;
+let ttsLang = 'sk-SK';
+let ttsVoice = null;
+let reviewMode = false; // true = cakame na hlasovu opravu
+let reviewPending = {}; // data cakajuce na potvrdenie
+
+function initTTS(){
+  if(!window.speechSynthesis) return;
+  // Najdi slovensky hlas alebo fallback
+  const loadVoices = ()=>{
+    const voices = speechSynthesis.getVoices();
+    ttsVoice = voices.find(v=>v.lang==='sk-SK')
+      || voices.find(v=>v.lang.startsWith('sk'))
+      || voices.find(v=>v.lang==='cs-CZ')
+      || voices.find(v=>v.lang.startsWith('cs'))
+      || null;
+  };
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function speak(text, onEnd){
+  if(!window.speechSynthesis || !ttsEnabled) { if(onEnd) onEnd(); return; }
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = ttsVoice?.lang || 'sk-SK';
+  if(ttsVoice) utt.voice = ttsVoice;
+  utt.rate = 0.95;
+  utt.pitch = 1;
+  utt.volume = 1;
+  if(onEnd) utt.onend = onEnd;
+  speechSynthesis.speak(utt);
+}
+
+function buildSummaryText(data){
+  const parts = [];
+  const colony = data.stanoviste
+    ? (data.stanoviste + ', včelstvo ' + (data.ul||'?'))
+    : ('včelstvo ' + (data.ul||'?'));
+  parts.push(colony);
+  if(data.str)    parts.push('sila ' + data.str + ' uličiek');
+  if(data.agr)    parts.push('agresivita ' + data.agr);
+  if(data.zasoby) parts.push('zásoby ' + data.zasoby + ' z päť');
+  if(data.plod)   parts.push('plod ' + data.plod + ' rámikov');
+  if(data.queenYear){
+    const col = queenColor(data.queenYear);
+    parts.push('matka rok ' + data.queenYear + (col ? ', farba ' + col.label : ''));
+  }
+  const dangerTags = (data.tags||[]).filter(t=>t.t==='danger').map(t=>t.l);
+  const warnTags   = (data.tags||[]).filter(t=>t.t==='warn').map(t=>t.l);
+  if(dangerTags.length) parts.push('POZOR: ' + dangerTags.join(', '));
+  if(warnTags.length)   parts.push(warnTags.join(', '));
+  return parts.join('. ') + '.';
+}
+
+// ══════════════════════════════════════════
+// HANDS-FREE REVIEW MODE
+// ══════════════════════════════════════════
+function startVoiceReview(txt, parsed){
+  reviewMode = true;
+  reviewPending = {...parsed, rawText: txt};
+
+  // Announce summary
+  const summary = buildSummaryText(parsed);
+  const announcement = 'Zápisok pre ' + summary
+    + ' Je to správne? Povedz Uložiť, alebo oprav hodnotu, napríklad: sila šesť, agresivita dva.';
+
+  // Show visual feedback too
+  showReviewStatus(parsed, 'Počúvam opravu... Povedz "Uložiť" alebo oprav hodnotu');
+  setStatus('recording', 'Kontrola zápisku', 'Povedz "Uložiť" alebo napr. "sila šesť"');
+
+  speak(announcement, ()=>{
+    // after speaking, listen for corrections
+    listenForCorrection();
+  });
+}
+
+function showReviewStatus(data, hint){
+  const el = document.getElementById('tbox');
+  const str    = data.str    || '?';
+  const agr    = data.agr    || '?';
+  const zasoby = data.zasoby || '?';
+  const plod   = data.plod   || 0;
+  const qy     = data.queenYear || '—';
+  const col    = data.queenYear ? (queenColor(data.queenYear)?.label||'') : '';
+  const dangerT= (data.tags||[]).filter(t=>t.t==='danger').map(t=>t.l).join(', ');
+
+  el.style.color='var(--text)'; el.style.fontStyle='normal';
+  el.innerHTML = `
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--honey);margin-bottom:8px">📋 Zápisok na kontrolu</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px">
+      <div style="background:var(--dark2);border-radius:5px;padding:6px 8px">
+        <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px">Sila</div>
+        <div style="font-size:16px;color:var(--honey-l);font-family:'Cormorant Garamond',serif" id="rv-display-sila">${str} uličiek</div>
+      </div>
+      <div style="background:var(--dark2);border-radius:5px;padding:6px 8px">
+        <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px">Agresivita</div>
+        <div style="font-size:16px;color:var(--honey-l);font-family:'Cormorant Garamond',serif" id="rv-display-agr">${agr}/5</div>
+      </div>
+      <div style="background:var(--dark2);border-radius:5px;padding:6px 8px">
+        <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px">Zásoby</div>
+        <div style="font-size:16px;color:var(--honey-l);font-family:'Cormorant Garamond',serif" id="rv-display-zasoby">${zasoby}/5</div>
+      </div>
+      <div style="background:var(--dark2);border-radius:5px;padding:6px 8px">
+        <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px">Plod</div>
+        <div style="font-size:16px;color:var(--honey-l);font-family:'Cormorant Garamond',serif" id="rv-display-plod">${plod} rámikov</div>
+      </div>
+    </div>
+    <div style="background:var(--dark2);border-radius:5px;padding:6px 8px;margin-bottom:6px">
+      <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px">Matka</div>
+      <div style="font-size:13px;color:var(--text)" id="rv-display-queen">${qy !== '—' ? qy + (col?' · '+col:'') : '—'}</div>
+    </div>
+    ${dangerT?`<div style="background:rgba(200,74,42,.1);border:.5px solid rgba(200,74,42,.4);border-radius:5px;padding:6px 8px;font-size:11px;color:#E86A4A">⚠ ${dangerT}</div>`:''}
+    <div style="margin-top:8px;font-size:11px;color:var(--dim);line-height:1.8">${hint}</div>
+  `;
+}
+
+function updateReviewDisplay(){
+  const d = reviewPending;
+  const el = id => document.getElementById(id);
+  if(el('rv-display-sila'))   el('rv-display-sila').textContent   = (d.str||'?') + ' uličiek';
+  if(el('rv-display-agr'))    el('rv-display-agr').textContent    = (d.agr||'?') + '/5';
+  if(el('rv-display-zasoby')) el('rv-display-zasoby').textContent = (d.zasoby||'?') + '/5';
+  if(el('rv-display-plod'))   el('rv-display-plod').textContent   = (d.plod||0) + ' rámikov';
+  const col = d.queenYear ? queenColor(d.queenYear) : null;
+  if(el('rv-display-queen'))  el('rv-display-queen').textContent  = d.queenYear ? d.queenYear + (col?' · '+col.label:'') : '—';
+}
+
+function listenForCorrection(){
+  if(!reviewMode) return;
+  // Temporarily stop continuous SR and start a fresh one for correction
+  if(SR){ try{SR.abort();}catch(e){} srRunning=false; }
+
+  const W = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!W) return;
+  const corrSR = new W();
+  corrSR.lang = 'sk-SK';
+  corrSR.continuous = false;
+  corrSR.interimResults = false;
+  corrSR.maxAlternatives = 3;
+
+  corrSR.onresult = function(e){
+    const results = Array.from(e.results[0]).map(r=>r.transcript.toLowerCase().trim());
+    const txt = results[0];
+    console.log('Correction heard:', results);
+    processCorrection(txt, results);
+  };
+  corrSR.onerror = function(){ if(reviewMode) setTimeout(listenForCorrection, 500); };
+  corrSR.onend   = function(){ if(reviewMode) setTimeout(listenForCorrection, 300); };
+  try{ corrSR.start(); }catch(e){}
+}
+
+function processCorrection(txt, alternatives){
+  const lo = txt.toLowerCase();
+
+  // SAVE commands
+  if(lo.includes('uložiť') || lo.includes('ulozit') || lo.includes('uložit')
+     || lo.includes('potvrdiť') || lo.includes('správne') || lo.includes('ok')
+     || lo.includes('áno') || lo.includes('ano') || lo.includes('súhlasím')){
+    reviewMode = false;
+    speak('Zápisok uložený.', ()=>{
+      if(micEnabled) setTimeout(startSR, 200);
+    });
+    finalizeNoteFromReview();
+    return;
+  }
+
+  // REDO commands
+  if(lo.includes('znova') || lo.includes('zrušiť') || lo.includes('cancel') || lo.includes('nie správne')){
+    reviewMode = false;
+    speak('Zápisok zrušený. Môžeš nahrávať znova.');
+    savedChunks = []; clearTranscript();
+    setStatus('listening','Počúvam povely','Povedz "Začíname" pre nahrávanie');
+    if(micEnabled) setTimeout(startSR, 200);
+    return;
+  }
+
+  // CORRECTION — sila
+  const silaM = lo.match(/sila\s*(\d+|jedna?|dve|tri|štyri|päť|šesť|sedem|osem|deväť|desať)/i)
+    || alternatives.map(a=>a.match(/sila\s*(\d+)/i)).find(Boolean);
+  if(silaM){
+    const val = wordToNum(silaM[1]) || parseInt(silaM[1]);
+    if(val){ reviewPending.str = val; updateReviewDisplay();
+      speak('Sila opravená na ' + val + ' uličiek. Čo ďalšie?', listenForCorrection); return; }
+  }
+
+  // CORRECTION — agresivita
+  const agrM = lo.match(/agresivita\s*(\d+|jedna?|dve|tri|štyri|päť)/i)
+    || lo.match(/bodavosť\s*(\d+)/i);
+  if(agrM){
+    const val = wordToNum(agrM[1]) || parseInt(agrM[1]);
+    if(val && val>=1 && val<=5){ reviewPending.agr = val; updateReviewDisplay();
+      speak('Agresivita opravená na ' + val + '. Čo ďalšie?', listenForCorrection); return; }
+  }
+
+  // CORRECTION — zásoby
+  const zasM = lo.match(/zásoby\s*(\d+|jedna?|dve|tri|štyri|päť)/i)
+    || lo.match(/zásob[ay]\s*(\d+)/i);
+  if(zasM){
+    const val = wordToNum(zasM[1]) || parseInt(zasM[1]);
+    if(val && val>=1 && val<=5){ reviewPending.zasoby = val; updateReviewDisplay();
+      speak('Zásoby opravené na ' + val + '. Čo ďalšie?', listenForCorrection); return; }
+  }
+
+  // CORRECTION — plod
+  const plodM = lo.match(/plod\s*(\d+|jedna?|dve|tri|štyri|päť|šesť|sedem|osem|deväť|desať)/i)
+    || lo.match(/(\d+)\s*rámikov\s*(s\s*)?plod/i);
+  if(plodM){
+    const val = wordToNum(plodM[1]) || parseInt(plodM[1]);
+    if(val!==null){ reviewPending.plod = val; updateReviewDisplay();
+      speak('Plod opravený na ' + val + ' rámikov. Čo ďalšie?', listenForCorrection); return; }
+  }
+
+  // CORRECTION — matka rok
+  const queenM = lo.match(/matka\s*(20\d{2})/i) || lo.match(/(20\d{2})/);
+  if(queenM){
+    const year = parseInt(queenM[1]);
+    if(year>=2010 && year<=2035){
+      reviewPending.queenYear = year;
+      const col = queenColor(year);
+      updateReviewDisplay();
+      speak('Matka rok ' + year + (col?', farba '+col.label:'') + '. Čo ďalšie?', listenForCorrection);
+      return;
+    }
+  }
+
+  // CORRECTION — matka farba
+  const queenColor2 = parseQueenYearByColor(lo);
+  if(queenColor2){
+    reviewPending.queenYear = queenColor2;
+    const col = queenColor(queenColor2);
+    updateReviewDisplay();
+    speak('Matka ' + (col?.label||'') + ', rok ' + queenColor2 + '. Čo ďalšie?', listenForCorrection);
+    return;
+  }
+
+  // Not understood — ask again
+  speak('Nerozumel som. Povedz napríklad: sila päť, agresivita dve, alebo Uložiť.', listenForCorrection);
+}
+
+function finalizeNoteFromReview(){
+  const d = reviewPending;
+  const note = parseNote(d.rawText || '');
+  note.str       = d.str    || note.str;
+  note.agr       = d.agr    || note.agr;
+  note.zasoby    = d.zasoby || 3;
+  note.plod      = d.plod   || 0;
+  note.queenYear = d.queenYear || null;
+
+  if(d.queenYear && selSt!==null && selUl!==null){
+    loadQueens();
+    queens[queenKey(selSt,selUl-1)]={year:d.queenYear,note:'Z prehliadky',setDate:new Date().toISOString()};
+    saveQueens();
+    renderUlChipsWithQueens();
+  }
+
+  notes.unshift(note);
+  try{ localStorage.setItem(SK_N, JSON.stringify(notes)); }catch(e){}
+  renderNotes(); renderDash();
+  savedChunks = []; reviewPending = {};
+
+  const el=document.getElementById('tbox');
+  el.style.color='var(--ok)'; el.style.fontStyle='normal'; el.textContent='✓ Zápisok uložený';
+  document.getElementById('save-btn').disabled=true;
+  document.getElementById('rec-lbl').textContent='Klepni pre nahrávanie';
+  setStatus('listening','Zápisok uložený ✓','Povedz "Začíname" pre ďalší záznam');
+  toast('Zápisok uložený');
+  setTimeout(()=>sw('n'), 1500);
+}
+
 function sw(n){
   ['r','n','d','hist','kal','preh','roj','lpis','poc','cfg'].forEach(k=>{
     document.getElementById('tab-'+k).classList.toggle('active',k===n);
@@ -2737,6 +3270,80 @@ function toast(msg){const el=document.getElementById('toast');el.textContent=msg
   </div>
 </div>
 
+
+<!-- REVIEW OVERLAY -->
+<div class="review-overlay" id="review-overlay">
+  <div class="review-box">
+    <div class="review-title">Skontroluj zápisok</div>
+    <div class="review-sub" id="review-sub">Skontroluj či aplikácia správne pochopila nahrávku. Oprav čo nesedí.</div>
+
+    <!-- Audio playback -->
+    <div class="review-audio" id="review-audio-wrap" style="display:none">
+      <div class="review-audio-lbl">Hlasový záznam</div>
+      <audio id="review-audio-player" controls></audio>
+    </div>
+
+    <!-- Transcript -->
+    <div class="review-transcript" id="review-transcript"></div>
+
+    <!-- Detected values summary -->
+    <div class="review-detected" id="review-detected"></div>
+
+    <!-- Editable fields -->
+    <div class="review-section">
+      <div class="review-section-title">Uprav hodnoty</div>
+      <div class="review-grid">
+        <div class="review-field full">
+          <div class="review-lbl">Sila včelstva — obsadené uličky</div>
+          <div class="review-slider-row">
+            <input type="range" class="review-slider" id="rv-sila" min="0" max="20" value="8"
+              oninput="document.getElementById('rv-sila-val').textContent=this.value">
+            <div class="review-slider-val" id="rv-sila-val">8</div>
+          </div>
+        </div>
+        <div class="review-field full">
+          <div class="review-lbl">Počet rámikov s plodom</div>
+          <div class="review-slider-row">
+            <input type="range" class="review-slider" id="rv-plod" min="0" max="15" value="0"
+              oninput="document.getElementById('rv-plod-val').textContent=this.value">
+            <div class="review-slider-val" id="rv-plod-val">0</div>
+          </div>
+        </div>
+        <div class="review-field full">
+          <div class="review-lbl">Agresivita / Bodavosť (1–5)</div>
+          <div class="review-slider-row">
+            <input type="range" class="review-slider" id="rv-agr" min="1" max="5" value="2"
+              oninput="document.getElementById('rv-agr-val').textContent=this.value">
+            <div class="review-slider-val" id="rv-agr-val">2</div>
+          </div>
+        </div>
+        <div class="review-field full">
+          <div class="review-lbl">Zásoby (1–5)</div>
+          <div class="review-slider-row">
+            <input type="range" class="review-slider" id="rv-zasoby" min="1" max="5" value="3"
+              oninput="document.getElementById('rv-zasoby-val').textContent=this.value">
+            <div class="review-slider-val" id="rv-zasoby-val">3</div>
+          </div>
+        </div>
+        <div class="review-field">
+          <div class="review-lbl">Rok matky</div>
+          <input type="number" class="review-inp" id="rv-queen" min="2000" max="2099" placeholder="napr. 2024">
+        </div>
+        <div class="review-field">
+          <div class="review-lbl">Farba matky</div>
+          <input type="text" class="review-inp" id="rv-queen-color" placeholder="auto" readonly style="cursor:default">
+        </div>
+      </div>
+      <div class="review-lbl" style="margin-bottom:6px">Stav včelstva</div>
+      <div class="review-tags" id="rv-tags"></div>
+    </div>
+
+    <div class="review-btns">
+      <button class="review-confirm" onclick="confirmReview()">✓ Uložiť zápisok</button>
+      <button class="review-redo" onclick="redoRecording()">↺ Nahrať znova</button>
+    </div>
+  </div>
+</div>
 <!-- QUICK ENTRY PANEL -->
 <div class="qe-panel" id="qe-panel">
   <div class="qe-box">
